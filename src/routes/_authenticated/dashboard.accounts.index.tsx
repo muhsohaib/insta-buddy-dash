@@ -7,7 +7,7 @@ import { AccountCard } from "@/components/account-card";
 import { Button } from "@/components/ui/button";
 import { Plus, Users } from "lucide-react";
 
-export const Route = createFileRoute("/_authenticated/dashboard/accounts")({
+export const Route = createFileRoute("/_authenticated/dashboard/accounts/")({
   component: AccountsPage,
   head: () => ({ meta: [{ title: "Accounts — Loomly" }] }),
 });
