@@ -6,11 +6,12 @@ import { DashboardShell } from "@/components/dashboard-shell";
 import { AdminGate } from "@/components/admin-gate";
 import { AdminNav } from "./admin.index";
 import { adminListPosts, adminMarkPostCompleted } from "@/lib/admin.functions";
-import { getBunnyDownloadUrl } from "@/lib/bunny.functions";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { Check, Download, ExternalLink } from "lucide-react";
+
 
 export const Route = createFileRoute("/_authenticated/admin/posts")({
   component: AdminPostsPage,
