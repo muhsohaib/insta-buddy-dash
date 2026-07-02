@@ -81,6 +81,17 @@ export const uploadPhotoPath = createServerFn({ method: "POST" })
       .from("account-photos")
       .createSignedUploadUrl(path);
     if (error) throw new Error(error.message);
-    const { data: pub } = context.supabase.storage.from("account-photos").getPublicUrl(path);
-    return { path, token: signed.token, publicUrl: pub.publicUrl };
+    return { path, token: signed.token };
+  });
+
+export const finalizePhotoUrl = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) => z.object({ path: z.string().min(1).max(500) }).parse(input))
+  .handler(async ({ context, data }) => {
+    // 10-year signed URL so private-bucket photos still render for owner and admins.
+    const { data: signed, error } = await context.supabase.storage
+      .from("account-photos")
+      .createSignedUrl(data.path, 60 * 60 * 24 * 365 * 10);
+    if (error) throw new Error(error.message);
+    return { signedUrl: signed.signedUrl };
   });
