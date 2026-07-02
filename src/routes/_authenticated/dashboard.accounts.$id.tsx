@@ -106,6 +106,7 @@ function OnboardingForm({ accountId }: { accountId: string }) {
   const uploadFn = useServerFn(uploadPhotoPath);
   const finalizeFn = useServerFn(finalizePhotoUrl);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
 
