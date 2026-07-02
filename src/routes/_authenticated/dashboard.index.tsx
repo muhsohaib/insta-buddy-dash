@@ -9,7 +9,7 @@ import { listMyPostsForAccount } from "@/lib/posts.functions";
 import { Button } from "@/components/ui/button";
 import { Plus, CalendarDays, TrendingUp, Sparkles } from "lucide-react";
 import { CalendarGrid, type CalendarPost } from "@/components/calendar-grid";
-import { CreateAccountDialog } from "@/components/create-account-dialog";
+import { CreateAccountDialog, type AccountGateState } from "@/components/create-account-dialog";
 import { SchedulePostDialog, type ReadyAccount } from "@/components/schedule-post-dialog";
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
