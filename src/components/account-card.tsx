@@ -2,8 +2,6 @@ import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { ArrowRight, Instagram } from "lucide-react";
 
-type StatusKey = "pending_details" | "creating" | "warming_up" | "ready" | "cancelled";
-
 const STATUS: Record<string, { label: string; dot: string; text: string; bg: string }> = {
   pending_details: { label: "Setup needed", dot: "bg-warning", text: "text-warning", bg: "bg-[color-mix(in_oklab,var(--color-warning)_15%,transparent)]" },
   creating: { label: "Creating", dot: "bg-[var(--color-purple-accent)]", text: "text-[var(--color-purple-accent)]", bg: "bg-[color-mix(in_oklab,var(--color-purple-accent)_15%,transparent)]" },
@@ -18,14 +16,18 @@ export function AccountCard({
   label,
   status,
   photo,
+  hasDetails = false,
 }: {
   id: string;
   username: string | null;
   label: string | null;
   status: string;
   photo: string | null;
+  hasDetails?: boolean;
 }) {
-  const meta = STATUS[status] ?? STATUS.pending_details;
+  // If details are already submitted but status hasn't advanced yet, present as "creating".
+  const effectiveStatus = status === "pending_details" && hasDetails ? "creating" : status;
+  const meta = STATUS[effectiveStatus] ?? STATUS.pending_details;
   const display = username ? `@${username}` : label ?? "Instagram account";
 
   return (
@@ -34,7 +36,6 @@ export function AccountCard({
       transition={{ type: "spring", stiffness: 300, damping: 22 }}
       className="soft-card group relative overflow-hidden"
     >
-      {/* Ambient hover glow */}
       <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full ambient-cyan opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100" />
 
       <div className="relative flex items-start gap-4 p-5">
@@ -63,7 +64,7 @@ export function AccountCard({
         </div>
       </div>
 
-      {(status === "creating" || status === "warming_up") && (
+      {(effectiveStatus === "creating" || effectiveStatus === "warming_up") && (
         <div className="border-t border-hairline px-5 py-3">
           <ol className="space-y-2">
             {[
@@ -72,7 +73,7 @@ export function AccountCard({
               { key: "ready", label: "Ready to post" },
             ].map((s, i) => {
               const stages = ["creating", "warming_up", "ready"];
-              const currentIdx = stages.indexOf(status);
+              const currentIdx = stages.indexOf(effectiveStatus);
               const done = currentIdx > i;
               const active = currentIdx === i;
               return (
@@ -90,17 +91,30 @@ export function AccountCard({
         </div>
       )}
 
-      <div className="flex items-center justify-between border-t border-hairline px-5 py-3">
-        <Link
-          to="/dashboard/accounts/$id"
-          params={{ id }}
-          className="inline-flex items-center gap-1 text-xs font-medium text-foreground hover:text-[var(--color-cyan-accent)]"
-        >
-          {status === "pending_details" ? "Finish setup" : status === "ready" ? "Open calendar" : "Open account"}
-          <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
-        </Link>
-      </div>
+      {effectiveStatus === "pending_details" && (
+        <div className="flex items-center justify-between border-t border-hairline px-5 py-3">
+          <Link
+            to="/dashboard/accounts/$id"
+            params={{ id }}
+            className="inline-flex items-center gap-1 text-xs font-medium text-foreground hover:text-[var(--color-cyan-accent)]"
+          >
+            Finish setup
+            <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
+          </Link>
+        </div>
+      )}
+
+      {effectiveStatus === "ready" && (
+        <div className="flex items-center justify-between border-t border-hairline px-5 py-3">
+          <Link
+            to="/dashboard"
+            className="inline-flex items-center gap-1 text-xs font-medium text-foreground hover:text-[var(--color-cyan-accent)]"
+          >
+            Open calendar
+            <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
+          </Link>
+        </div>
+      )}
     </motion.div>
   );
 }
-
