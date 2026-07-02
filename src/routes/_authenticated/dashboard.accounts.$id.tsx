@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useState } from "react";
@@ -106,6 +106,7 @@ function OnboardingForm({ accountId }: { accountId: string }) {
   const uploadFn = useServerFn(uploadPhotoPath);
   const finalizeFn = useServerFn(finalizePhotoUrl);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
 
@@ -152,8 +153,9 @@ function OnboardingForm({ accountId }: { accountId: string }) {
         },
       });
       toast.success("Details submitted. We'll get to work.");
-      queryClient.invalidateQueries({ queryKey: ["account", accountId] });
-      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      await queryClient.invalidateQueries({ queryKey: ["account", accountId] });
+      await queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      navigate({ to: "/dashboard/accounts" });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Submit failed");
     }
