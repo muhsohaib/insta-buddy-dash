@@ -125,7 +125,7 @@ function DashboardPage() {
       </div>
 
       {/* Dialogs */}
-      <CreateAccountDialog open={showCreateAccount} onClose={() => setShowCreateAccount(false)} />
+      <CreateAccountDialog open={showCreateAccount} onClose={() => setShowCreateAccount(false)} state={gateState} />
       <SchedulePostDialog
         open={openDate !== null}
         initialDate={openDate}
