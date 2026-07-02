@@ -1,0 +1,107 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { queryOptions, useSuspenseQuery, useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { DashboardShell } from "@/components/dashboard-shell";
+import { amIAdmin, adminListClients } from "@/lib/admin.functions";
+import { AdminGate } from "@/components/admin-gate";
+
+export const Route = createFileRoute("/_authenticated/admin/")({
+  component: AdminHome,
+  head: () => ({ meta: [{ title: "Admin — Loomly" }] }),
+});
+
+function AdminHome() {
+  return (
+    <DashboardShell>
+      <AdminGate>
+        <AdminNav />
+        <ClientsTable />
+      </AdminGate>
+    </DashboardShell>
+  );
+}
+
+export function AdminNav() {
+  return (
+    <div className="mb-6 flex gap-4 border-b border-border">
+      {[
+        { to: "/admin", label: "Clients" },
+        { to: "/admin/accounts", label: "IG accounts" },
+        { to: "/admin/posts", label: "Scheduled posts" },
+      ].map((t) => (
+        <Link
+          key={t.to}
+          to={t.to}
+          className="border-b-2 border-transparent pb-3 text-sm text-muted-foreground hover:text-foreground [&.active]:border-foreground [&.active]:text-foreground"
+          activeOptions={{ exact: t.to === "/admin" }}
+        >
+          {t.label}
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+function ClientsTable() {
+  const fn = useServerFn(adminListClients);
+  const q = useSuspenseQuery(queryOptions({ queryKey: ["admin", "clients"], queryFn: () => fn() }));
+
+  const totalMRR = q.data.reduce((sum, c) => sum + (c.status === "active" ? c.quantity * 49 : 0), 0);
+  const activeClients = q.data.filter((c) => c.status === "active").length;
+
+  return (
+    <>
+      <div className="mb-6 grid gap-4 md:grid-cols-3">
+        <Stat label="Clients" value={q.data.length} />
+        <Stat label="Active" value={activeClients} />
+        <Stat label="MRR" value={`$${totalMRR.toLocaleString()}`} />
+      </div>
+      <div className="overflow-hidden rounded-xl border border-border bg-background">
+        <table className="w-full text-sm">
+          <thead className="bg-secondary/60 text-left text-xs uppercase text-muted-foreground">
+            <tr>
+              <th className="px-4 py-3 font-medium">Client</th>
+              <th className="px-4 py-3 font-medium">Plan</th>
+              <th className="px-4 py-3 font-medium">Status</th>
+              <th className="px-4 py-3 font-medium">Accounts</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border">
+            {q.data.map((c) => (
+              <tr key={c.id} className="hover:bg-secondary/30">
+                <td className="px-4 py-3">
+                  <div className="font-medium">{c.full_name || c.email}</div>
+                  <div className="text-xs text-muted-foreground">{c.email}</div>
+                </td>
+                <td className="px-4 py-3">{c.quantity} × $49</td>
+                <td className="px-4 py-3 capitalize">{c.status}</td>
+                <td className="px-4 py-3 text-xs text-muted-foreground">
+                  {c.account_counts.pending_details > 0 && <span className="mr-2">📝 {c.account_counts.pending_details}</span>}
+                  {c.account_counts.creating > 0 && <span className="mr-2">🔨 {c.account_counts.creating}</span>}
+                  {c.account_counts.warming_up > 0 && <span className="mr-2">🔥 {c.account_counts.warming_up}</span>}
+                  {c.account_counts.ready > 0 && <span className="mr-2 text-emerald-700">✅ {c.account_counts.ready}</span>}
+                </td>
+              </tr>
+            ))}
+            {q.data.length === 0 && (
+              <tr><td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">No clients yet.</td></tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string | number }) {
+  return (
+    <div className="rounded-xl border border-border bg-background p-4">
+      <div className="text-xs text-muted-foreground">{label}</div>
+      <div className="mt-1 text-2xl font-semibold">{value}</div>
+    </div>
+  );
+}
+
+// re-referenced for silence
+void amIAdmin;
+void useQuery;

@@ -9,54 +9,189 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
+import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
+import { Route as AuthenticatedDashboardBillingRouteImport } from './routes/_authenticated/dashboard.billing'
 import { Route as ApiPublicWebhooksWhopRouteImport } from './routes/api/public/webhooks/whop'
+import { Route as AuthenticatedDashboardAccountsIdRouteImport } from './routes/_authenticated/dashboard.accounts.$id'
 
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedDashboardIndexRoute =
+  AuthenticatedDashboardIndexRouteImport.update({
+    id: '/dashboard/',
+    path: '/dashboard/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardSettingsRoute =
+  AuthenticatedDashboardSettingsRouteImport.update({
+    id: '/dashboard/settings',
+    path: '/dashboard/settings',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardBillingRoute =
+  AuthenticatedDashboardBillingRouteImport.update({
+    id: '/dashboard/billing',
+    path: '/dashboard/billing',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const ApiPublicWebhooksWhopRoute = ApiPublicWebhooksWhopRouteImport.update({
   id: '/api/public/webhooks/whop',
   path: '/api/public/webhooks/whop',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedDashboardAccountsIdRoute =
+  AuthenticatedDashboardAccountsIdRouteImport.update({
+    id: '/dashboard/accounts/$id',
+    path: '/dashboard/accounts/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/pricing': typeof PricingRoute
+  '/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
+  '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/accounts/$id': typeof AuthenticatedDashboardAccountsIdRoute
   '/api/public/webhooks/whop': typeof ApiPublicWebhooksWhopRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/pricing': typeof PricingRoute
+  '/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
+  '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/dashboard': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/accounts/$id': typeof AuthenticatedDashboardAccountsIdRoute
   '/api/public/webhooks/whop': typeof ApiPublicWebhooksWhopRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/pricing': typeof PricingRoute
+  '/_authenticated/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
+  '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/_authenticated/dashboard/accounts/$id': typeof AuthenticatedDashboardAccountsIdRoute
   '/api/public/webhooks/whop': typeof ApiPublicWebhooksWhopRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/public/webhooks/whop'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/pricing'
+    | '/dashboard/billing'
+    | '/dashboard/settings'
+    | '/dashboard/'
+    | '/dashboard/accounts/$id'
+    | '/api/public/webhooks/whop'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/public/webhooks/whop'
-  id: '__root__' | '/' | '/api/public/webhooks/whop'
+  to:
+    | '/'
+    | '/auth'
+    | '/pricing'
+    | '/dashboard/billing'
+    | '/dashboard/settings'
+    | '/dashboard'
+    | '/dashboard/accounts/$id'
+    | '/api/public/webhooks/whop'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/pricing'
+    | '/_authenticated/dashboard/billing'
+    | '/_authenticated/dashboard/settings'
+    | '/_authenticated/dashboard/'
+    | '/_authenticated/dashboard/accounts/$id'
+    | '/api/public/webhooks/whop'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  PricingRoute: typeof PricingRoute
   ApiPublicWebhooksWhopRoute: typeof ApiPublicWebhooksWhopRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/dashboard/': {
+      id: '/_authenticated/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/settings': {
+      id: '/_authenticated/dashboard/settings'
+      path: '/dashboard/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof AuthenticatedDashboardSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/billing': {
+      id: '/_authenticated/dashboard/billing'
+      path: '/dashboard/billing'
+      fullPath: '/dashboard/billing'
+      preLoaderRoute: typeof AuthenticatedDashboardBillingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/api/public/webhooks/whop': {
       id: '/api/public/webhooks/whop'
@@ -65,11 +200,38 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicWebhooksWhopRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/dashboard/accounts/$id': {
+      id: '/_authenticated/dashboard/accounts/$id'
+      path: '/dashboard/accounts/$id'
+      fullPath: '/dashboard/accounts/$id'
+      preLoaderRoute: typeof AuthenticatedDashboardAccountsIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDashboardBillingRoute: typeof AuthenticatedDashboardBillingRoute
+  AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
+  AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
+  AuthenticatedDashboardAccountsIdRoute: typeof AuthenticatedDashboardAccountsIdRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDashboardBillingRoute: AuthenticatedDashboardBillingRoute,
+  AuthenticatedDashboardSettingsRoute: AuthenticatedDashboardSettingsRoute,
+  AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
+  AuthenticatedDashboardAccountsIdRoute: AuthenticatedDashboardAccountsIdRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  PricingRoute: PricingRoute,
   ApiPublicWebhooksWhopRoute: ApiPublicWebhooksWhopRoute,
 }
 export const routeTree = rootRouteImport
