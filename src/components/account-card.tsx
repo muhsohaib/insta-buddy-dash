@@ -63,13 +63,40 @@ export function AccountCard({
         </div>
       </div>
 
+      {(status === "creating" || status === "warming_up") && (
+        <div className="border-t border-hairline px-5 py-3">
+          <ol className="space-y-2">
+            {[
+              { key: "creating", label: "Creating account" },
+              { key: "warming_up", label: "Warming up" },
+              { key: "ready", label: "Ready to post" },
+            ].map((s, i) => {
+              const stages = ["creating", "warming_up", "ready"];
+              const currentIdx = stages.indexOf(status);
+              const done = currentIdx > i;
+              const active = currentIdx === i;
+              return (
+                <li key={s.key} className="flex items-center gap-2 text-xs">
+                  <span className={`flex h-4 w-4 items-center justify-center rounded-full text-[9px] ${done ? "bg-success text-background" : active ? "gradient-accent text-background" : "bg-secondary text-muted-foreground"}`}>
+                    {i + 1}
+                  </span>
+                  <span className={active ? "font-medium text-foreground" : done ? "text-muted-foreground line-through" : "text-muted-foreground"}>
+                    {s.label}
+                  </span>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+      )}
+
       <div className="flex items-center justify-between border-t border-hairline px-5 py-3">
         <Link
           to="/dashboard/accounts/$id"
           params={{ id }}
           className="inline-flex items-center gap-1 text-xs font-medium text-foreground hover:text-[var(--color-cyan-accent)]"
         >
-          {status === "pending_details" ? "Finish setup" : status === "ready" ? "Open calendar" : "View status"}
+          {status === "pending_details" ? "Finish setup" : status === "ready" ? "Open calendar" : "Open account"}
           <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
         </Link>
       </div>
