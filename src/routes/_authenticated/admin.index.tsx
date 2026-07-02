@@ -26,7 +26,7 @@ export function AdminNav() {
     <div className="mb-6 flex gap-4 border-b border-border">
       {[
         { to: "/admin", label: "Clients" },
-        { to: "/admin/accounts", label: "IG accounts" },
+        { to: "/admin/accounts", label: "Accounts" },
         { to: "/admin/posts", label: "Scheduled posts" },
       ].map((t) => (
         <Link
