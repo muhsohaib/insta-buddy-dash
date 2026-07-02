@@ -74,6 +74,7 @@ function AccountsPage() {
                 label={a.label ?? d?.app_name ?? null}
                 status={a.status}
                 photo={d?.profile_photo_url ?? null}
+                hasDetails={Boolean(d)}
               />
             );
           })}
