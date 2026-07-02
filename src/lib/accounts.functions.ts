@@ -8,6 +8,7 @@ export const listMyAccounts = createServerFn({ method: "GET" })
     const { data, error } = await context.supabase
       .from("instagram_accounts")
       .select("id, status, label, created_at, account_details(ig_username, app_name, profile_photo_url)")
+      .eq("user_id", context.userId)
       .order("created_at", { ascending: true });
     if (error) throw new Error(error.message);
     return data ?? [];
@@ -21,6 +22,7 @@ export const getMyAccount = createServerFn({ method: "GET" })
       .from("instagram_accounts")
       .select("*, account_details(*)")
       .eq("id", data.id)
+      .eq("user_id", context.userId)
       .maybeSingle();
     if (error) throw new Error(error.message);
     return acct;
