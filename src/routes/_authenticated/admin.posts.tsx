@@ -49,7 +49,14 @@ function PostsTable() {
   async function download(video_id: string | null, library_id: string | null) {
     if (!video_id || !library_id) return;
     try {
-      const { original, embed } = await downloadFn({ data: { video_id, library_id } });
+      const { original, embed, ready, status } = await downloadFn({ data: { video_id, library_id } });
+      if (!ready) {
+        toast.message("Video is still processing on Bunny Stream", {
+          description: `Current status: ${status ?? "unknown"}. Try again in a moment.`,
+        });
+        window.open(embed, "_blank");
+        return;
+      }
       window.open(original || embed, "_blank");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Could not open download");
