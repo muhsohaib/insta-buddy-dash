@@ -23,6 +23,7 @@ import { Route as AuthenticatedAdminPostsRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminAccountsRouteImport } from './routes/_authenticated/admin.accounts'
 import { Route as AuthenticatedDashboardAccountsIndexRouteImport } from './routes/_authenticated/dashboard.accounts.index'
 import { Route as ApiPublicWebhooksWhopRouteImport } from './routes/api/public/webhooks/whop'
+import { Route as ApiPublicAdminBunnyDownloadRouteImport } from './routes/api/public/admin/bunny-download'
 import { Route as AuthenticatedDashboardAccountsIdRouteImport } from './routes/_authenticated/dashboard.accounts.$id'
 
 const PricingRoute = PricingRouteImport.update({
@@ -101,6 +102,12 @@ const ApiPublicWebhooksWhopRoute = ApiPublicWebhooksWhopRouteImport.update({
   path: '/api/public/webhooks/whop',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicAdminBunnyDownloadRoute =
+  ApiPublicAdminBunnyDownloadRouteImport.update({
+    id: '/api/public/admin/bunny-download',
+    path: '/api/public/admin/bunny-download',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedDashboardAccountsIdRoute =
   AuthenticatedDashboardAccountsIdRouteImport.update({
     id: '/dashboard/accounts/$id',
@@ -121,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/accounts/$id': typeof AuthenticatedDashboardAccountsIdRoute
+  '/api/public/admin/bunny-download': typeof ApiPublicAdminBunnyDownloadRoute
   '/api/public/webhooks/whop': typeof ApiPublicWebhooksWhopRoute
   '/dashboard/accounts/': typeof AuthenticatedDashboardAccountsIndexRoute
 }
@@ -137,6 +145,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/accounts/$id': typeof AuthenticatedDashboardAccountsIdRoute
+  '/api/public/admin/bunny-download': typeof ApiPublicAdminBunnyDownloadRoute
   '/api/public/webhooks/whop': typeof ApiPublicWebhooksWhopRoute
   '/dashboard/accounts': typeof AuthenticatedDashboardAccountsIndexRoute
 }
@@ -155,6 +164,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/dashboard/accounts/$id': typeof AuthenticatedDashboardAccountsIdRoute
+  '/api/public/admin/bunny-download': typeof ApiPublicAdminBunnyDownloadRoute
   '/api/public/webhooks/whop': typeof ApiPublicWebhooksWhopRoute
   '/_authenticated/dashboard/accounts/': typeof AuthenticatedDashboardAccountsIndexRoute
 }
@@ -173,6 +183,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/dashboard/'
     | '/dashboard/accounts/$id'
+    | '/api/public/admin/bunny-download'
     | '/api/public/webhooks/whop'
     | '/dashboard/accounts/'
   fileRoutesByTo: FileRoutesByTo
@@ -189,6 +200,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/dashboard'
     | '/dashboard/accounts/$id'
+    | '/api/public/admin/bunny-download'
     | '/api/public/webhooks/whop'
     | '/dashboard/accounts'
   id:
@@ -206,6 +218,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/'
     | '/_authenticated/dashboard/'
     | '/_authenticated/dashboard/accounts/$id'
+    | '/api/public/admin/bunny-download'
     | '/api/public/webhooks/whop'
     | '/_authenticated/dashboard/accounts/'
   fileRoutesById: FileRoutesById
@@ -215,6 +228,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   PricingRoute: typeof PricingRoute
+  ApiPublicAdminBunnyDownloadRoute: typeof ApiPublicAdminBunnyDownloadRoute
   ApiPublicWebhooksWhopRoute: typeof ApiPublicWebhooksWhopRoute
 }
 
@@ -318,6 +332,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicWebhooksWhopRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/admin/bunny-download': {
+      id: '/api/public/admin/bunny-download'
+      path: '/api/public/admin/bunny-download'
+      fullPath: '/api/public/admin/bunny-download'
+      preLoaderRoute: typeof ApiPublicAdminBunnyDownloadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/dashboard/accounts/$id': {
       id: '/_authenticated/dashboard/accounts/$id'
       path: '/dashboard/accounts/$id'
@@ -363,18 +384,9 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   PricingRoute: PricingRoute,
+  ApiPublicAdminBunnyDownloadRoute: ApiPublicAdminBunnyDownloadRoute,
   ApiPublicWebhooksWhopRoute: ApiPublicWebhooksWhopRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
