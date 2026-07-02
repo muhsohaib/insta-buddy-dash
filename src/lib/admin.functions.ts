@@ -71,10 +71,21 @@ export const adminListAccounts = createServerFn({ method: "GET" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data, error } = await supabaseAdmin
       .from("instagram_accounts")
-      .select("*, account_details(*), profiles!inner(email, full_name)")
+      .select("*, account_details(*)")
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);
-    return data ?? [];
+    const rows = data ?? [];
+    const userIds = Array.from(new Set(rows.map((r) => r.user_id).filter(Boolean)));
+    let profilesById: Record<string, { email: string | null; full_name: string | null }> = {};
+    if (userIds.length > 0) {
+      const { data: profs, error: pErr } = await supabaseAdmin
+        .from("profiles")
+        .select("id, email, full_name")
+        .in("id", userIds);
+      if (pErr) throw new Error(pErr.message);
+      profilesById = Object.fromEntries((profs ?? []).map((p) => [p.id, { email: p.email, full_name: p.full_name }]));
+    }
+    return rows.map((r) => ({ ...r, profiles: profilesById[r.user_id] ?? null }));
   });
 
 export const adminUpdateAccountStatus = createServerFn({ method: "POST" })
