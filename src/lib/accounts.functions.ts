@@ -87,9 +87,10 @@ export const uploadPhotoPath = createServerFn({ method: "POST" })
 export const finalizePhotoUrl = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) => z.object({ path: z.string().min(1).max(500) }).parse(input))
-  .handler(async ({ context, data }) => {
+  .handler(async ({ data }) => {
     // 10-year signed URL so private-bucket photos still render for owner and admins.
-    const { data: signed, error } = await context.supabase.storage
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: signed, error } = await supabaseAdmin.storage
       .from("account-photos")
       .createSignedUrl(data.path, 60 * 60 * 24 * 365 * 10);
     if (error) throw new Error(error.message);
