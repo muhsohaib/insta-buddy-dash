@@ -4,7 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { DashboardShell } from "@/components/dashboard-shell";
-import { listMyAccounts, getMySubscription } from "@/lib/accounts.functions";
+import { listMyAccounts, getMySubscription, createAdditionalAccount } from "@/lib/accounts.functions";
 import { listMyPostsForAccount } from "@/lib/posts.functions";
 import { Button } from "@/components/ui/button";
 import { Plus, CalendarDays, TrendingUp, Sparkles } from "lucide-react";
@@ -12,6 +12,7 @@ import { CalendarGrid, type CalendarPost } from "@/components/calendar-grid";
 import { CreateAccountDialog, type AccountGateState } from "@/components/create-account-dialog";
 import { SchedulePostDialog, type ReadyAccount } from "@/components/schedule-post-dialog";
 import { PickAccountDialog, type PickableAccount } from "@/components/pick-account-dialog";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
   component: DashboardPage,
@@ -22,6 +23,7 @@ function DashboardPage() {
   const listFn = useServerFn(listMyAccounts);
   const subFn = useServerFn(getMySubscription);
   const listPostsFn = useServerFn(listMyPostsForAccount);
+  const createAccountFn = useServerFn(createAdditionalAccount);
   const queryClient = useQueryClient();
 
   const accountsQ = useSuspenseQuery(queryOptions({ queryKey: ["accounts"], queryFn: () => listFn() }));
@@ -71,6 +73,7 @@ function DashboardPage() {
   const [showCreateAccount, setShowCreateAccount] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
   const [pickerDate, setPickerDate] = useState<Date | null>(null);
+  const [creatingAccount, setCreatingAccount] = useState(false);
   const navigate = useNavigate();
 
   const hasReady = readyAccounts.length > 0;
@@ -113,14 +116,26 @@ function DashboardPage() {
     setShowPicker(true);
   }
 
-  function onHeaderCreateAccount() {
-    // If a slot is already provisioned but awaiting details, jump straight to
-    // its onboarding form. Otherwise send the user to pricing to add a slot.
-    if (pendingAccount) {
-      navigate({ to: "/dashboard/accounts/$id", params: { id: pendingAccount.id } });
+  async function onHeaderCreateAccount() {
+    if (creatingAccount) return;
+    setCreatingAccount(true);
+    try {
+      const account = pendingAccount ?? await createAccountFn();
+      await queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      navigate({ to: "/dashboard/accounts/$id", params: { id: account.id } });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not add account");
+    } finally {
+      setCreatingAccount(false);
+    }
+  }
+
+  function onEmptyCreateAccount() {
+    if (accountsQ.data.length === 0) {
+      setShowCreateAccount(true);
       return;
     }
-    setShowCreateAccount(true);
+    void onHeaderCreateAccount();
   }
 
   const activeCount = accountsQ.data.filter((a) => a.status === "ready").length;
@@ -144,9 +159,10 @@ function DashboardPage() {
         </div>
         <Button
           onClick={onHeaderCreateAccount}
+          disabled={creatingAccount}
           className="gradient-accent rounded-xl text-background shadow-[0_10px_30px_-8px_var(--color-cyan-accent)] hover:shadow-[0_15px_40px_-8px_var(--color-cyan-accent)]"
         >
-          <Plus className="mr-1 h-4 w-4" /> {pendingAccount ? "Finish new account setup" : "Add new account"}
+          <Plus className="mr-1 h-4 w-4" /> {creatingAccount ? "Adding…" : pendingAccount ? "Finish new account setup" : "Add new account"}
         </Button>
       </div>
 
@@ -160,7 +176,7 @@ function DashboardPage() {
       {/* Calendar */}
       <div className="mt-6">
         {accountsQ.data.length === 0 ? (
-          <EmptyCalendar onCreate={() => setShowCreateAccount(true)} />
+          <EmptyCalendar onCreate={onEmptyCreateAccount} />
         ) : (
           <CalendarGrid posts={postsQueries.data} onCreate={onCreateFromDay} />
         )}
