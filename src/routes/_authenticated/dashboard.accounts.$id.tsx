@@ -153,8 +153,9 @@ function OnboardingForm({ accountId }: { accountId: string }) {
         },
       });
       toast.success("Details submitted. We'll get to work.");
-      queryClient.invalidateQueries({ queryKey: ["account", accountId] });
-      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      await queryClient.invalidateQueries({ queryKey: ["account", accountId] });
+      await queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      navigate({ to: "/dashboard/accounts" });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Submit failed");
     }
