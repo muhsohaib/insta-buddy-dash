@@ -64,7 +64,6 @@ function ClientsTable() {
               <th className="px-4 py-3 font-medium">Plan</th>
               <th className="px-4 py-3 font-medium">Status</th>
               <th className="px-4 py-3 font-medium">Accounts</th>
-              <th className="px-4 py-3 font-medium">Submitted details</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
@@ -82,41 +81,10 @@ function ClientsTable() {
                   {c.account_counts.warming_up > 0 && <span className="mr-2">🔥 {c.account_counts.warming_up}</span>}
                   {c.account_counts.ready > 0 && <span className="mr-2 text-emerald-700">✅ {c.account_counts.ready}</span>}
                 </td>
-                <td className="max-w-xl px-4 py-3 text-xs text-muted-foreground">
-                  <div className="space-y-3">
-                    {c.account_submissions.map((account) => {
-                      const d = account.details;
-                      return (
-                        <div key={account.id} className="rounded-lg border border-border bg-secondary/20 p-3">
-                          <div className="mb-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-foreground">
-                            <span className="font-medium">{d?.app_name || account.label || "Instagram account"}</span>
-                            {d?.ig_username && <span className="text-muted-foreground">@{d.ig_username}</span>}
-                            <span className="rounded-md bg-background px-2 py-0.5 text-[11px] capitalize text-muted-foreground">{account.status.replace("_", " ")}</span>
-                          </div>
-                          <div><b>Holder:</b> {c.full_name || "No name"} · {c.email || "No email"}</div>
-                          {d ? (
-                            <>
-                              <div><b>Niche:</b> {d.niche}</div>
-                              <div><b>Country:</b> {d.target_country}</div>
-                              {d.website && <div><b>Site:</b> <a href={d.website} target="_blank" rel="noreferrer" className="underline">{d.website}</a></div>}
-                              {d.bio && <div className="mt-1 whitespace-pre-wrap"><b>Bio:</b> {d.bio}</div>}
-                              {d.competitors?.length > 0 && <div className="mt-1"><b>Competitors:</b> {d.competitors.join(", ")}</div>}
-                              {d.notes && <div className="mt-1 whitespace-pre-wrap"><b>Notes:</b> {d.notes}</div>}
-                              {d.profile_photo_url && <a href={d.profile_photo_url} target="_blank" rel="noreferrer" className="mt-1 inline-block underline">Open photo</a>}
-                            </>
-                          ) : (
-                            <div className="mt-1">No submission details yet.</div>
-                          )}
-                        </div>
-                      );
-                    })}
-                    {c.account_submissions.length === 0 && <span>No accounts yet.</span>}
-                  </div>
-                </td>
               </tr>
             ))}
             {q.data.length === 0 && (
-              <tr><td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">No clients yet.</td></tr>
+              <tr><td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">No clients yet.</td></tr>
             )}
           </tbody>
         </table>
