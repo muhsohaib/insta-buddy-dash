@@ -19,14 +19,15 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { amIAdmin } from "@/lib/admin.functions";
 
-const NAV = [
+type NavItem = { to: string; label: string; icon: typeof CalendarIcon; exact?: boolean };
+const NAV: NavItem[] = [
   { to: "/dashboard", label: "Calendar", icon: CalendarIcon, exact: true },
   { to: "/dashboard/accounts", label: "Accounts", icon: Users },
   { to: "/dashboard/library", label: "Video Library", icon: Film },
   { to: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
   { to: "/dashboard/billing", label: "Billing", icon: CreditCard },
   { to: "/dashboard/settings", label: "Settings", icon: Settings },
-] as const;
+];
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const [email, setEmail] = useState<string>("");
