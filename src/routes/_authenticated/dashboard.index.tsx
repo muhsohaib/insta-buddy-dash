@@ -101,10 +101,10 @@ function DashboardPage() {
           </p>
         </div>
         <Button
-          onClick={() => setShowCreateAccount(true)}
+          onClick={() => (hasReady ? setOpenDate(new Date()) : setShowCreateAccount(true))}
           className="gradient-accent rounded-xl text-background shadow-[0_10px_30px_-8px_var(--color-cyan-accent)] hover:shadow-[0_15px_40px_-8px_var(--color-cyan-accent)]"
         >
-          <Plus className="mr-1 h-4 w-4" /> Create new account
+          <Plus className="mr-1 h-4 w-4" /> {hasReady ? "Schedule post" : "Create new account"}
         </Button>
       </div>
 
