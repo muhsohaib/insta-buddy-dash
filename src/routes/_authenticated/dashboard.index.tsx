@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
@@ -11,6 +11,7 @@ import { Plus, CalendarDays, TrendingUp, Sparkles } from "lucide-react";
 import { CalendarGrid, type CalendarPost } from "@/components/calendar-grid";
 import { CreateAccountDialog, type AccountGateState } from "@/components/create-account-dialog";
 import { SchedulePostDialog, type ReadyAccount } from "@/components/schedule-post-dialog";
+import { PickAccountDialog, type PickableAccount } from "@/components/pick-account-dialog";
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
   component: DashboardPage,
@@ -66,19 +67,60 @@ function DashboardPage() {
   );
 
   const [openDate, setOpenDate] = useState<Date | null>(null);
+  const [scheduleAccountId, setScheduleAccountId] = useState<string | undefined>(undefined);
   const [showCreateAccount, setShowCreateAccount] = useState(false);
+  const [showPicker, setShowPicker] = useState(false);
+  const [pickerDate, setPickerDate] = useState<Date | null>(null);
+  const navigate = useNavigate();
 
   const hasReady = readyAccounts.length > 0;
   const hasWarming = accountsQ.data.some((a) => a.status === "warming_up");
-  const hasCreating = accountsQ.data.some((a) => a.status === "creating" || a.status === "pending_details");
+  const hasCreating = accountsQ.data.some((a) => a.status === "creating");
+  const pendingAccount = accountsQ.data.find((a) => a.status === "pending_details");
   const gateState: AccountGateState = hasWarming ? "warming_up" : hasCreating ? "creating" : "none";
 
+  const pickable: PickableAccount[] = useMemo(
+    () =>
+      accountsQ.data
+        .filter((a) => ["ready", "warming_up", "creating", "pending_details"].includes(a.status))
+        .map((a) => {
+          const d = Array.isArray(a.account_details) ? a.account_details[0] : a.account_details;
+          return {
+            id: a.id,
+            username: d?.ig_username ?? null,
+            label: a.label ?? d?.app_name ?? null,
+            status: a.status,
+            photo: d?.profile_photo_url ?? null,
+          };
+        }),
+    [accountsQ.data]
+  );
+
   function onCreateFromDay(date: Date) {
-    if (!hasReady) {
+    // No accounts at all → gate to pricing / status.
+    if (pickable.length === 0) {
       setShowCreateAccount(true);
       return;
     }
-    setOpenDate(date);
+    // Only one account and it's ready → straight to scheduler.
+    if (pickable.length === 1 && hasReady) {
+      setScheduleAccountId(pickable[0].id);
+      setOpenDate(date);
+      return;
+    }
+    // Multiple accounts (or a single non-ready one) → let the user pick.
+    setPickerDate(date);
+    setShowPicker(true);
+  }
+
+  function onHeaderCreateAccount() {
+    // If a slot is already provisioned but awaiting details, jump straight to
+    // its onboarding form. Otherwise send the user to pricing to add a slot.
+    if (pendingAccount) {
+      navigate({ to: "/dashboard/accounts/$id", params: { id: pendingAccount.id } });
+      return;
+    }
+    setShowCreateAccount(true);
   }
 
   const activeCount = accountsQ.data.filter((a) => a.status === "ready").length;
@@ -101,10 +143,10 @@ function DashboardPage() {
           </p>
         </div>
         <Button
-          onClick={() => (hasReady ? setOpenDate(new Date()) : setShowCreateAccount(true))}
+          onClick={onHeaderCreateAccount}
           className="gradient-accent rounded-xl text-background shadow-[0_10px_30px_-8px_var(--color-cyan-accent)] hover:shadow-[0_15px_40px_-8px_var(--color-cyan-accent)]"
         >
-          <Plus className="mr-1 h-4 w-4" /> {hasReady ? "Schedule post" : "Create new account"}
+          <Plus className="mr-1 h-4 w-4" /> {pendingAccount ? "Finish new account setup" : "Add new account"}
         </Button>
       </div>
 
@@ -126,11 +168,21 @@ function DashboardPage() {
 
       {/* Dialogs */}
       <CreateAccountDialog open={showCreateAccount} onClose={() => setShowCreateAccount(false)} state={gateState} />
+      <PickAccountDialog
+        open={showPicker}
+        onClose={() => setShowPicker(false)}
+        accounts={pickable}
+        onPickReady={(id) => {
+          setScheduleAccountId(id);
+          setOpenDate(pickerDate ?? new Date());
+        }}
+      />
       <SchedulePostDialog
         open={openDate !== null}
         initialDate={openDate}
         accounts={readyAccounts}
-        onClose={() => setOpenDate(null)}
+        defaultAccountId={scheduleAccountId}
+        onClose={() => { setOpenDate(null); setScheduleAccountId(undefined); }}
         onCreated={() => {
           queryClient.invalidateQueries({ queryKey: ["posts"] });
         }}
