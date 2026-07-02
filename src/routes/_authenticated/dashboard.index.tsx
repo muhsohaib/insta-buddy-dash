@@ -69,6 +69,9 @@ function DashboardPage() {
   const [showCreateAccount, setShowCreateAccount] = useState(false);
 
   const hasReady = readyAccounts.length > 0;
+  const hasWarming = accountsQ.data.some((a) => a.status === "warming_up");
+  const hasCreating = accountsQ.data.some((a) => a.status === "creating" || a.status === "pending_details");
+  const gateState: AccountGateState = hasWarming ? "warming_up" : hasCreating ? "creating" : "none";
 
   function onCreateFromDay(date: Date) {
     if (!hasReady) {
