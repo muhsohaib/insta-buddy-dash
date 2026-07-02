@@ -6,7 +6,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DashboardShell } from "@/components/dashboard-shell";
-import { getMyAccount, submitAccountDetails, uploadPhotoPath } from "@/lib/accounts.functions";
+import { getMyAccount, submitAccountDetails, uploadPhotoPath, finalizePhotoUrl } from "@/lib/accounts.functions";
 import { listMyPostsForAccount } from "@/lib/posts.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -104,6 +104,7 @@ const formSchema = z.object({
 function OnboardingForm({ accountId }: { accountId: string }) {
   const submitFn = useServerFn(submitAccountDetails);
   const uploadFn = useServerFn(uploadPhotoPath);
+  const finalizeFn = useServerFn(finalizePhotoUrl);
   const queryClient = useQueryClient();
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -118,12 +119,13 @@ function OnboardingForm({ accountId }: { accountId: string }) {
     setUploading(true);
     try {
       const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
-      const { path, token, publicUrl } = await uploadFn({ data: { ext } });
+      const { path, token } = await uploadFn({ data: { ext } });
       const { error } = await supabase.storage
         .from("account-photos")
         .uploadToSignedUrl(path, token, file, { contentType: file.type });
       if (error) throw error;
-      setPhotoUrl(publicUrl);
+      const { signedUrl } = await finalizeFn({ data: { path } });
+      setPhotoUrl(signedUrl);
       toast.success("Photo uploaded");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Upload failed");

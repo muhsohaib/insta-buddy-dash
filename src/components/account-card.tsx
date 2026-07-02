@@ -44,13 +44,16 @@ export function AccountCard({
 
       <div className="relative flex items-start gap-4 p-5">
         <div className="relative">
-          <div className="h-14 w-14 overflow-hidden rounded-full ring-2 ring-hairline">
+          <div className="grid h-14 w-14 place-items-center overflow-hidden rounded-full gradient-accent text-background ring-2 ring-hairline">
             {photo ? (
-              <img src={photo} alt="" className="h-full w-full object-cover" />
+              <img
+                src={photo}
+                alt=""
+                className="h-full w-full object-cover"
+                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+              />
             ) : (
-              <div className="grid h-full w-full place-items-center gradient-accent text-background">
-                <Instagram className="h-5 w-5" />
-              </div>
+              <Instagram className="h-5 w-5" />
             )}
           </div>
           <span className={`absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full ring-2 ring-background ${meta.dot}`} />
