@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ArrowRight, Instagram, Activity } from "lucide-react";
+import { ArrowRight, Instagram } from "lucide-react";
 
 type StatusKey = "pending_details" | "creating" | "warming_up" | "ready" | "cancelled";
 
@@ -27,11 +27,6 @@ export function AccountCard({
 }) {
   const meta = STATUS[status] ?? STATUS.pending_details;
   const display = username ? `@${username}` : label ?? "Instagram account";
-
-  // Placeholder metrics — real data would come from IG API. Deterministic per id.
-  const seed = id.charCodeAt(0) + id.charCodeAt(id.length - 1);
-  const followers = status === "ready" ? (seed % 900) + 120 : 0;
-  const health = status === "ready" ? 70 + (seed % 30) : status === "warming_up" ? 40 + (seed % 30) : 20;
 
   return (
     <motion.div
@@ -68,27 +63,6 @@ export function AccountCard({
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-2 border-t border-hairline px-5 py-4 text-xs">
-        <Stat label="Followers" value={followers ? followers.toLocaleString() : "—"} />
-        <Stat label="Last post" value={status === "ready" ? `${(seed % 5) + 1}d ago` : "—"} />
-        <Stat label="Health" value={`${health}%`} />
-      </div>
-
-      <div className="border-t border-hairline px-5 py-3">
-        <div className="mb-2 flex items-center justify-between text-[11px] text-muted-foreground">
-          <span className="inline-flex items-center gap-1"><Activity className="h-3 w-3" /> Score</span>
-          <span>{health}/100</span>
-        </div>
-        <div className="h-1.5 w-full overflow-hidden rounded-full bg-secondary">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${health}%` }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="h-full gradient-accent"
-          />
-        </div>
-      </div>
-
       <div className="flex items-center justify-between border-t border-hairline px-5 py-3">
         <Link
           to="/dashboard/accounts/$id"
@@ -103,11 +77,3 @@ export function AccountCard({
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
-      <div className="mt-0.5 text-sm font-semibold">{value}</div>
-    </div>
-  );
-}
