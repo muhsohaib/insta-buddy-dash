@@ -28,6 +28,30 @@ export const getMyAccount = createServerFn({ method: "GET" })
     return acct;
   });
 
+export const createAdditionalAccount = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { count, error: countErr } = await supabaseAdmin
+      .from("instagram_accounts")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", context.userId)
+      .neq("status", "cancelled");
+    if (countErr) throw new Error(countErr.message);
+
+    const { data, error } = await supabaseAdmin
+      .from("instagram_accounts")
+      .insert({
+        user_id: context.userId,
+        status: "pending_details",
+        label: `Account ${(count ?? 0) + 1}`,
+      })
+      .select("id")
+      .single();
+    if (error) throw new Error(error.message);
+    return data;
+  });
+
 const detailsSchema = z.object({
   account_id: z.string().uuid(),
   profile_photo_url: z.string().url().optional().nullable(),

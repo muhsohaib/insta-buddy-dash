@@ -1,11 +1,13 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { queryOptions, useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { useState } from "react";
 import { DashboardShell } from "@/components/dashboard-shell";
-import { listMyAccounts } from "@/lib/accounts.functions";
+import { createAdditionalAccount, listMyAccounts } from "@/lib/accounts.functions";
 import { AccountCard } from "@/components/account-card";
 import { Button } from "@/components/ui/button";
 import { Plus, Users } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/dashboard/accounts/")({
   component: AccountsPage,
@@ -14,7 +16,25 @@ export const Route = createFileRoute("/_authenticated/dashboard/accounts/")({
 
 function AccountsPage() {
   const listFn = useServerFn(listMyAccounts);
+  const createAccountFn = useServerFn(createAdditionalAccount);
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const [creatingAccount, setCreatingAccount] = useState(false);
   const q = useSuspenseQuery(queryOptions({ queryKey: ["accounts"], queryFn: () => listFn() }));
+
+  async function onAddAccount() {
+    if (creatingAccount) return;
+    setCreatingAccount(true);
+    try {
+      const account = await createAccountFn();
+      await queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      navigate({ to: "/dashboard/accounts/$id", params: { id: account.id } });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not add account");
+    } finally {
+      setCreatingAccount(false);
+    }
+  }
 
   return (
     <DashboardShell>
@@ -24,8 +44,8 @@ function AccountsPage() {
           <h1 className="mt-1 text-3xl font-semibold tracking-tight">Your Instagram accounts</h1>
           <p className="mt-1 text-sm text-muted-foreground">Manage every account, warmup status, and quick actions.</p>
         </div>
-        <Button asChild className="gradient-accent rounded-xl text-background">
-          <Link to="/pricing"><Plus className="mr-1 h-4 w-4" /> Add accounts</Link>
+        <Button onClick={onAddAccount} disabled={creatingAccount} className="gradient-accent rounded-xl text-background">
+          <Plus className="mr-1 h-4 w-4" /> {creatingAccount ? "Adding…" : "Add accounts"}
         </Button>
       </div>
 
