@@ -14,8 +14,11 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
 import { Route as AuthenticatedDashboardBillingRouteImport } from './routes/_authenticated/dashboard.billing'
+import { Route as AuthenticatedAdminPostsRouteImport } from './routes/_authenticated/admin.posts'
+import { Route as AuthenticatedAdminAccountsRouteImport } from './routes/_authenticated/admin.accounts'
 import { Route as ApiPublicWebhooksWhopRouteImport } from './routes/api/public/webhooks/whop'
 import { Route as AuthenticatedDashboardAccountsIdRouteImport } from './routes/_authenticated/dashboard.accounts.$id'
 
@@ -44,6 +47,11 @@ const AuthenticatedDashboardIndexRoute =
     path: '/dashboard/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardSettingsRoute =
   AuthenticatedDashboardSettingsRouteImport.update({
     id: '/dashboard/settings',
@@ -54,6 +62,17 @@ const AuthenticatedDashboardBillingRoute =
   AuthenticatedDashboardBillingRouteImport.update({
     id: '/dashboard/billing',
     path: '/dashboard/billing',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminPostsRoute = AuthenticatedAdminPostsRouteImport.update({
+  id: '/admin/posts',
+  path: '/admin/posts',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminAccountsRoute =
+  AuthenticatedAdminAccountsRouteImport.update({
+    id: '/admin/accounts',
+    path: '/admin/accounts',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const ApiPublicWebhooksWhopRoute = ApiPublicWebhooksWhopRouteImport.update({
@@ -72,8 +91,11 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/pricing': typeof PricingRoute
+  '/admin/accounts': typeof AuthenticatedAdminAccountsRoute
+  '/admin/posts': typeof AuthenticatedAdminPostsRoute
   '/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/accounts/$id': typeof AuthenticatedDashboardAccountsIdRoute
   '/api/public/webhooks/whop': typeof ApiPublicWebhooksWhopRoute
@@ -82,8 +104,11 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/pricing': typeof PricingRoute
+  '/admin/accounts': typeof AuthenticatedAdminAccountsRoute
+  '/admin/posts': typeof AuthenticatedAdminPostsRoute
   '/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/accounts/$id': typeof AuthenticatedDashboardAccountsIdRoute
   '/api/public/webhooks/whop': typeof ApiPublicWebhooksWhopRoute
@@ -94,8 +119,11 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/pricing': typeof PricingRoute
+  '/_authenticated/admin/accounts': typeof AuthenticatedAdminAccountsRoute
+  '/_authenticated/admin/posts': typeof AuthenticatedAdminPostsRoute
   '/_authenticated/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/dashboard/accounts/$id': typeof AuthenticatedDashboardAccountsIdRoute
   '/api/public/webhooks/whop': typeof ApiPublicWebhooksWhopRoute
@@ -106,8 +134,11 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/pricing'
+    | '/admin/accounts'
+    | '/admin/posts'
     | '/dashboard/billing'
     | '/dashboard/settings'
+    | '/admin/'
     | '/dashboard/'
     | '/dashboard/accounts/$id'
     | '/api/public/webhooks/whop'
@@ -116,8 +147,11 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/pricing'
+    | '/admin/accounts'
+    | '/admin/posts'
     | '/dashboard/billing'
     | '/dashboard/settings'
+    | '/admin'
     | '/dashboard'
     | '/dashboard/accounts/$id'
     | '/api/public/webhooks/whop'
@@ -127,8 +161,11 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/pricing'
+    | '/_authenticated/admin/accounts'
+    | '/_authenticated/admin/posts'
     | '/_authenticated/dashboard/billing'
     | '/_authenticated/dashboard/settings'
+    | '/_authenticated/admin/'
     | '/_authenticated/dashboard/'
     | '/_authenticated/dashboard/accounts/$id'
     | '/api/public/webhooks/whop'
@@ -179,6 +216,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard/settings': {
       id: '/_authenticated/dashboard/settings'
       path: '/dashboard/settings'
@@ -191,6 +235,20 @@ declare module '@tanstack/react-router' {
       path: '/dashboard/billing'
       fullPath: '/dashboard/billing'
       preLoaderRoute: typeof AuthenticatedDashboardBillingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/posts': {
+      id: '/_authenticated/admin/posts'
+      path: '/admin/posts'
+      fullPath: '/admin/posts'
+      preLoaderRoute: typeof AuthenticatedAdminPostsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/accounts': {
+      id: '/_authenticated/admin/accounts'
+      path: '/admin/accounts'
+      fullPath: '/admin/accounts'
+      preLoaderRoute: typeof AuthenticatedAdminAccountsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/api/public/webhooks/whop': {
@@ -211,15 +269,21 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminAccountsRoute: typeof AuthenticatedAdminAccountsRoute
+  AuthenticatedAdminPostsRoute: typeof AuthenticatedAdminPostsRoute
   AuthenticatedDashboardBillingRoute: typeof AuthenticatedDashboardBillingRoute
   AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
   AuthenticatedDashboardAccountsIdRoute: typeof AuthenticatedDashboardAccountsIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminAccountsRoute: AuthenticatedAdminAccountsRoute,
+  AuthenticatedAdminPostsRoute: AuthenticatedAdminPostsRoute,
   AuthenticatedDashboardBillingRoute: AuthenticatedDashboardBillingRoute,
   AuthenticatedDashboardSettingsRoute: AuthenticatedDashboardSettingsRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
   AuthenticatedDashboardAccountsIdRoute: AuthenticatedDashboardAccountsIdRoute,
 }
