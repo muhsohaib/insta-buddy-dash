@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
@@ -11,6 +11,7 @@ import { Plus, CalendarDays, TrendingUp, Sparkles } from "lucide-react";
 import { CalendarGrid, type CalendarPost } from "@/components/calendar-grid";
 import { CreateAccountDialog, type AccountGateState } from "@/components/create-account-dialog";
 import { SchedulePostDialog, type ReadyAccount } from "@/components/schedule-post-dialog";
+import { PickAccountDialog, type PickableAccount } from "@/components/pick-account-dialog";
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
   component: DashboardPage,
