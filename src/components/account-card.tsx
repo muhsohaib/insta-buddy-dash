@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ArrowRight, Instagram, Activity } from "lucide-react";
+import { ArrowRight, Instagram } from "lucide-react";
 
 type StatusKey = "pending_details" | "creating" | "warming_up" | "ready" | "cancelled";
 
