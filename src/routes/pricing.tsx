@@ -1,0 +1,107 @@
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { SiteHeader } from "@/components/site-header";
+import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
+import { Check } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { createWhopCheckout } from "@/lib/whop.functions";
+
+export const Route = createFileRoute("/pricing")({
+  component: Pricing,
+  head: () => ({
+    meta: [
+      { title: "Pricing — Loomly" },
+      { name: "description", content: "$49 per Instagram account per month. Pick your quantity and get started." },
+    ],
+  }),
+});
+
+function Pricing() {
+  const [qty, setQty] = useState(1);
+  const [signedIn, setSignedIn] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
+  }, []);
+
+  const total = qty * 49;
+
+  async function onCheckout() {
+    if (!signedIn) {
+      sessionStorage.setItem("loomly:postAuthRedirect", "/pricing");
+      navigate({ to: "/auth" });
+      return;
+    }
+    setLoading(true);
+    try {
+      const { url } = await createWhopCheckout({ data: { quantity: qty } });
+      window.location.href = url;
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not start checkout");
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      <SiteHeader />
+      <main className="mx-auto max-w-3xl px-6 py-20">
+        <div className="text-center">
+          <h1 className="text-4xl font-semibold tracking-tight">Simple pricing.</h1>
+          <p className="mt-3 text-muted-foreground">$49 per Instagram account per month. Cancel anytime.</p>
+        </div>
+
+        <div className="mt-12 rounded-2xl border border-border bg-secondary/30 p-8 md:p-10">
+          <div className="flex items-baseline justify-between">
+            <div>
+              <div className="text-sm text-muted-foreground">You'll get</div>
+              <div className="mt-1 text-2xl font-semibold">{qty} Instagram {qty === 1 ? "account" : "accounts"}</div>
+            </div>
+            <div className="text-right">
+              <div className="text-4xl font-semibold tracking-tight">${total}</div>
+              <div className="text-sm text-muted-foreground">per month</div>
+            </div>
+          </div>
+
+          <div className="mt-8">
+            <div className="mb-3 flex justify-between text-xs text-muted-foreground">
+              <span>1</span><span>20</span>
+            </div>
+            <Slider value={[qty]} min={1} max={20} step={1} onValueChange={(v) => setQty(v[0] ?? 1)} />
+            <div className="mt-3 flex flex-wrap gap-2">
+              {[1, 2, 5, 10].map((n) => (
+                <button key={n} onClick={() => setQty(n)} className={`rounded-full border px-3 py-1 text-xs transition ${qty === n ? "border-primary bg-primary text-primary-foreground" : "border-border hover:bg-secondary"}`}>{n}</button>
+              ))}
+            </div>
+          </div>
+
+          <ul className="mt-8 space-y-3 text-sm">
+            {[
+              "We create and warm up each account for 3–4 days",
+              "One calendar to schedule every post",
+              "Direct video upload up to 4K",
+              "Human team publishes on schedule",
+              "Cancel or change quantity anytime",
+            ].map((f) => (
+              <li key={f} className="flex items-start gap-2">
+                <Check className="mt-0.5 h-4 w-4 text-primary" />
+                <span>{f}</span>
+              </li>
+            ))}
+          </ul>
+
+          <Button size="lg" className="mt-8 w-full" disabled={loading} onClick={onCheckout}>
+            {loading ? "Opening checkout…" : `Continue — $${total}/month`}
+          </Button>
+          <p className="mt-3 text-center text-xs text-muted-foreground">
+            Secure checkout via Whop. {signedIn ? "" : <><Link to="/auth" className="underline">Sign in</Link> first if you already have an account.</>}
+          </p>
+        </div>
+      </main>
+    </div>
+  );
+}
