@@ -6,8 +6,6 @@ import { Button } from "@/components/ui/button";
 import {
   Calendar as CalendarIcon,
   Users,
-  Film,
-  BarChart3,
   CreditCard,
   Settings,
   LogOut,
@@ -23,8 +21,6 @@ type NavItem = { to: string; label: string; icon: typeof CalendarIcon; exact?: b
 const NAV: NavItem[] = [
   { to: "/dashboard", label: "Calendar", icon: CalendarIcon, exact: true },
   { to: "/dashboard/accounts", label: "Accounts", icon: Users },
-  { to: "/dashboard/library", label: "Video Library", icon: Film },
-  { to: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
   { to: "/dashboard/billing", label: "Billing", icon: CreditCard },
   { to: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
