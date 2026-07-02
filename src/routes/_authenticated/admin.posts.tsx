@@ -6,11 +6,12 @@ import { DashboardShell } from "@/components/dashboard-shell";
 import { AdminGate } from "@/components/admin-gate";
 import { AdminNav } from "./admin.index";
 import { adminListPosts, adminMarkPostCompleted } from "@/lib/admin.functions";
-import { getBunnyDownloadUrl } from "@/lib/bunny.functions";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { Check, Download, ExternalLink } from "lucide-react";
+
 
 export const Route = createFileRoute("/_authenticated/admin/posts")({
   component: AdminPostsPage,
@@ -32,7 +33,6 @@ function PostsTable() {
   const [filter, setFilter] = useState<"scheduled" | "completed" | "all">("scheduled");
   const listFn = useServerFn(adminListPosts);
   const completeFn = useServerFn(adminMarkPostCompleted);
-  const downloadFn = useServerFn(getBunnyDownloadUrl);
   const queryClient = useQueryClient();
 
   const q = useSuspenseQuery(queryOptions({
@@ -48,20 +48,39 @@ function PostsTable() {
 
   async function download(video_id: string | null, library_id: string | null) {
     if (!video_id || !library_id) return;
+    const toastId = toast.loading("Preparing download…");
     try {
-      const { original, embed, ready, status } = await downloadFn({ data: { video_id, library_id } });
-      if (!ready) {
-        toast.message("Video is still processing on Bunny Stream", {
-          description: `Current status: ${status ?? "unknown"}. Try again in a moment.`,
-        });
-        window.open(embed, "_blank");
-        return;
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+      if (!token) throw new Error("Not signed in");
+
+      const res = await fetch(
+        `/api/public/admin/bunny-download?video=${encodeURIComponent(video_id)}&library=${encodeURIComponent(library_id)}`,
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      if (!res.ok) {
+        const msg = await res.text();
+        throw new Error(msg || `Download failed (${res.status})`);
       }
-      window.open(original || embed, "_blank");
+      const blob = await res.blob();
+      const disposition = res.headers.get("content-disposition") ?? "";
+      const match = /filename="?([^";]+)"?/i.exec(disposition);
+      const filename = match?.[1] ?? `${video_id}.mp4`;
+
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(blobUrl);
+      toast.success("Download started", { id: toastId });
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Could not open download");
+      toast.error(e instanceof Error ? e.message : "Could not download", { id: toastId });
     }
   }
+
 
   return (
     <div>
