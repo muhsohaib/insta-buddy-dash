@@ -22,6 +22,7 @@ export const getMyAccount = createServerFn({ method: "GET" })
       .from("instagram_accounts")
       .select("*, account_details(*)")
       .eq("id", data.id)
+      .eq("user_id", context.userId)
       .maybeSingle();
     if (error) throw new Error(error.message);
     return acct;
