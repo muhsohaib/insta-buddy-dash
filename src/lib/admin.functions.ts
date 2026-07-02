@@ -118,13 +118,25 @@ export const adminListPosts = createServerFn({ method: "GET" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     let q = supabaseAdmin
       .from("scheduled_posts")
-      .select("*, instagram_accounts!inner(label, account_details(ig_username, app_name)), profiles!inner(email, full_name)")
+      .select("*, instagram_accounts(label, account_details(ig_username, app_name))")
       .order("scheduled_at", { ascending: true });
     if (data.status !== "all") q = q.eq("status", data.status);
     const { data: rows, error } = await q;
     if (error) throw new Error(error.message);
-    return rows ?? [];
+    const posts = rows ?? [];
+    const userIds = Array.from(new Set(posts.map((p) => p.user_id).filter(Boolean)));
+    let profilesById: Record<string, { email: string | null; full_name: string | null }> = {};
+    if (userIds.length > 0) {
+      const { data: profs, error: pErr } = await supabaseAdmin
+        .from("profiles")
+        .select("id, email, full_name")
+        .in("id", userIds);
+      if (pErr) throw new Error(pErr.message);
+      profilesById = Object.fromEntries((profs ?? []).map((p) => [p.id, { email: p.email, full_name: p.full_name }]));
+    }
+    return posts.map((p) => ({ ...p, profiles: profilesById[p.user_id] ?? null }));
   });
+
 
 export const adminMarkPostCompleted = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
