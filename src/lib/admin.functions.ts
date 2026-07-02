@@ -35,7 +35,8 @@ export const adminListClients = createServerFn({ method: "GET" })
       .select("user_id, quantity, status");
     const { data: accounts } = await supabaseAdmin
       .from("instagram_accounts")
-      .select("user_id, status");
+      .select("id, user_id, status, label, created_at, account_details(*)")
+      .order("created_at", { ascending: true });
 
     return (profiles ?? []).map((p) => {
       const sub = subs?.find((s) => s.user_id === p.id);
@@ -50,6 +51,15 @@ export const adminListClients = createServerFn({ method: "GET" })
           warming_up: accts.filter((a) => a.status === "warming_up").length,
           ready: accts.filter((a) => a.status === "ready").length,
         },
+        account_submissions: accts.map((account) => ({
+          id: account.id,
+          label: account.label,
+          status: account.status,
+          created_at: account.created_at,
+          details: Array.isArray(account.account_details)
+            ? (account.account_details[0] ?? null)
+            : (account.account_details ?? null),
+        })),
       };
     });
   });
