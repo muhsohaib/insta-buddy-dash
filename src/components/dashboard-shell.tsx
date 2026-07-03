@@ -143,12 +143,14 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
             <div className="ml-auto flex items-center gap-2">
               <OrganizationSwitcher
+                hidePersonal
                 afterCreateOrganizationUrl="/dashboard"
                 afterSelectOrganizationUrl="/dashboard"
-                afterLeaveOrganizationUrl="/dashboard"
+                afterLeaveOrganizationUrl="/onboarding"
                 organizationProfileUrl="/dashboard/organization"
                 organizationProfileMode="navigation"
               />
+
               <Button variant="ghost" size="icon" className="relative rounded-xl">
                 <Bell className="h-4 w-4" />
                 <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full gradient-accent" />
