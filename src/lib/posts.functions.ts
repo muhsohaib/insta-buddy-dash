@@ -69,3 +69,27 @@ export const deleteScheduledPost = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+const updatePostSchema = z.object({
+  id: z.string().uuid(),
+  caption: z.string().max(2200).optional(),
+  scheduled_at: z.string().optional(),
+});
+
+export const updateScheduledPost = createServerFn({ method: "POST" })
+  .middleware([requireClerkOrg])
+  .inputValidator((input) => updatePostSchema.parse(input))
+  .handler(async ({ context, data }) => {
+    const patch: Record<string, unknown> = {};
+    if (data.caption !== undefined) patch.caption = data.caption;
+    if (data.scheduled_at !== undefined) patch.scheduled_at = data.scheduled_at;
+    const { data: post, error } = await context.supabase
+      .from("scheduled_posts")
+      .update(patch)
+      .eq("id", data.id)
+      .eq("org_id", context.orgId)
+      .select()
+      .single();
+    if (error) throw new Error(error.message);
+    return post;
+  });
