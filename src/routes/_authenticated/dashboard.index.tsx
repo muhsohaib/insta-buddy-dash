@@ -123,12 +123,7 @@ function DashboardPage() {
       const pendingAccount = accountsQ.data.find((a) => a.status === "pending_details");
       const account = pendingAccount ?? await createAccountFn();
       await queryClient.invalidateQueries({ queryKey: ["accounts"] });
-      if (account.status === "pending_details") {
-        // The account needs setup before it can be used; navigate to its setup page.
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const { useNavigate } = await import("@tanstack/react-router");
-        useNavigate()({ to: "/dashboard/accounts/$id", params: { id: account.id } });
-      }
+      navigate({ to: "/dashboard/accounts/$id", params: { id: account.id } });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not add account");
     } finally {
