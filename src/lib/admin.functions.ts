@@ -2,7 +2,10 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireClerkAuth } from "@/integrations/clerk/auth-middleware";
 
-async function assertAdmin(context: { supabase: { rpc: (fn: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }> }; userId: string }) {
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/integrations/supabase/types";
+
+async function assertAdmin(context: { supabase: SupabaseClient<Database>; userId: string }) {
   const { data, error } = await context.supabase.rpc("has_role", {
     _user_id: context.userId,
     _role: "admin",
