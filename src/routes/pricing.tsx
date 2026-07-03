@@ -1,10 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useAuth } from "@clerk/tanstack-react-start";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Check } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { createWhopCheckout } from "@/lib/whop.functions";
 
@@ -20,18 +20,14 @@ export const Route = createFileRoute("/pricing")({
 
 function Pricing() {
   const [qty, setQty] = useState(1);
-  const [signedIn, setSignedIn] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
-  }, []);
+  const { isSignedIn } = useAuth();
 
   const total = qty * 49;
 
   async function onCheckout() {
-    if (!signedIn) {
+    if (!isSignedIn) {
       sessionStorage.setItem("loomly:postAuthRedirect", "/pricing");
       navigate({ to: "/auth" });
       return;
@@ -98,7 +94,7 @@ function Pricing() {
             {loading ? "Opening checkout…" : `Continue — $${total}/month`}
           </Button>
           <p className="mt-3 text-center text-xs text-muted-foreground">
-            Secure checkout via Whop. {signedIn ? "" : <><Link to="/auth" className="underline">Sign in</Link> first if you already have an account.</>}
+            Secure checkout via Whop. {isSignedIn ? "" : <><Link to="/auth" className="underline">Sign in</Link> first if you already have an account.</>}
           </p>
         </div>
       </main>

@@ -1,15 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@clerk/tanstack-react-start";
 import { Button } from "@/components/ui/button";
 
 export function SiteHeader() {
-  const [signedIn, setSignedIn] = useState(false);
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => setSignedIn(!!session));
-    return () => sub.subscription.unsubscribe();
-  }, []);
+  const { isSignedIn } = useAuth();
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur">
@@ -23,7 +17,7 @@ export function SiteHeader() {
           <a href="/#how" className="text-sm text-muted-foreground hover:text-foreground">How it works</a>
         </nav>
         <div className="flex items-center gap-2">
-          {signedIn ? (
+          {isSignedIn ? (
             <Button asChild size="sm"><Link to="/dashboard">Dashboard</Link></Button>
           ) : (
             <>
