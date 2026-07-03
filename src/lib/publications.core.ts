@@ -204,6 +204,27 @@ export async function markPublishedCore(
   });
 }
 
+export async function getPublicationStatusCore(ctx: PubCtx, id: string) {
+  const { data, error } = await ctx.supabase
+    .from("publications")
+    .select("id, status, scheduled_at, published_at, instagram_post_url, failure_reason, updated_at")
+    .eq("id", id)
+    .eq("org_id", ctx.orgId)
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  if (!data) throw new Error("Publication not found");
+  return data;
+}
+
+export async function cancelPublicationCore(ctx: PubCtx, id: string) {
+  const current = await getPublicationCore(ctx, id);
+  if (LOCKED_STATUSES.includes(current.status as PublicationStatus)) {
+    throw new Error("Cannot cancel a publication that is publishing or published");
+  }
+  await logEvent(ctx, id, "cancelled", { previous_status: current.status });
+  return deletePublicationCore(ctx, id);
+}
+
 // -------- Admin queue --------
 
 export async function adminListPublicationsCore(
