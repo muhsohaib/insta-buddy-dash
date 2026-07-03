@@ -8,57 +8,53 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { PricingPanel } from "@/components/pricing-panel";
-import { SettingsPanel } from "@/components/settings-panel";
-import { WorkspaceSettingsPanel } from "@/components/workspace-settings-panel";
+import { SettingsPanel, type SettingsTab } from "@/components/settings-panel";
 
 export type ModalKey = "pricing" | "settings" | "workspace-settings";
 
-const HASH_MODAL_KEYS: Exclude<ModalKey, "workspace-settings">[] = ["pricing", "settings"];
+const HASH_MODAL_KEYS: ("pricing" | "settings")[] = ["pricing", "settings"];
 
-function parseHash(raw: string): Exclude<ModalKey, "workspace-settings"> | null {
+function parseHash(raw: string): "pricing" | "settings" | null {
   const clean = (raw ?? "").replace(/^#/, "").toLowerCase();
   return (HASH_MODAL_KEYS as string[]).includes(clean)
-    ? (clean as Exclude<ModalKey, "workspace-settings">)
+    ? (clean as "pricing" | "settings")
     : null;
 }
 
-/** Workspace-settings uses a local store instead of URL hash because Clerk's
- *  <OrganizationProfile routing="hash"> hijacks the hash to route between
- *  its own tabs (e.g. #/members), which would otherwise close the modal. */
-let wsOpen = false;
-const wsListeners = new Set<() => void>();
-function setWorkspaceSettingsOpen(next: boolean) {
-  if (wsOpen === next) return;
-  wsOpen = next;
-  wsListeners.forEach((l) => l());
+/** Local store controls which tab the settings modal opens on. Using a store
+ *  (not URL hash) because Clerk components inside the modal may hijack the
+ *  hash for their own subroutes. */
+let settingsTab: SettingsTab = "account";
+const tabListeners = new Set<() => void>();
+function setSettingsTab(next: SettingsTab) {
+  if (settingsTab === next) return;
+  settingsTab = next;
+  tabListeners.forEach((l) => l());
 }
-function subscribeWorkspaceSettings(cb: () => void) {
-  wsListeners.add(cb);
-  return () => wsListeners.delete(cb);
+function subscribeSettingsTab(cb: () => void) {
+  tabListeners.add(cb);
+  return () => tabListeners.delete(cb);
 }
-function useWorkspaceSettingsOpen() {
+function useSettingsTab() {
   return useSyncExternalStore(
-    subscribeWorkspaceSettings,
-    () => wsOpen,
-    () => false,
+    subscribeSettingsTab,
+    () => settingsTab,
+    () => settingsTab,
   );
 }
 
-/** Opens a URL-hash driven modal for #pricing / #settings while keeping the
- *  underlying dashboard route mounted. Workspace settings is opened via a
- *  local store (see note above). */
 export function DashboardModals() {
   const navigate = useNavigate();
   const hash = useRouterState({ select: (s) => s.location.hash });
   const active = parseHash(hash);
-  const wsSettingsOpen = useWorkspaceSettingsOpen();
+  const tab = useSettingsTab();
 
   const close = useCallback(() => {
     navigate({ to: ".", hash: "", replace: false });
   }, [navigate]);
 
   useEffect(() => {
-    // no-op; kept for future analytics of modal open state
+    if (active !== "settings") setSettingsTab("account");
   }, [active]);
 
   return (
@@ -76,43 +72,29 @@ export function DashboardModals() {
       </Dialog>
 
       <Dialog open={active === "settings"} onOpenChange={(o) => (!o ? close() : undefined)}>
-        <DialogContent className="max-w-xl">
-          <DialogHeader>
-            <DialogTitle>Settings</DialogTitle>
-            <DialogDescription>Manage your account preferences.</DialogDescription>
-          </DialogHeader>
-          <SettingsPanel />
-        </DialogContent>
-      </Dialog>
-
-      <Dialog
-        open={wsSettingsOpen}
-        onOpenChange={(o) => setWorkspaceSettingsOpen(o)}
-      >
-        <DialogContent className="max-w-5xl w-[calc(100vw-2rem)] max-h-[85vh] overflow-y-auto overflow-x-hidden">
-          <DialogHeader>
-            <DialogTitle>Workspace settings</DialogTitle>
-            <DialogDescription>
-              Invite teammates, manage roles, and update workspace details.
-            </DialogDescription>
-          </DialogHeader>
-          <WorkspaceSettingsPanel />
+        <DialogContent className="max-w-4xl w-[calc(100vw-2rem)] max-h-[85vh] overflow-hidden p-0">
+          <SettingsPanel
+            initialTab={tab}
+            onRequestClose={close}
+          />
         </DialogContent>
       </Dialog>
     </>
   );
 }
 
-
-/** Helper to build hash-navigation props for a specific modal. */
+/** Opens a modal. `workspace-settings` opens the shared Settings modal on
+ *  the Workspace tab. */
 export function useOpenModal() {
   const navigate = useNavigate();
   return useCallback(
     (key: ModalKey) => {
       if (key === "workspace-settings") {
-        setWorkspaceSettingsOpen(true);
+        setSettingsTab("workspace");
+        navigate({ to: ".", hash: "settings" });
         return;
       }
+      if (key === "settings") setSettingsTab("account");
       navigate({ to: ".", hash: key });
     },
     [navigate],
