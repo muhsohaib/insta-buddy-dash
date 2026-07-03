@@ -183,9 +183,19 @@ function DashboardPage() {
         {accountsQ.data.length === 0 ? (
           <EmptyCalendar onCreate={onEmptyCreateAccount} />
         ) : (
-          <CalendarGrid posts={postsQueries.data} onCreate={onCreateFromDay} />
+          <CalendarGrid
+            posts={postsQueries.data}
+            onCreate={onCreateFromDay}
+            onEditPost={(p) => setEditingPost(p)}
+          />
         )}
       </div>
+
+      <EditPostDialog
+        post={editingPost}
+        onClose={() => setEditingPost(null)}
+        onChanged={() => queryClient.invalidateQueries({ queryKey: ["posts"] })}
+      />
 
       {/* Dialogs */}
       <CreateAccountDialog open={showCreateAccount} onClose={() => setShowCreateAccount(false)} state={gateState} />
