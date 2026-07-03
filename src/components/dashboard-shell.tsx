@@ -53,10 +53,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   const email = user?.primaryEmailAddress?.emailAddress ?? "";
-  const name =
-    [user?.firstName, user?.lastName].filter(Boolean).join(" ").trim() ||
-    user?.username ||
-    "";
+
 
   async function signOut() {
     await queryClient.cancelQueries();
