@@ -6,6 +6,15 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 type Ctx = { supabase: SupabaseClient; orgId: string; userId: string | null };
 
+export async function adminAssert(context: { supabase: SupabaseClient; userId: string }) {
+  const { data, error } = await context.supabase.rpc("has_role", {
+    _user_id: context.userId,
+    _role: "admin",
+  });
+  if (error) throw new Error(error.message);
+  if (!data) throw new Error("Forbidden");
+}
+
 // ---------- Catalog ----------
 
 export async function listProductsCore({ supabase }: { supabase: SupabaseClient }) {
