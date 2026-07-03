@@ -171,16 +171,11 @@ export const adminMarkPublished = createServerFn({ method: "POST" })
   )
   .handler(async ({ context, data }) => {
     await adminAssert(context);
-    const ctx = {
-      supabase: context.supabase as never,
-      orgId: "*", // admin skip
-      userId: context.userId,
-      actor: "user" as const,
-    };
-    // Skip org check by using core update via admin transition
     return adminTransitionPublicationCore(context.supabase, data.id, "published", {
       instagram_post_url: data.instagram_post_url ?? null,
     });
-    void ctx;
-    void markPublishedCore;
   });
+
+// keep unused imports referenced for future direct use
+void markPublishedCore;
+
