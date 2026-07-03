@@ -72,12 +72,24 @@ export function SettingsPanel({ initialTab = "account", onRequestClose }: Settin
             icon={<Building2 className="h-4 w-4" />}
             label="Workspace"
           />
+          <TabButton
+            active={tab === "billing"}
+            onClick={() => setTab("billing")}
+            icon={<CreditCard className="h-4 w-4" />}
+            label="Billing"
+          />
         </nav>
       </aside>
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-6">
-        {tab === "account" ? <AccountTab /> : <WorkspaceTab onClosed={onRequestClose} />}
+        {tab === "account" ? (
+          <AccountTab />
+        ) : tab === "workspace" ? (
+          <WorkspaceTab onClosed={onRequestClose} />
+        ) : (
+          <BillingTab />
+        )}
       </div>
     </div>
   );
