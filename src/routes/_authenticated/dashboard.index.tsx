@@ -139,21 +139,11 @@ function DashboardPage() {
 
       {/* Dialogs */}
       <CreateAccountDialog open={showCreateAccount} onClose={() => setShowCreateAccount(false)} state={gateState} />
-      <PickAccountDialog
-        open={showPicker}
-        onClose={() => setShowPicker(false)}
-        accounts={pickable}
-        onPickReady={(id) => {
-          setScheduleAccountId(id);
-          setOpenDate(pickerDate ?? new Date());
-        }}
-      />
-      <SchedulePostDialog
+      <CreatePostDialog
         open={openDate !== null}
         initialDate={openDate}
         accounts={readyAccounts}
-        defaultAccountId={scheduleAccountId}
-        onClose={() => { setOpenDate(null); setScheduleAccountId(undefined); }}
+        onClose={() => setOpenDate(null)}
         onCreated={() => {
           queryClient.invalidateQueries({ queryKey: ["posts"] });
         }}
