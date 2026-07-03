@@ -86,7 +86,7 @@ export const createWhopCheckout = createServerFn({ method: "POST" })
           currency,
           plan_type: planType,
           release_method: asString(basePlan.release_method) ?? "buy_now",
-          initial_price: total,
+          initial_price: planType === "renewal" ? 0 : total,
           renewal_price: planType === "renewal" ? total : null,
           billing_period: planType === "renewal" ? billingPeriod : null,
           expiration_days: typeof basePlan.expiration_days === "number" ? basePlan.expiration_days : null,
