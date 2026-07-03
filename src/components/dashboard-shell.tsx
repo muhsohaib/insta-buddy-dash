@@ -12,6 +12,7 @@ import {
   Plus,
   Sparkles,
   Check,
+  Package,
 } from "lucide-react";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
