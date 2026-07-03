@@ -65,10 +65,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     router.navigate({ to: "/", replace: true });
   }
 
-  const initials = (name || email || "?")
-    .split(/[\s@.]+/)
-    .filter(Boolean)
-    .slice(0, 2)
+
     .map((s) => s[0]?.toUpperCase())
     .join("");
 
