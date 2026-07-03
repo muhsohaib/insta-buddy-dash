@@ -58,14 +58,17 @@ export const requireClerkAuth = createMiddleware({ type: "function" }).server(
   async ({ next }) => next({ context: await verifyClerk() }),
 );
 
+// Every resource belongs to a workspace. A workspace is either a Clerk
+// Organization (when one is active) or the user's personal workspace,
+// identified by a stable `personal:<userId>` synthetic id. This lets all
+// downstream queries key on a single `org_id` column without a separate
+// code path for "no org".
 export const requireClerkOrg = createMiddleware({ type: "function" }).server(
   async ({ next }) => {
     const ctx = await verifyClerk();
-    if (!ctx.orgId) {
-      throw new Error("No active organization. Create or select a workspace first.");
-    }
+    const workspaceId = ctx.orgId ?? `personal:${ctx.userId}`;
     return next({
-      context: { ...ctx, orgId: ctx.orgId as string },
+      context: { ...ctx, orgId: workspaceId, isPersonalWorkspace: !ctx.orgId },
     });
   },
 );
