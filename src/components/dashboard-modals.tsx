@@ -9,19 +9,20 @@ import {
 } from "@/components/ui/dialog";
 import { PricingPanel } from "@/components/pricing-panel";
 import { SettingsPanel } from "@/components/settings-panel";
+import { WorkspaceSettingsPanel } from "@/components/workspace-settings-panel";
 
-export type ModalKey = "pricing" | "settings";
+export type ModalKey = "pricing" | "settings" | "workspace-settings";
 
-const MODAL_KEYS: ModalKey[] = ["pricing", "settings"];
+const MODAL_KEYS: ModalKey[] = ["pricing", "settings", "workspace-settings"];
 
 function parseHash(raw: string): ModalKey | null {
   const clean = (raw ?? "").replace(/^#/, "").toLowerCase();
   return (MODAL_KEYS as string[]).includes(clean) ? (clean as ModalKey) : null;
 }
 
-/** Opens a URL-hash driven modal for #pricing / #settings while keeping the
- *  underlying dashboard route mounted. Browser back/forward toggles the modal
- *  through hash history entries. */
+/** Opens a URL-hash driven modal for #pricing / #settings / #workspace-settings
+ *  while keeping the underlying dashboard route mounted. Browser back/forward
+ *  toggles the modal through hash history entries. */
 export function DashboardModals() {
   const navigate = useNavigate();
   const hash = useRouterState({ select: (s) => s.location.hash });
@@ -31,7 +32,6 @@ export function DashboardModals() {
     navigate({ to: ".", hash: "", replace: false });
   }, [navigate]);
 
-  // Prevent body scroll shift is handled by Radix; nothing else to do here.
   useEffect(() => {
     // no-op; kept for future analytics of modal open state
   }, [active]);
@@ -59,9 +59,25 @@ export function DashboardModals() {
           <SettingsPanel />
         </DialogContent>
       </Dialog>
+
+      <Dialog
+        open={active === "workspace-settings"}
+        onOpenChange={(o) => (!o ? close() : undefined)}
+      >
+        <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Workspace settings</DialogTitle>
+            <DialogDescription>
+              Invite teammates, manage roles, and update workspace details.
+            </DialogDescription>
+          </DialogHeader>
+          <WorkspaceSettingsPanel />
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
+
 
 /** Helper to build hash-navigation props for a specific modal. */
 export function useOpenModal() {
