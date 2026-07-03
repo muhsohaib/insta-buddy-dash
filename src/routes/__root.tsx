@@ -7,7 +7,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { ClerkProvider, useAuth } from "@clerk/tanstack-react-start";
 
 import appCss from "../styles.css?url";
@@ -97,12 +97,22 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const { publishableKey } = Route.useLoaderData();
+  const [pageRestoreKey, setPageRestoreKey] = useState(0);
+
+  useEffect(() => {
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) setPageRestoreKey((key) => key + 1);
+    };
+
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, []);
 
   return (
     <ClerkProvider publishableKey={publishableKey} localization={workspaceLocalization}>
       <QueryClientProvider client={queryClient}>
         <ClerkAuthSync />
-        <Outlet />
+        <Outlet key={pageRestoreKey} />
         <Toaster position="top-right" />
       </QueryClientProvider>
     </ClerkProvider>
