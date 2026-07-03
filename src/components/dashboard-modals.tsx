@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { PricingPanel } from "@/components/pricing-panel";
+
 import { SettingsPanel, type SettingsTab } from "@/components/settings-panel";
 
 export type ModalKey = "pricing" | "settings" | "workspace-settings";
