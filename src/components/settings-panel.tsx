@@ -39,9 +39,10 @@ import {
 import { getMyProfile, updateMyProfile } from "@/lib/profile.functions";
 import { inviteOrgMember } from "@/lib/organization.functions";
 import { getMySubscription } from "@/lib/accounts.functions";
+import { listApiKeys, createApiKey, revokeApiKey } from "@/lib/api-keys.functions";
 import { cn } from "@/lib/utils";
 
-export type SettingsTab = "account" | "workspace" | "billing";
+export type SettingsTab = "account" | "workspace" | "billing" | "api";
 
 interface SettingsPanelProps {
   initialTab?: SettingsTab;
