@@ -60,16 +60,25 @@ export function DashboardModals() {
   return (
     <>
       <Dialog open={active === "pricing"} onOpenChange={(o) => (!o ? close() : undefined)}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Upgrade</DialogTitle>
+            <DialogTitle>Start a new order</DialogTitle>
             <DialogDescription>
-              $49 per Instagram account per month. Change quantity anytime.
+              Every batch of accounts is one order. Pick how many you need on the next step.
             </DialogDescription>
           </DialogHeader>
-          <PricingPanel compact />
+          <div className="flex justify-end">
+            <a
+              href="/dashboard/orders/new"
+              onClick={close}
+              className="inline-flex items-center rounded-xl gradient-accent px-4 py-2 text-sm font-medium text-background"
+            >
+              Continue
+            </a>
+          </div>
         </DialogContent>
       </Dialog>
+
 
       <Dialog open={active === "settings"} onOpenChange={(o) => (!o ? close() : undefined)}>
         <DialogContent className="max-w-4xl w-[calc(100vw-2rem)] max-h-[85vh] overflow-hidden p-0">
