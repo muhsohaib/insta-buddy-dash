@@ -219,32 +219,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               <div className="h-7 w-7 rounded-lg gradient-accent" />
               <span className="text-base font-semibold tracking-tight">Loomly</span>
             </div>
-
-            <div className="relative hidden max-w-md flex-1 md:block">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <input
-                type="search"
-                placeholder="Search accounts, posts…"
-                className="h-10 w-full rounded-xl border border-hairline bg-surface pl-9 pr-3 text-sm outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-ring/40"
-              />
-            </div>
-
-            <div className="ml-auto flex items-center gap-2">
-              <Button variant="ghost" size="icon" className="relative rounded-xl">
-                <Bell className="h-4 w-4" />
-                <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full gradient-accent" />
-              </Button>
-              <div className="flex items-center gap-3 rounded-full border border-hairline bg-background pl-1 pr-3 py-1">
-                <div className="grid h-7 w-7 place-items-center rounded-full gradient-accent text-xs font-semibold text-background">
-                  {initials || "U"}
-                </div>
-                <div className="hidden text-xs leading-tight sm:block">
-                  <div className="font-medium text-foreground">{name || "You"}</div>
-                  <div className="text-muted-foreground">{email}</div>
-                </div>
-              </div>
-            </div>
           </div>
+
+
 
           {/* Mobile nav */}
           <div className="flex gap-1 overflow-x-auto border-t border-hairline px-3 py-2 md:hidden">
