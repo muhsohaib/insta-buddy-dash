@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { createHash } from "crypto";
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { requireClerkAuth } from "@/integrations/clerk/auth-middleware";
 
 // Resolve the Bunny Stream CDN hostname from env. Never derive from the
 // Library ID — Bunny assigns a unique CDN hostname per library
@@ -20,7 +20,7 @@ function getCdnHostname(): string {
 // Creates a Bunny Stream video object and returns the TUS upload envelope
 // so the browser can upload directly to Bunny (resumable, no server bandwidth).
 export const createBunnyUpload = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireClerkAuth])
   .inputValidator((input) => z.object({ title: z.string().min(1).max(200) }).parse(input))
   .handler(async ({ data }) => {
     const libraryId = process.env.BUNNY_STREAM_LIBRARY_ID;
@@ -61,7 +61,7 @@ export const createBunnyUpload = createServerFn({ method: "POST" })
 // Also reports the current processing status so the UI can wait for encoding
 // to finish before opening the CDN URL.
 export const getBunnyDownloadUrl = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireClerkAuth])
   .inputValidator((input) =>
     z.object({ video_id: z.string().min(1), library_id: z.string().min(1) }).parse(input),
   )

@@ -1,9 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { requireClerkAuth } from "@/integrations/clerk/auth-middleware";
 
 export const listMyAccounts = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireClerkAuth])
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("instagram_accounts")
@@ -15,7 +15,7 @@ export const listMyAccounts = createServerFn({ method: "GET" })
   });
 
 export const getMyAccount = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireClerkAuth])
   .inputValidator((input) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ context, data }) => {
     const { data: acct, error } = await context.supabase
@@ -29,7 +29,7 @@ export const getMyAccount = createServerFn({ method: "GET" })
   });
 
 export const createAdditionalAccount = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireClerkAuth])
   .handler(async ({ context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { count, error: countErr } = await supabaseAdmin
@@ -66,7 +66,7 @@ const detailsSchema = z.object({
 });
 
 export const submitAccountDetails = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireClerkAuth])
   .inputValidator((input) => detailsSchema.parse(input))
   .handler(async ({ context, data }) => {
     const { account_id, ...rest } = data;
@@ -84,7 +84,7 @@ export const submitAccountDetails = createServerFn({ method: "POST" })
   });
 
 export const getMySubscription = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireClerkAuth])
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("subscriptions")
@@ -97,7 +97,7 @@ export const getMySubscription = createServerFn({ method: "GET" })
   });
 
 export const uploadPhotoPath = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireClerkAuth])
   .inputValidator((input) => z.object({ ext: z.string().max(5) }).parse(input))
   .handler(async ({ context, data }) => {
     const path = `${context.userId}/${crypto.randomUUID()}.${data.ext.replace(/[^a-z0-9]/gi, "")}`;
@@ -109,7 +109,7 @@ export const uploadPhotoPath = createServerFn({ method: "POST" })
   });
 
 export const finalizePhotoUrl = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireClerkAuth])
   .inputValidator((input) => z.object({ path: z.string().min(1).max(500) }).parse(input))
   .handler(async ({ data }) => {
     // 10-year signed URL so private-bucket photos still render for owner and admins.

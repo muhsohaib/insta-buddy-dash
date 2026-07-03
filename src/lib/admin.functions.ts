@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { requireClerkAuth } from "@/integrations/clerk/auth-middleware";
 
 async function assertAdmin(context: { supabase: import("@supabase/supabase-js").SupabaseClient; userId: string }) {
   const { data, error } = await context.supabase.rpc("has_role", {
@@ -12,7 +12,7 @@ async function assertAdmin(context: { supabase: import("@supabase/supabase-js").
 }
 
 export const amIAdmin = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireClerkAuth])
   .handler(async ({ context }) => {
     const { data } = await context.supabase.rpc("has_role", {
       _user_id: context.userId,
@@ -22,7 +22,7 @@ export const amIAdmin = createServerFn({ method: "GET" })
   });
 
 export const adminListClients = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireClerkAuth])
   .handler(async ({ context }) => {
     await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -65,7 +65,7 @@ export const adminListClients = createServerFn({ method: "GET" })
   });
 
 export const adminListAccounts = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireClerkAuth])
   .handler(async ({ context }) => {
     await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -89,7 +89,7 @@ export const adminListAccounts = createServerFn({ method: "GET" })
   });
 
 export const adminUpdateAccountStatus = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireClerkAuth])
   .inputValidator((input) =>
     z
       .object({
@@ -109,7 +109,7 @@ export const adminUpdateAccountStatus = createServerFn({ method: "POST" })
   });
 
 export const adminListPosts = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireClerkAuth])
   .inputValidator((input) =>
     z.object({ status: z.enum(["scheduled", "completed", "all"]).default("scheduled") }).parse(input),
   )
@@ -139,7 +139,7 @@ export const adminListPosts = createServerFn({ method: "GET" })
 
 
 export const adminMarkPostCompleted = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireClerkAuth])
   .inputValidator((input) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ context, data }) => {
     await assertAdmin(context);
