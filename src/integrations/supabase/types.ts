@@ -76,6 +76,45 @@ export type Database = {
           },
         ]
       }
+      api_keys: {
+        Row: {
+          created_at: string
+          created_by_user_id: string
+          expires_at: string | null
+          id: string
+          label: string
+          last_used_at: string | null
+          org_id: string
+          prefix: string
+          revoked_at: string | null
+          token_hash: string
+        }
+        Insert: {
+          created_at?: string
+          created_by_user_id: string
+          expires_at?: string | null
+          id?: string
+          label: string
+          last_used_at?: string | null
+          org_id: string
+          prefix: string
+          revoked_at?: string | null
+          token_hash: string
+        }
+        Update: {
+          created_at?: string
+          created_by_user_id?: string
+          expires_at?: string | null
+          id?: string
+          label?: string
+          last_used_at?: string | null
+          org_id?: string
+          prefix?: string
+          revoked_at?: string | null
+          token_hash?: string
+        }
+        Relationships: []
+      }
       instagram_accounts: {
         Row: {
           created_at: string
