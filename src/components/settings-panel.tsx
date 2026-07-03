@@ -32,6 +32,9 @@ import {
   Mail,
   X,
   Pencil,
+  Key,
+  Copy,
+  Check,
 } from "lucide-react";
 import { getMyProfile, updateMyProfile } from "@/lib/profile.functions";
 import { inviteOrgMember } from "@/lib/organization.functions";
