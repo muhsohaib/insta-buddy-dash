@@ -28,6 +28,7 @@ import { Route as AuthenticatedAdminAccountsRouteImport } from './routes/_authen
 import { Route as AuthenticatedDashboardAccountsIndexRouteImport } from './routes/_authenticated/dashboard.accounts.index'
 import { Route as ApiPublicWebhooksWhopRouteImport } from './routes/api/public/webhooks/whop'
 import { Route as ApiPublicAdminBunnyDownloadRouteImport } from './routes/api/public/admin/bunny-download'
+import { Route as AuthenticatedDashboardOrdersNewRouteImport } from './routes/_authenticated/dashboard.orders.new'
 import { Route as AuthenticatedDashboardAccountsIdRouteImport } from './routes/_authenticated/dashboard.accounts.$id'
 
 const SignUpRoute = SignUpRouteImport.update({
@@ -133,6 +134,12 @@ const ApiPublicAdminBunnyDownloadRoute =
     path: '/api/public/admin/bunny-download',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedDashboardOrdersNewRoute =
+  AuthenticatedDashboardOrdersNewRouteImport.update({
+    id: '/dashboard/orders/new',
+    path: '/dashboard/orders/new',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardAccountsIdRoute =
   AuthenticatedDashboardAccountsIdRouteImport.update({
     id: '/dashboard/accounts/$id',
@@ -157,6 +164,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/accounts/$id': typeof AuthenticatedDashboardAccountsIdRoute
+  '/dashboard/orders/new': typeof AuthenticatedDashboardOrdersNewRoute
   '/api/public/admin/bunny-download': typeof ApiPublicAdminBunnyDownloadRoute
   '/api/public/webhooks/whop': typeof ApiPublicWebhooksWhopRoute
   '/dashboard/accounts/': typeof AuthenticatedDashboardAccountsIndexRoute
@@ -178,6 +186,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/accounts/$id': typeof AuthenticatedDashboardAccountsIdRoute
+  '/dashboard/orders/new': typeof AuthenticatedDashboardOrdersNewRoute
   '/api/public/admin/bunny-download': typeof ApiPublicAdminBunnyDownloadRoute
   '/api/public/webhooks/whop': typeof ApiPublicWebhooksWhopRoute
   '/dashboard/accounts': typeof AuthenticatedDashboardAccountsIndexRoute
@@ -201,6 +210,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/dashboard/accounts/$id': typeof AuthenticatedDashboardAccountsIdRoute
+  '/_authenticated/dashboard/orders/new': typeof AuthenticatedDashboardOrdersNewRoute
   '/api/public/admin/bunny-download': typeof ApiPublicAdminBunnyDownloadRoute
   '/api/public/webhooks/whop': typeof ApiPublicWebhooksWhopRoute
   '/_authenticated/dashboard/accounts/': typeof AuthenticatedDashboardAccountsIndexRoute
@@ -224,6 +234,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/dashboard/'
     | '/dashboard/accounts/$id'
+    | '/dashboard/orders/new'
     | '/api/public/admin/bunny-download'
     | '/api/public/webhooks/whop'
     | '/dashboard/accounts/'
@@ -245,6 +256,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/dashboard'
     | '/dashboard/accounts/$id'
+    | '/dashboard/orders/new'
     | '/api/public/admin/bunny-download'
     | '/api/public/webhooks/whop'
     | '/dashboard/accounts'
@@ -267,6 +279,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/'
     | '/_authenticated/dashboard/'
     | '/_authenticated/dashboard/accounts/$id'
+    | '/_authenticated/dashboard/orders/new'
     | '/api/public/admin/bunny-download'
     | '/api/public/webhooks/whop'
     | '/_authenticated/dashboard/accounts/'
@@ -418,6 +431,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicAdminBunnyDownloadRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/dashboard/orders/new': {
+      id: '/_authenticated/dashboard/orders/new'
+      path: '/dashboard/orders/new'
+      fullPath: '/dashboard/orders/new'
+      preLoaderRoute: typeof AuthenticatedDashboardOrdersNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard/accounts/$id': {
       id: '/_authenticated/dashboard/accounts/$id'
       path: '/dashboard/accounts/$id'
@@ -440,6 +460,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
   AuthenticatedDashboardAccountsIdRoute: typeof AuthenticatedDashboardAccountsIdRoute
+  AuthenticatedDashboardOrdersNewRoute: typeof AuthenticatedDashboardOrdersNewRoute
   AuthenticatedDashboardAccountsIndexRoute: typeof AuthenticatedDashboardAccountsIndexRoute
 }
 
@@ -456,6 +477,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
   AuthenticatedDashboardAccountsIdRoute: AuthenticatedDashboardAccountsIdRoute,
+  AuthenticatedDashboardOrdersNewRoute: AuthenticatedDashboardOrdersNewRoute,
   AuthenticatedDashboardAccountsIndexRoute:
     AuthenticatedDashboardAccountsIndexRoute,
 }
