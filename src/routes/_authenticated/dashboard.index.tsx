@@ -74,10 +74,7 @@ function DashboardPage() {
   );
 
   const [openDate, setOpenDate] = useState<Date | null>(null);
-  const [scheduleAccountId, setScheduleAccountId] = useState<string | undefined>(undefined);
   const [showCreateAccount, setShowCreateAccount] = useState(false);
-  const [showPicker, setShowPicker] = useState(false);
-  const [pickerDate, setPickerDate] = useState<Date | null>(null);
   const [creatingAccount, setCreatingAccount] = useState(false);
   const [editingPost, setEditingPost] = useState<EditablePost | null>(null);
   const navigate = useNavigate();
@@ -87,38 +84,13 @@ function DashboardPage() {
   const hasCreating = accountsQ.data.some((a) => a.status === "creating");
   const gateState: AccountGateState = hasWarming ? "warming_up" : hasCreating ? "creating" : "none";
 
-  const pickable: PickableAccount[] = useMemo(
-    () =>
-      accountsQ.data
-        .filter((a) => ["ready", "warming_up", "creating", "pending_details"].includes(a.status))
-        .map((a) => {
-          const d = Array.isArray(a.account_details) ? a.account_details[0] : a.account_details;
-          return {
-            id: a.id,
-            username: d?.ig_username ?? null,
-            label: a.label ?? d?.app_name ?? null,
-            status: a.status,
-            photo: d?.profile_photo_url ?? null,
-          };
-        }),
-    [accountsQ.data]
-  );
-
   function onCreateFromDay(date: Date) {
-    // No accounts at all → gate to pricing / status.
-    if (pickable.length === 0) {
+    // No ready accounts → gate to pricing / status.
+    if (!hasReady) {
       setShowCreateAccount(true);
       return;
     }
-    // Only one account and it's ready → straight to scheduler.
-    if (pickable.length === 1 && hasReady) {
-      setScheduleAccountId(pickable[0].id);
-      setOpenDate(date);
-      return;
-    }
-    // Multiple accounts (or a single non-ready one) → let the user pick.
-    setPickerDate(date);
-    setShowPicker(true);
+    setOpenDate(date);
   }
 
   async function onCreateAccount() {
