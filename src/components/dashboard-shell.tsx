@@ -1,29 +1,38 @@
 import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { useAuth, useClerk, useUser, OrganizationSwitcher } from "@clerk/tanstack-react-start";
+import { useAuth, useClerk, useUser, useOrganization, useOrganizationList } from "@clerk/tanstack-react-start";
 import { Button } from "@/components/ui/button";
 import {
   Calendar as CalendarIcon,
   Users,
-  CreditCard,
   Settings,
   LogOut,
   Shield,
   Search,
   Bell,
   Building2,
+  ChevronDown,
+  Plus,
+  Sparkles,
+  Check,
 } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { amIAdmin } from "@/lib/admin.functions";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { DashboardModals, useOpenModal } from "@/components/dashboard-modals";
 
 type NavItem = { to: string; label: string; icon: typeof CalendarIcon; exact?: boolean };
 const NAV: NavItem[] = [
   { to: "/dashboard", label: "Calendar", icon: CalendarIcon, exact: true },
   { to: "/dashboard/accounts", label: "Accounts", icon: Users },
-  { to: "/dashboard/organization", label: "Workspace", icon: Building2 },
-  { to: "/dashboard/billing", label: "Billing", icon: CreditCard },
-  { to: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
@@ -32,7 +41,12 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const clerk = useClerk();
   const { isSignedIn } = useAuth();
   const { user } = useUser();
+  const { organization } = useOrganization();
+  const { userMemberships, setActive } = useOrganizationList({
+    userMemberships: { infinite: true },
+  });
   const amIAdminFn = useServerFn(amIAdmin);
+  const openModal = useOpenModal();
   const { data: admin } = useQuery({
     queryKey: ["me", "isAdmin"],
     queryFn: () => amIAdminFn(),
@@ -60,18 +74,73 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     .map((s) => s[0]?.toUpperCase())
     .join("");
 
+  const workspaceName = organization?.name ?? "Personal workspace";
+  const workspaceInitial = workspaceName.charAt(0).toUpperCase();
+  const memberships = userMemberships?.data ?? [];
+
   return (
     <div className="min-h-screen bg-surface">
       {/* Sidebar */}
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 border-r border-hairline bg-sidebar md:flex md:flex-col">
-        <div className="flex h-16 items-center gap-2 px-5">
-          <div className="relative h-7 w-7 overflow-hidden rounded-lg gradient-accent shadow-[0_4px_12px_-4px_var(--color-cyan-accent)]">
-            <div className="absolute inset-[2px] rounded-md bg-background/40" />
-          </div>
-          <span className="text-base font-semibold tracking-tight">Loomly</span>
+        {/* Workspace switcher (top left) */}
+        <div className="px-3 pt-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex w-full items-center gap-2 rounded-xl border border-hairline bg-background/60 px-2.5 py-2 text-left transition hover:bg-secondary">
+                <span className="grid h-8 w-8 place-items-center rounded-lg gradient-accent text-xs font-semibold text-background">
+                  {workspaceInitial}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-sm font-medium">{workspaceName}</span>
+                  <span className="block truncate text-xs text-muted-foreground">{email}</span>
+                </span>
+                <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-64">
+              {memberships.length > 0 && (
+                <>
+                  <DropdownMenuLabel className="text-xs text-muted-foreground">
+                    Workspaces
+                  </DropdownMenuLabel>
+                  {memberships.map((m) => {
+                    const active = m.organization.id === organization?.id;
+                    return (
+                      <DropdownMenuItem
+                        key={m.organization.id}
+                        onSelect={() => {
+                          if (!active && setActive) {
+                            setActive({ organization: m.organization.id }).catch(() => {});
+                          }
+                        }}
+                      >
+                        <Building2 className="mr-2 h-4 w-4" />
+                        <span className="flex-1 truncate">{m.organization.name}</span>
+                        {active && <Check className="ml-2 h-4 w-4 text-primary" />}
+                      </DropdownMenuItem>
+                    );
+                  })}
+                  <DropdownMenuSeparator />
+                </>
+              )}
+              <DropdownMenuItem onSelect={() => clerk.openCreateOrganization?.()}>
+                <Plus className="mr-2 h-4 w-4" /> Create new workspace
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => openModal("pricing")}>
+                <Sparkles className="mr-2 h-4 w-4" /> Upgrade
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => openModal("settings")}>
+                <Settings className="mr-2 h-4 w-4" /> Settings
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onSelect={signOut}>
+                <LogOut className="mr-2 h-4 w-4" /> Sign out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
-        <nav className="flex-1 space-y-1 px-3 py-4">
+        <nav className="mt-4 flex-1 space-y-1 px-3 py-2">
           {NAV.map((item) => {
             const active = item.exact ? pathname === item.to : pathname.startsWith(item.to);
             const Icon = item.icon;
@@ -109,7 +178,26 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           )}
         </nav>
 
-        <div className="border-t border-hairline p-3">
+        {/* Bottom-left utility nav */}
+        <div className="border-t border-hairline p-3 space-y-1">
+          <button
+            onClick={() => openModal("pricing")}
+            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+          >
+            <span className="grid h-8 w-8 place-items-center rounded-lg bg-secondary">
+              <Sparkles className="h-4 w-4" />
+            </span>
+            Upgrade
+          </button>
+          <button
+            onClick={() => openModal("settings")}
+            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+          >
+            <span className="grid h-8 w-8 place-items-center rounded-lg bg-secondary">
+              <Settings className="h-4 w-4" />
+            </span>
+            Settings
+          </button>
           <button
             onClick={signOut}
             className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-muted-foreground transition hover:bg-secondary hover:text-foreground"
@@ -142,15 +230,6 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             </div>
 
             <div className="ml-auto flex items-center gap-2">
-              <OrganizationSwitcher
-                hidePersonal
-                afterCreateOrganizationUrl="/dashboard"
-                afterSelectOrganizationUrl="/dashboard"
-                afterLeaveOrganizationUrl="/onboarding"
-                organizationProfileUrl="/dashboard/organization"
-                organizationProfileMode="navigation"
-              />
-
               <Button variant="ghost" size="icon" className="relative rounded-xl">
                 <Bell className="h-4 w-4" />
                 <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full gradient-accent" />
@@ -183,6 +262,18 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                 </Link>
               );
             })}
+            <button
+              onClick={() => openModal("pricing")}
+              className="inline-flex shrink-0 items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+            >
+              <Sparkles className="h-3.5 w-3.5" /> Upgrade
+            </button>
+            <button
+              onClick={() => openModal("settings")}
+              className="inline-flex shrink-0 items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+            >
+              <Settings className="h-3.5 w-3.5" /> Settings
+            </button>
           </div>
         </header>
 
@@ -196,6 +287,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           <div className="mx-auto max-w-7xl">{children}</div>
         </motion.main>
       </div>
+
+      {/* URL-hash driven modals — mounted once so dashboard stays alive */}
+      <DashboardModals />
     </div>
   );
 }
