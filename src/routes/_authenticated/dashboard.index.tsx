@@ -60,6 +60,9 @@ function DashboardPage() {
               scheduled_at: p.scheduled_at,
               caption: p.caption,
               account_label: acct?.username ?? acct?.label ?? null,
+              bunny_video_id: p.bunny_video_id,
+              bunny_library_id: p.bunny_library_id,
+              thumbnail_url: p.thumbnail_url,
             });
           }
         });
