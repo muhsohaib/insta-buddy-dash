@@ -64,7 +64,7 @@ export function DashboardModals() {
         open={active === "workspace-settings"}
         onOpenChange={(o) => (!o ? close() : undefined)}
       >
-        <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
+        <DialogContent className="max-w-5xl w-[calc(100vw-2rem)] max-h-[85vh] overflow-y-auto overflow-x-hidden">
           <DialogHeader>
             <DialogTitle>Workspace settings</DialogTitle>
             <DialogDescription>

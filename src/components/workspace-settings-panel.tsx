@@ -24,7 +24,7 @@ export function WorkspaceSettingsPanel() {
   return (
     <div className="space-y-4">
       {isAdmin && <InviteForm organizationId={organization.id} />}
-      <div className="rounded-xl border border-hairline bg-background p-2">
+      <div className="rounded-xl border border-hairline bg-background p-2 min-w-0">
         <OrganizationProfile routing="hash" />
       </div>
     </div>
