@@ -2,11 +2,52 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireClerkOrg } from "@/integrations/clerk/auth-middleware";
 
-// Creates a Whop Checkout Session server-side so the quantity (and therefore
-// the total price) is baked into the checkout the user lands on. Whop's
-// hosted checkout URL ignores `?quantity=` query params — the plan itself is
-// fixed-price, so the only way to charge N × $49 is to POST to the Checkout
-// Sessions API with the desired quantity.
+const ACCOUNT_PRICE = 49;
+
+type WhopRecord = Record<string, unknown>;
+
+function asRecord(value: unknown) {
+  return value && typeof value === "object" ? (value as WhopRecord) : null;
+}
+
+function asString(value: unknown) {
+  return typeof value === "string" && value.length > 0 ? value : null;
+}
+
+async function whopRequest(path: string, apiKey: string, init: RequestInit = {}) {
+  const res = await fetch(`https://api.whop.com/api/v1${path}`, {
+    ...init,
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      "Api-Version-Date": "2026-07-01",
+      ...init.headers,
+    },
+  });
+
+  const text = await res.text();
+  let json: WhopRecord = {};
+  if (text) {
+    try {
+      json = JSON.parse(text) as WhopRecord;
+    } catch {
+      // Keep the raw response available in the thrown server log below.
+    }
+  }
+
+  if (!res.ok) {
+    console.error("[whop-checkout] API error", path, res.status, text.slice(0, 500));
+    throw new Error("Whop rejected the checkout request.");
+  }
+
+  return json;
+}
+
+// Creates a one-off Whop checkout configuration with the selected total price
+// baked into an inline plan. Whop checkout links do not multiply a base plan by
+// a `quantity` param, so 4 accounts must be a $196/mo plan, not quantity=4 on a
+// $49 (or $9) hosted checkout URL.
 export const createWhopCheckout = createServerFn({ method: "POST" })
   .middleware([requireClerkOrg])
   .inputValidator((input) => z.object({ quantity: z.number().int().min(1).max(50) }).parse(input))
@@ -17,61 +58,58 @@ export const createWhopCheckout = createServerFn({ method: "POST" })
       throw new Error("Payments are not configured yet. Ask an admin to add Whop credentials.");
     }
 
+    const basePlan = await whopRequest(`/plans/${encodeURIComponent(planId)}`, apiKey);
+    const product = asRecord(basePlan.product);
+    const productId = asString(product?.id);
+    if (!productId) {
+      console.error("[whop-checkout] base plan has no product", planId);
+      throw new Error("Payments are not configured correctly. Ask an admin to check the Whop plan.");
+    }
+
+    const quantity = data.quantity;
+    const total = quantity * ACCOUNT_PRICE;
+    const planType = asString(basePlan.plan_type) ?? "renewal";
+    const billingPeriod = typeof basePlan.billing_period === "number" ? basePlan.billing_period : 30;
+    const currency = asString(basePlan.currency) ?? "usd";
+
     const metadata = {
       org_id: context.orgId,
       user_id: context.userId,
-      quantity: data.quantity,
+      quantity,
     };
 
-    const body = {
-      plan_id: planId,
-      quantity: data.quantity,
-      metadata,
-    };
-
-    // Try v5 first, fall back to v2 (Whop has shipped both; older keys still
-    // resolve on v2). Both endpoints return a `purchase_url` we can redirect to.
-    const endpoints = [
-      "https://api.whop.com/api/v5/checkout_sessions",
-      "https://api.whop.com/api/v2/checkout_sessions",
-    ];
-
-    let lastErr = "";
-    for (const endpoint of endpoints) {
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
-          Accept: "application/json",
+    const checkout = await whopRequest("/checkout_configurations", apiKey, {
+      method: "POST",
+      body: JSON.stringify({
+        plan: {
+          product_id: productId,
+          currency,
+          plan_type: planType,
+          release_method: asString(basePlan.release_method) ?? "buy_now",
+          initial_price: total,
+          renewal_price: planType === "renewal" ? total : null,
+          billing_period: planType === "renewal" ? billingPeriod : null,
+          expiration_days: typeof basePlan.expiration_days === "number" ? basePlan.expiration_days : null,
+          title: `${quantity} Instagram ${quantity === 1 ? "account" : "accounts"}`,
+          description: `Loomly subscription for ${quantity} Instagram ${quantity === 1 ? "account" : "accounts"}.`,
+          visibility: "hidden",
+          unlimited_stock: true,
+          metadata,
+          force_create_new_plan: true,
         },
-        body: JSON.stringify(body),
-      });
+        metadata,
+      }),
+    });
 
-      const text = await res.text();
-      if (!res.ok) {
-        lastErr = `${endpoint} → ${res.status} ${text}`;
-        console.error("[whop-checkout] non-2xx", lastErr);
-        continue;
-      }
+    const url =
+      asString(checkout.purchase_url) ??
+      asString(checkout.checkout_url) ??
+      asString(asRecord(checkout.data)?.purchase_url);
 
-      let json: Record<string, unknown> = {};
-      try {
-        json = JSON.parse(text) as Record<string, unknown>;
-      } catch {
-        lastErr = `${endpoint} → invalid JSON: ${text.slice(0, 200)}`;
-        continue;
-      }
-
-      const url =
-        (json.purchase_url as string | undefined) ??
-        (json.checkout_url as string | undefined) ??
-        ((json.data as Record<string, unknown> | undefined)?.purchase_url as string | undefined);
-
-      if (url) return { url };
-      lastErr = `${endpoint} → no purchase_url in response: ${text.slice(0, 200)}`;
+    if (!url) {
+      console.error("[whop-checkout] no purchase_url in response", JSON.stringify(checkout).slice(0, 500));
+      throw new Error("Could not start checkout. Please try again or contact support.");
     }
 
-    console.error("[whop-checkout] all endpoints failed", lastErr);
-    throw new Error("Could not start checkout. Please try again or contact support.");
+    return { url };
   });
