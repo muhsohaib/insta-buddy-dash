@@ -1,6 +1,6 @@
 import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { useAuth, useClerk, useUser } from "@clerk/tanstack-react-start";
+import { useAuth, useClerk, useUser, OrganizationSwitcher } from "@clerk/tanstack-react-start";
 import { Button } from "@/components/ui/button";
 import {
   Calendar as CalendarIcon,
@@ -11,6 +11,7 @@ import {
   Shield,
   Search,
   Bell,
+  Building2,
 } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -20,6 +21,7 @@ type NavItem = { to: string; label: string; icon: typeof CalendarIcon; exact?: b
 const NAV: NavItem[] = [
   { to: "/dashboard", label: "Calendar", icon: CalendarIcon, exact: true },
   { to: "/dashboard/accounts", label: "Accounts", icon: Users },
+  { to: "/dashboard/organization", label: "Workspace", icon: Building2 },
   { to: "/dashboard/billing", label: "Billing", icon: CreditCard },
   { to: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
