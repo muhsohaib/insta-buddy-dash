@@ -12,6 +12,7 @@ import { CalendarGrid, type CalendarPost } from "@/components/calendar-grid";
 import { CreateAccountDialog, type AccountGateState } from "@/components/create-account-dialog";
 import { SchedulePostDialog, type ReadyAccount } from "@/components/schedule-post-dialog";
 import { PickAccountDialog, type PickableAccount } from "@/components/pick-account-dialog";
+import { EditPostDialog, type EditablePost } from "@/components/edit-post-dialog";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
