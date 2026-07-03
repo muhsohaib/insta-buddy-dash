@@ -745,3 +745,126 @@ function InvitationsList() {
     </div>
   );
 }
+
+/* ============================ BILLING TAB ============================ */
+
+function BillingTab() {
+  const { organization, membership, isLoaded } = useOrganization();
+  const isAdmin = membership?.role === "org:admin";
+  const getSubFn = useServerFn(getMySubscription);
+  const [loading, setLoading] = useState(true);
+  const [sub, setSub] = useState<Awaited<ReturnType<typeof getMySubscription>> | null>(null);
+
+  useEffect(() => {
+    if (!organization) return;
+    setLoading(true);
+    getSubFn()
+      .then((s) => setSub(s))
+      .catch(() => setSub(null))
+      .finally(() => setLoading(false));
+  }, [getSubFn, organization?.id]);
+
+  if (!isLoaded || loading) {
+    return (
+      <div className="grid h-64 place-items-center text-sm text-muted-foreground">
+        <Loader2 className="h-5 w-5 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!organization) {
+    return (
+      <div className="grid h-64 place-items-center text-center text-sm text-muted-foreground">
+        No active workspace.
+      </div>
+    );
+  }
+
+  const quantity = sub?.quantity ?? 0;
+  const total = quantity * 49;
+  const status = sub?.status ?? "inactive";
+  const renews = sub?.current_period_end
+    ? new Date(sub.current_period_end).toLocaleDateString()
+    : null;
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-lg font-semibold tracking-tight">Billing</h2>
+        <p className="text-sm text-muted-foreground">
+          Manage your subscription for {organization.name}.
+        </p>
+      </div>
+
+      {sub ? (
+        <div className="rounded-xl border border-hairline bg-muted/30 p-5">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <div className="text-xs uppercase tracking-wider text-muted-foreground">
+                Current plan
+              </div>
+              <div className="mt-1 text-2xl font-semibold tracking-tight">
+                ${total}
+                <span className="ml-1 text-sm font-normal text-muted-foreground">/month</span>
+              </div>
+              <div className="mt-1 text-sm text-muted-foreground">
+                {quantity} Instagram {quantity === 1 ? "account" : "accounts"} × $49
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-xs uppercase tracking-wider text-muted-foreground">Status</div>
+              <div
+                className={cn(
+                  "mt-1 inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium capitalize",
+                  status === "active"
+                    ? "bg-emerald-500/10 text-emerald-500"
+                    : "bg-muted text-muted-foreground",
+                )}
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                {status}
+              </div>
+              {renews && (
+                <div className="mt-2 text-xs text-muted-foreground">Renews {renews}</div>
+              )}
+            </div>
+          </div>
+
+          {isAdmin && (
+            <div className="mt-5 flex flex-wrap gap-2 border-t border-hairline pt-4">
+              <Button variant="outline" size="sm" asChild>
+                <a href="https://whop.com/orders" target="_blank" rel="noreferrer">
+                  Manage in Whop →
+                </a>
+              </Button>
+              <Button variant="outline" size="sm" asChild>
+                <a href="/pricing">Change plan</a>
+              </Button>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="rounded-xl border border-hairline bg-muted/30 p-6 text-center">
+          <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-background ring-1 ring-hairline">
+            <CreditCard className="h-5 w-5 text-muted-foreground" />
+          </div>
+          <div className="mt-3 text-base font-medium">No active subscription</div>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Subscribe to start scheduling posts on Instagram accounts.
+          </p>
+          {isAdmin && (
+            <Button className="mt-4" asChild>
+              <a href="/pricing">Choose a plan</a>
+            </Button>
+          )}
+        </div>
+      )}
+
+      {!isAdmin && (
+        <p className="text-xs text-muted-foreground">
+          Only workspace admins can change billing.
+        </p>
+      )}
+    </div>
+  );
+}
