@@ -24,7 +24,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Trash2, Film } from "lucide-react";
-import { deleteScheduledPost, updateScheduledPost } from "@/lib/posts.functions";
+import { deletePublication, updatePublication } from "@/lib/publications.functions";
 
 export type EditablePost = {
   id: string;
@@ -52,8 +52,9 @@ export function EditPostDialog({
   const [deleting, setDeleting] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
-  const updateFn = useServerFn(updateScheduledPost);
-  const deleteFn = useServerFn(deleteScheduledPost);
+  const updateFn = useServerFn(updatePublication);
+  const deleteFn = useServerFn(deletePublication);
+
 
   useEffect(() => {
     if (!post) return;
@@ -77,10 +78,13 @@ export function EditPostDialog({
       await updateFn({
         data: {
           id: post.id,
-          caption,
-          scheduled_at: new Date(datetime).toISOString(),
+          patch: {
+            caption,
+            scheduled_at: new Date(datetime).toISOString(),
+          },
         },
       });
+
       toast.success("Post updated");
       onChanged();
       onClose();
