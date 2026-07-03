@@ -14,7 +14,7 @@ export type Database = {
   }
   public: {
     Tables: {
-      _archived_account_details: {
+      account_details: {
         Row: {
           account_id: string
           app_name: string
@@ -71,16 +71,17 @@ export type Database = {
             foreignKeyName: "account_details_account_id_fkey"
             columns: ["account_id"]
             isOneToOne: true
-            referencedRelation: "_archived_instagram_accounts"
+            referencedRelation: "instagram_accounts"
             referencedColumns: ["id"]
           },
         ]
       }
-      _archived_instagram_accounts: {
+      instagram_accounts: {
         Row: {
           created_at: string
           id: string
           label: string | null
+          order_item_id: string | null
           org_id: string
           status: Database["public"]["Enums"]["account_status"]
           updated_at: string
@@ -90,6 +91,7 @@ export type Database = {
           created_at?: string
           id?: string
           label?: string | null
+          order_item_id?: string | null
           org_id: string
           status?: Database["public"]["Enums"]["account_status"]
           updated_at?: string
@@ -99,68 +101,18 @@ export type Database = {
           created_at?: string
           id?: string
           label?: string | null
+          order_item_id?: string | null
           org_id?: string
           status?: Database["public"]["Enums"]["account_status"]
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
-      }
-      _archived_scheduled_posts: {
-        Row: {
-          account_id: string
-          bunny_library_id: string | null
-          bunny_video_id: string | null
-          caption: string
-          completed_at: string | null
-          completed_by: string | null
-          created_at: string
-          id: string
-          org_id: string
-          scheduled_at: string
-          status: Database["public"]["Enums"]["post_status"]
-          thumbnail_url: string | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          account_id: string
-          bunny_library_id?: string | null
-          bunny_video_id?: string | null
-          caption?: string
-          completed_at?: string | null
-          completed_by?: string | null
-          created_at?: string
-          id?: string
-          org_id: string
-          scheduled_at: string
-          status?: Database["public"]["Enums"]["post_status"]
-          thumbnail_url?: string | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          account_id?: string
-          bunny_library_id?: string | null
-          bunny_video_id?: string | null
-          caption?: string
-          completed_at?: string | null
-          completed_by?: string | null
-          created_at?: string
-          id?: string
-          org_id?: string
-          scheduled_at?: string
-          status?: Database["public"]["Enums"]["post_status"]
-          thumbnail_url?: string | null
-          updated_at?: string
-          user_id?: string
-        }
         Relationships: [
           {
-            foreignKeyName: "scheduled_posts_account_id_fkey"
-            columns: ["account_id"]
+            foreignKeyName: "instagram_accounts_order_item_id_fkey"
+            columns: ["order_item_id"]
             isOneToOne: false
-            referencedRelation: "_archived_instagram_accounts"
+            referencedRelation: "order_items"
             referencedColumns: ["id"]
           },
         ]
@@ -509,6 +461,65 @@ export type Database = {
           whop_customer_id?: string | null
         }
         Relationships: []
+      }
+      scheduled_posts: {
+        Row: {
+          account_id: string
+          bunny_library_id: string | null
+          bunny_video_id: string | null
+          caption: string
+          completed_at: string | null
+          completed_by: string | null
+          created_at: string
+          id: string
+          org_id: string
+          scheduled_at: string
+          status: Database["public"]["Enums"]["post_status"]
+          thumbnail_url: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_id: string
+          bunny_library_id?: string | null
+          bunny_video_id?: string | null
+          caption?: string
+          completed_at?: string | null
+          completed_by?: string | null
+          created_at?: string
+          id?: string
+          org_id: string
+          scheduled_at: string
+          status?: Database["public"]["Enums"]["post_status"]
+          thumbnail_url?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_id?: string
+          bunny_library_id?: string | null
+          bunny_video_id?: string | null
+          caption?: string
+          completed_at?: string | null
+          completed_by?: string | null
+          created_at?: string
+          id?: string
+          org_id?: string
+          scheduled_at?: string
+          status?: Database["public"]["Enums"]["post_status"]
+          thumbnail_url?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scheduled_posts_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "instagram_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       subscriptions: {
         Row: {
