@@ -880,3 +880,212 @@ function BillingTab() {
     </div>
   );
 }
+
+/* ============================ API KEYS TAB ============================ */
+
+function ApiKeysTab() {
+  const { organization, membership, isLoaded } = useOrganization();
+  const listFn = useServerFn(listApiKeys);
+  const createFn = useServerFn(createApiKey);
+  const revokeFn = useServerFn(revokeApiKey);
+
+  const isAdmin = !organization || membership?.role === "org:admin";
+  const [keys, setKeys] = useState<
+    Array<{
+      id: string;
+      label: string;
+      prefix: string;
+      created_at: string;
+      last_used_at: string | null;
+      revoked_at: string | null;
+    }>
+  >([]);
+  const [loading, setLoading] = useState(true);
+  const [label, setLabel] = useState("");
+  const [creating, setCreating] = useState(false);
+  const [newKey, setNewKey] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  async function refresh() {
+    setLoading(true);
+    try {
+      const rows = await listFn();
+      setKeys(rows as typeof keys);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Failed to load keys");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (!isAdmin) {
+      setLoading(false);
+      return;
+    }
+    refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [organization?.id, isAdmin]);
+
+  async function create() {
+    if (!label.trim()) return;
+    setCreating(true);
+    try {
+      const created = await createFn({ data: { label: label.trim() } });
+      setNewKey(created.key);
+      setLabel("");
+      await refresh();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Failed to create key");
+    } finally {
+      setCreating(false);
+    }
+  }
+
+  async function revoke(id: string) {
+    try {
+      await revokeFn({ data: { id } });
+      toast.success("Key revoked");
+      await refresh();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Failed to revoke");
+    }
+  }
+
+  async function copy() {
+    if (!newKey) return;
+    await navigator.clipboard.writeText(newKey);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  if (!isLoaded || loading) {
+    return (
+      <div className="grid h-64 place-items-center text-sm text-muted-foreground">
+        <Loader2 className="h-5 w-5 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="grid h-64 place-items-center text-center text-sm text-muted-foreground">
+        Only workspace admins can manage API keys.
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-lg font-semibold tracking-tight">API keys</h2>
+        <p className="text-sm text-muted-foreground">
+          Use these keys to let AI agents, scripts, or integrations create and manage
+          orders in this workspace. Every request is scoped to{" "}
+          {organization?.name ?? "your workspace"} — the same as if you clicked it in the
+          dashboard.
+        </p>
+      </div>
+
+      <div className="rounded-xl border border-hairline bg-muted/30 p-4">
+        <div className="text-xs uppercase tracking-wider text-muted-foreground">
+          Endpoint
+        </div>
+        <div className="mt-1 font-mono text-sm">
+          {typeof window !== "undefined" ? window.location.origin : ""}/api/public/v1
+        </div>
+        <div className="mt-2 text-xs text-muted-foreground">
+          Send <span className="font-mono">Authorization: Bearer sk_live_…</span> on every request. See{" "}
+          <a className="underline" href="/api/public/v1/openapi" target="_blank" rel="noreferrer">
+            /api/public/v1/openapi
+          </a>{" "}
+          for the full spec.
+        </div>
+      </div>
+
+      {newKey && (
+        <div className="rounded-xl border border-emerald-500/40 bg-emerald-500/5 p-4">
+          <div className="text-sm font-medium">New key created</div>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Copy it now — you won't see it again.
+          </p>
+          <div className="mt-3 flex items-center gap-2 rounded-md border border-hairline bg-background px-3 py-2 font-mono text-xs">
+            <span className="truncate">{newKey}</span>
+            <Button variant="ghost" size="icon" onClick={copy} className="h-7 w-7 shrink-0">
+              {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+            </Button>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="mt-2"
+            onClick={() => setNewKey(null)}
+          >
+            Done
+          </Button>
+        </div>
+      )}
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          create();
+        }}
+        className="flex flex-wrap items-center gap-2"
+      >
+        <Input
+          value={label}
+          onChange={(e) => setLabel(e.target.value)}
+          placeholder="Key label (e.g. Claude, Zapier, CLI)"
+          className="min-w-[220px] flex-1"
+        />
+        <Button type="submit" disabled={creating || !label.trim()}>
+          {creating ? "Creating…" : "Create key"}
+        </Button>
+      </form>
+
+      <div className="divide-y divide-hairline overflow-hidden rounded-xl border border-hairline">
+        {keys.length === 0 ? (
+          <div className="bg-background p-6 text-center text-sm text-muted-foreground">
+            No API keys yet.
+          </div>
+        ) : (
+          keys.map((k) => {
+            const revoked = !!k.revoked_at;
+            return (
+              <div key={k.id} className="flex items-center gap-3 bg-background p-3">
+                <Key className="h-4 w-4 text-muted-foreground" />
+                <div className="min-w-0 flex-1">
+                  <div className="truncate text-sm font-medium">
+                    {k.label}{" "}
+                    {revoked && (
+                      <span className="ml-1 text-xs font-normal text-muted-foreground">
+                        (revoked)
+                      </span>
+                    )}
+                  </div>
+                  <div className="truncate font-mono text-xs text-muted-foreground">
+                    {k.prefix}…{"  "}·{"  "}
+                    {k.last_used_at
+                      ? `used ${new Date(k.last_used_at).toLocaleDateString()}`
+                      : "never used"}
+                  </div>
+                </div>
+                {!revoked && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-destructive hover:text-destructive"
+                    onClick={() => revoke(k.id)}
+                  >
+                    Revoke
+                  </Button>
+                )}
+              </div>
+            );
+          })
+        )}
+      </div>
+    </div>
+  );
+}
