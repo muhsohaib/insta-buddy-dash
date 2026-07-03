@@ -1,21 +1,19 @@
 import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useAuth, useClerk, useUser, useOrganization, useOrganizationList } from "@clerk/tanstack-react-start";
-import { Button } from "@/components/ui/button";
 import {
   Calendar as CalendarIcon,
   Users,
   Settings,
   LogOut,
   Shield,
-  Search,
-  Bell,
   Building2,
   ChevronDown,
   Plus,
   Sparkles,
   Check,
 } from "lucide-react";
+
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { amIAdmin } from "@/lib/admin.functions";
@@ -55,10 +53,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   const email = user?.primaryEmailAddress?.emailAddress ?? "";
-  const name =
-    [user?.firstName, user?.lastName].filter(Boolean).join(" ").trim() ||
-    user?.username ||
-    "";
+
 
   async function signOut() {
     await queryClient.cancelQueries();
@@ -67,12 +62,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     router.navigate({ to: "/", replace: true });
   }
 
-  const initials = (name || email || "?")
-    .split(/[\s@.]+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((s) => s[0]?.toUpperCase())
-    .join("");
+
 
   const workspaceName = organization?.name ?? "Personal workspace";
   const workspaceInitial = workspaceName.charAt(0).toUpperCase();
@@ -219,32 +209,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               <div className="h-7 w-7 rounded-lg gradient-accent" />
               <span className="text-base font-semibold tracking-tight">Loomly</span>
             </div>
-
-            <div className="relative hidden max-w-md flex-1 md:block">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <input
-                type="search"
-                placeholder="Search accounts, posts…"
-                className="h-10 w-full rounded-xl border border-hairline bg-surface pl-9 pr-3 text-sm outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-ring/40"
-              />
-            </div>
-
-            <div className="ml-auto flex items-center gap-2">
-              <Button variant="ghost" size="icon" className="relative rounded-xl">
-                <Bell className="h-4 w-4" />
-                <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full gradient-accent" />
-              </Button>
-              <div className="flex items-center gap-3 rounded-full border border-hairline bg-background pl-1 pr-3 py-1">
-                <div className="grid h-7 w-7 place-items-center rounded-full gradient-accent text-xs font-semibold text-background">
-                  {initials || "U"}
-                </div>
-                <div className="hidden text-xs leading-tight sm:block">
-                  <div className="font-medium text-foreground">{name || "You"}</div>
-                  <div className="text-muted-foreground">{email}</div>
-                </div>
-              </div>
-            </div>
           </div>
+
+
 
           {/* Mobile nav */}
           <div className="flex gap-1 overflow-x-auto border-t border-hairline px-3 py-2 md:hidden">
