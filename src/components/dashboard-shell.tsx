@@ -1,21 +1,19 @@
 import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useAuth, useClerk, useUser, useOrganization, useOrganizationList } from "@clerk/tanstack-react-start";
-import { Button } from "@/components/ui/button";
 import {
   Calendar as CalendarIcon,
   Users,
   Settings,
   LogOut,
   Shield,
-  Search,
-  Bell,
   Building2,
   ChevronDown,
   Plus,
   Sparkles,
   Check,
 } from "lucide-react";
+
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { amIAdmin } from "@/lib/admin.functions";
