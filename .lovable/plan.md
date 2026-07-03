@@ -1,94 +1,60 @@
-# Migrate authentication from Lovable Cloud (Supabase) to Clerk
+## The problem
 
-## Heads-up before we start
+The pricing page lets a user pick 1–20 accounts, but the server function just builds a URL like `https://whop.com/checkout/<PLAN_ID>?quantity=N`. Whop's hosted checkout page ignores the `quantity` query param — the plan itself has a fixed price ($49), so every user lands on a $49/1-seat checkout regardless of what they picked.
 
-This is a large, destructive refactor, not a quickstart install. The app currently uses Supabase auth end-to-end:
+Whop plans are priced per plan, not per unit. To charge N × $49 we have to tell Whop the quantity **when creating the checkout**, not in the redirect URL. Whop exposes this through the **Checkout Sessions API**, which returns a one-time `purchase_url` that already has the correct quantity and total baked in.
 
-- Every table (`profiles`, `user_roles`, `instagram_accounts`, `account_details`, `scheduled_posts`, `subscriptions`) has a `user_id uuid` column and RLS policies keyed on `auth.uid()`.
-- `requireSupabaseAuth` middleware gates every server function.
-- `handle_new_user` trigger auto-creates `profiles` when a row lands in `auth.users`.
-- Whop webhook provisions users via `supabaseAdmin.auth.admin`.
-- Google OAuth goes through the Lovable broker.
-- `has_role(auth.uid(), 'admin')` powers the admin panel.
+## The fix
 
-Clerk issues its own user IDs (`user_xxx`, text — not UUIDs) and does not populate `auth.users`. To keep RLS working with Clerk we use **Supabase's Clerk third-party auth integration** — Supabase accepts Clerk-issued JWTs and `auth.jwt()->>'sub'` returns the Clerk user ID. This is the recommended path; the alternative (dropping RLS and gating everything in server functions) is riskier.
+Switch `createWhopCheckout` from "build a URL" to "call Whop's Checkout Sessions API server-side, then redirect to the returned purchase URL".
 
-## Existing users
+### 1. Add a Whop API key secret
 
-Existing rows in `auth.users` will NOT map to Clerk automatically. Options:
-1. Wipe the dev database (fastest, loses all existing accounts/posts).
-2. Keep data but require every user to re-sign-up in Clerk, then run a one-time mapping to rewrite `user_id` columns from old Supabase UUIDs to new Clerk IDs (manual, per-user).
+The Checkout Sessions endpoint is authenticated. We need a new secret `WHOP_API_KEY` (the app's Whop API key from the Whop dashboard → Developer → API keys). I'll request it via the secrets tool during build.
 
-**I'll assume option 1 (wipe) unless you say otherwise** — this is a dev/preview project and simpler.
+`WHOP_PLAN_ID` (already set) stays as-is.
 
-## Plan
+### 2. Rewrite `src/lib/whop.functions.ts`
 
-### 1. Install & provider setup
-- `bun add @clerk/tanstack-react-start @clerk/ui`
-- Add `ClerkProvider` (with `shadcn` theme) inside `src/routes/__root.tsx` `<body>`, wrapping the existing providers.
-- Add `@import '@clerk/ui/themes/shadcn.css'` to `src/styles.css`.
+Inside the handler:
 
-### 2. API keys
-Request via `add_secret`:
-- `CLERK_PUBLISHABLE_KEY` (also exposed as `VITE_CLERK_PUBLISHABLE_KEY`)
-- `CLERK_SECRET_KEY`
-- `CLERK_JWT_ISSUER_DOMAIN` (for Supabase third-party auth)
+```ts
+const res = await fetch("https://api.whop.com/api/v5/checkout_sessions", {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${process.env.WHOP_API_KEY}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    plan_id: process.env.WHOP_PLAN_ID,
+    quantity: data.quantity,
+    metadata: {
+      org_id: context.orgId,
+      user_id: context.userId,
+      quantity: data.quantity,
+    },
+  }),
+});
+```
 
-You get these from https://dashboard.clerk.com after creating an app.
+- Parse the JSON, pull `purchase_url` (fallback to `checkout_url`), return `{ url }`.
+- On non-2xx, log the response body and throw a friendly error the pricing page can toast.
+- Keep the existing `min(1).max(50)` Zod validation and the `requireClerkOrg` middleware — nothing else on the pricing page changes.
 
-### 3. Supabase ↔ Clerk third-party auth
-- Configure Clerk as a third-party auth provider in Supabase (via SQL: register the Clerk issuer domain so PostgREST validates Clerk JWTs and `auth.jwt()->>'sub'` returns the Clerk user id).
-- Update the browser Supabase client so it forwards the Clerk session token as the `Authorization` header on every Data API call. `@/integrations/supabase/client.ts` is auto-generated and shouldn't be edited, so we'll create a thin wrapper `src/integrations/supabase/clerk-client.ts` that components use instead of the raw client.
+### 3. Webhook side — no changes needed
 
-### 4. Schema migration
-One migration that:
-- Drops `handle_new_user` trigger and function (no more `auth.users` inserts).
-- Drops all existing RLS policies referencing `auth.uid()`.
-- Changes `user_id` / `id` columns from `uuid` to `text` on: `profiles`, `user_roles`, `instagram_accounts`, `account_details`, `scheduled_posts`, `subscriptions`. Drops FK to `auth.users`.
-- Recreates RLS policies keyed on `(auth.jwt()->>'sub') = user_id`.
-- Updates `has_role` to take `_user_id text`.
-- Re-issues `GRANT`s.
-- **Wipes existing rows** in these tables (required — old UUIDs won't match new Clerk IDs).
+`src/routes/api/public/webhooks/whop.ts` already reads `metadata.quantity` and provisions that many `instagram_accounts` rows, so once Whop sends the real quantity, provisioning will match the amount paid.
 
-### 5. Server-side auth
-- Replace `src/integrations/supabase/auth-middleware.ts` usage with a new `src/integrations/clerk/auth-middleware.ts` that verifies the Clerk session (`@clerk/backend`) and puts `userId: string` and a Supabase client (with the Clerk JWT attached) on context.
-- Update every `createServerFn().middleware([requireSupabaseAuth])` call site in `src/lib/*.functions.ts` (`accounts`, `posts`, `admin`, `whop`, `bunny`) to use the new middleware and treat `userId` as `string`.
-- Replace `src/start.ts` `attachSupabaseAuth` bearer middleware with one that attaches the Clerk session token.
-- Update `src/routes/api/public/webhooks/whop.ts` and `src/routes/api/public/admin/bunny-download.ts`: create users via Clerk Backend API (`clerkClient.users.createUser`) instead of `supabaseAdmin.auth.admin.createUser`.
+### 4. Verification
 
-### 6. Routes & UI
-- Replace `src/routes/auth.tsx` with Clerk's `<SignIn />` component (shadcn-themed).
-- Add `src/routes/sign-up.tsx` with `<SignUp />`.
-- Rewrite `src/routes/_authenticated/route.tsx` gate: use Clerk's `getAuth()` (server) / `useAuth()` (client) instead of `supabase.auth.getUser()`.
-- Replace `src/routes/index.tsx` and `src/routes/auth.tsx` sign-in buttons — remove `lovable.auth.signInWithOAuth` calls; use Clerk's `<SignInButton>` or redirect to `/auth`.
-- Update `src/components/dashboard-shell.tsx` sign-out and user display: `useUser()` from Clerk for name/email/avatar; `useClerk().signOut()` for the sign-out button; keep the existing cache-teardown ordering.
-- Update `src/components/site-header.tsx` signed-in check to Clerk's `useAuth().isSignedIn`.
-- Remove `src/integrations/lovable/` broker calls from all UI code (the package can stay installed).
+After the change, from the pricing page:
+- Pick 10 → click Continue → the returned Whop checkout should show **$490/month** with 10 seats.
+- Pick 1 → should show **$49/month**.
+- After a successful test payment, the webhook should insert 10 (or 1) `instagram_accounts` rows for the active workspace.
 
-### 7. Remove Supabase auth wiring
-- Delete unused `src/integrations/supabase/auth-attacher.ts` import from `src/start.ts`.
-- Remove any `supabase.auth.*` calls from components (getSession, getUser, onAuthStateChange, signOut) — replace with Clerk equivalents.
-- Keep `src/integrations/supabase/client.ts` in place (it's auto-generated) but stop using its `.auth` surface.
+## Files touched
 
-### 8. Test
-- Sign up a new user via Clerk → confirm `profiles` row is created (we'll add a small `ensureProfile` server fn called from the `_authenticated` layout since we can't rely on the old auth.users trigger).
-- Verify RLS: create an Instagram account, confirm it's readable only by the owner.
-- Verify admin panel: manually seed a `user_roles` row for your Clerk ID via the migration/insert tool, confirm `has_role` gate passes.
-- Verify Whop webhook still provisions users end-to-end.
-- Verify Bunny download still works from admin panel.
+- `src/lib/whop.functions.ts` — replace URL-builder with a Checkout Sessions API call.
+- New secret: `WHOP_API_KEY` (requested at build time, not committed).
 
-## Risks / what will break
-
-- **All existing users must re-sign-up.** Any test data tied to old UUIDs is wiped.
-- **Google OAuth** moves from the Lovable-managed broker to Clerk-managed Google. You'll need to configure Google in the Clerk dashboard (Clerk provides shared dev credentials by default).
-- **Whop webhook** currently identifies users by Supabase user id in metadata. After migration, Whop metadata must carry the Clerk user id (or email) instead — I'll switch it to email lookup.
-- **Realtime / storage RLS** on the `account-photos` bucket also uses `auth.uid()` and will need policy updates.
-- **`supabase--configure_social_auth`** and Lovable Cloud's managed OAuth UI become irrelevant; Clerk owns auth going forward.
-
-## Decisions I need from you before building
-
-1. **Wipe existing data?** (recommended — option 1 above). If no, we need a per-user mapping strategy.
-2. **Which sign-in methods should Clerk enable?** Currently the app uses Google only. Same in Clerk, or add email/password too?
-3. **Confirm you understand this replaces Lovable Cloud auth entirely** — sign-in, user records, session management, and admin identification all move to Clerk. Supabase remains only as the database.
-
-Reply with your answers (or "proceed with defaults: wipe + Google only") and I'll implement.
+No UI, pricing copy, or webhook logic changes.
