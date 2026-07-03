@@ -8,11 +8,12 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { ClerkProvider, useAuth } from "@clerk/tanstack-react-start";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { getClerkPublishableKey } from "@/integrations/clerk/config.functions";
 
 function NotFoundComponent() {
   return (
@@ -74,6 +75,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
+  loader: () => getClerkPublishableKey(),
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
@@ -94,21 +96,31 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const router = useRouter();
-
-  useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
-      if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
-      router.invalidate();
-      if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
-    });
-    return () => sub.subscription.unsubscribe();
-  }, [router, queryClient]);
+  const { publishableKey } = Route.useLoaderData();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Outlet />
-      <Toaster position="top-right" />
-    </QueryClientProvider>
+    <ClerkProvider publishableKey={publishableKey}>
+      <QueryClientProvider client={queryClient}>
+        <ClerkAuthSync />
+        <Outlet />
+        <Toaster position="top-right" />
+      </QueryClientProvider>
+    </ClerkProvider>
   );
+}
+
+// Refetches loader/queries when auth state changes so protected routes react.
+function ClerkAuthSync() {
+  const router = useRouter();
+  const { queryClient } = Route.useRouteContext();
+  const { isLoaded, isSignedIn, userId } = useAuth();
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    router.invalidate();
+    if (isSignedIn) queryClient.invalidateQueries();
+    else queryClient.clear();
+  }, [isLoaded, isSignedIn, userId, router, queryClient]);
+
+  return null;
 }

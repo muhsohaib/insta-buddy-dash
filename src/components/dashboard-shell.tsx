@@ -1,7 +1,6 @@
 import { Link, useRouter, useRouterState } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { supabase } from "@/integrations/supabase/client";
+import { useAuth, useClerk, useUser } from "@clerk/tanstack-react-start";
 import { Button } from "@/components/ui/button";
 import {
   Calendar as CalendarIcon,
@@ -26,26 +25,29 @@ const NAV: NavItem[] = [
 ];
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
-  const [email, setEmail] = useState<string>("");
-  const [name, setName] = useState<string>("");
   const router = useRouter();
   const queryClient = useQueryClient();
+  const clerk = useClerk();
+  const { isSignedIn } = useAuth();
+  const { user } = useUser();
   const amIAdminFn = useServerFn(amIAdmin);
-  const { data: admin } = useQuery({ queryKey: ["me", "isAdmin"], queryFn: () => amIAdminFn() });
+  const { data: admin } = useQuery({
+    queryKey: ["me", "isAdmin"],
+    queryFn: () => amIAdminFn(),
+    enabled: !!isSignedIn,
+  });
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      setEmail(data.user?.email ?? "");
-      const meta = (data.user?.user_metadata ?? {}) as { full_name?: string; name?: string };
-      setName(meta.full_name ?? meta.name ?? "");
-    });
-  }, []);
+  const email = user?.primaryEmailAddress?.emailAddress ?? "";
+  const name =
+    [user?.firstName, user?.lastName].filter(Boolean).join(" ").trim() ||
+    user?.username ||
+    "";
 
   async function signOut() {
     await queryClient.cancelQueries();
     queryClient.clear();
-    await supabase.auth.signOut();
+    await clerk.signOut();
     router.navigate({ to: "/", replace: true });
   }
 

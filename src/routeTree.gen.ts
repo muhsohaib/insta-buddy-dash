@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
@@ -26,6 +27,11 @@ import { Route as ApiPublicWebhooksWhopRouteImport } from './routes/api/public/w
 import { Route as ApiPublicAdminBunnyDownloadRouteImport } from './routes/api/public/admin/bunny-download'
 import { Route as AuthenticatedDashboardAccountsIdRouteImport } from './routes/_authenticated/dashboard.accounts.$id'
 
+const SignUpRoute = SignUpRouteImport.update({
+  id: '/sign-up',
+  path: '/sign-up',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
@@ -119,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/pricing': typeof PricingRoute
+  '/sign-up': typeof SignUpRoute
   '/admin/accounts': typeof AuthenticatedAdminAccountsRoute
   '/admin/posts': typeof AuthenticatedAdminPostsRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
@@ -136,6 +143,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/pricing': typeof PricingRoute
+  '/sign-up': typeof SignUpRoute
   '/admin/accounts': typeof AuthenticatedAdminAccountsRoute
   '/admin/posts': typeof AuthenticatedAdminPostsRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
@@ -155,6 +163,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/pricing': typeof PricingRoute
+  '/sign-up': typeof SignUpRoute
   '/_authenticated/admin/accounts': typeof AuthenticatedAdminAccountsRoute
   '/_authenticated/admin/posts': typeof AuthenticatedAdminPostsRoute
   '/_authenticated/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
@@ -174,6 +183,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/pricing'
+    | '/sign-up'
     | '/admin/accounts'
     | '/admin/posts'
     | '/dashboard/analytics'
@@ -191,6 +201,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/pricing'
+    | '/sign-up'
     | '/admin/accounts'
     | '/admin/posts'
     | '/dashboard/analytics'
@@ -209,6 +220,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/pricing'
+    | '/sign-up'
     | '/_authenticated/admin/accounts'
     | '/_authenticated/admin/posts'
     | '/_authenticated/dashboard/analytics'
@@ -228,12 +240,20 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   PricingRoute: typeof PricingRoute
+  SignUpRoute: typeof SignUpRoute
   ApiPublicAdminBunnyDownloadRoute: typeof ApiPublicAdminBunnyDownloadRoute
   ApiPublicWebhooksWhopRoute: typeof ApiPublicWebhooksWhopRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sign-up': {
+      id: '/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof SignUpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pricing': {
       id: '/pricing'
       path: '/pricing'
@@ -384,6 +404,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   PricingRoute: PricingRoute,
+  SignUpRoute: SignUpRoute,
   ApiPublicAdminBunnyDownloadRoute: ApiPublicAdminBunnyDownloadRoute,
   ApiPublicWebhooksWhopRoute: ApiPublicWebhooksWhopRoute,
 }

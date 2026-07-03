@@ -1,9 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { requireClerkAuth } from "@/integrations/clerk/auth-middleware";
 
 export const listMyPostsForAccount = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireClerkAuth])
   .inputValidator((input) => z.object({ account_id: z.string().uuid() }).parse(input))
   .handler(async ({ context, data }) => {
     const { data: posts, error } = await context.supabase
@@ -25,7 +25,7 @@ const createPostSchema = z.object({
 });
 
 export const createScheduledPost = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireClerkAuth])
   .inputValidator((input) => createPostSchema.parse(input))
   .handler(async ({ context, data }) => {
     // Ensure the account is Ready and owned by user
@@ -56,7 +56,7 @@ export const createScheduledPost = createServerFn({ method: "POST" })
   });
 
 export const deleteScheduledPost = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireClerkAuth])
   .inputValidator((input) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ context, data }) => {
     const { error } = await context.supabase

@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,21 +35,16 @@ function AccountPage() {
   const { id } = Route.useParams();
   const getFn = useServerFn(getMyAccount);
   const listPostsFn = useServerFn(listMyPostsForAccount);
-  const queryClient = useQueryClient();
 
-  const acctQ = useSuspenseQuery(queryOptions({ queryKey: ["account", id], queryFn: () => getFn({ data: { id } }) }));
-
-  // Realtime for status changes
-  useEffect(() => {
-    const ch = supabase
-      .channel(`account-${id}`)
-      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "instagram_accounts", filter: `id=eq.${id}` }, () => {
-        queryClient.invalidateQueries({ queryKey: ["account", id] });
-        queryClient.invalidateQueries({ queryKey: ["accounts"] });
-      })
-      .subscribe();
-    return () => { supabase.removeChannel(ch); };
-  }, [id, queryClient]);
+  // Poll while the account is not yet ready (Supabase realtime is off under Clerk auth).
+  const acctQ = useSuspenseQuery(queryOptions({
+    queryKey: ["account", id],
+    queryFn: () => getFn({ data: { id } }),
+    refetchInterval: (q) => {
+      const s = q.state.data?.status;
+      return s && s !== "ready" && s !== "cancelled" ? 8000 : false;
+    },
+  }));
 
   const account = acctQ.data;
   if (!account) {

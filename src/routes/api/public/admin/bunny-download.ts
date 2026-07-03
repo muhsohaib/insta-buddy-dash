@@ -1,14 +1,7 @@
 // Streams the original Bunny Stream video back to the browser as an
-// attachment. Bunny's CDN `/original` path returns an HTML 404 page unless
-// "Allow direct play URL" is enabled on the library — and even then the
-// browser would render the file inline instead of downloading it. Proxying
-// through this route:
-//   - hides the Bunny API key,
-//   - picks a real MP4 URL from the library's MP4-fallback resolutions,
-//   - forces `Content-Disposition: attachment` so the browser downloads.
+// attachment. Verifies the caller is an admin via the Clerk session token.
 import { createFileRoute } from "@tanstack/react-router";
-import { createClient } from "@supabase/supabase-js";
-import type { Database } from "@/integrations/supabase/types";
+import { verifyToken } from "@clerk/backend";
 
 export const Route = createFileRoute("/api/public/admin/bunny-download")({
   server: {
@@ -19,23 +12,26 @@ export const Route = createFileRoute("/api/public/admin/bunny-download")({
         const libraryId = url.searchParams.get("library");
         if (!videoId || !libraryId) return new Response("Missing params", { status: 400 });
 
-        // ---- Auth: verify Supabase bearer + admin role ----
+        // ---- Auth: verify Clerk bearer + admin role ----
         const authHeader = request.headers.get("authorization") ?? "";
         if (!authHeader.startsWith("Bearer ")) return new Response("Unauthorized", { status: 401 });
         const token = authHeader.slice("Bearer ".length);
 
-        const SUPABASE_URL = process.env.SUPABASE_URL;
-        const SUPABASE_PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY;
-        if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) return new Response("Server not configured", { status: 500 });
+        const secretKey = process.env.CLERK_SECRET_KEY;
+        if (!secretKey) return new Response("Server not configured", { status: 500 });
 
-        const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-          global: { headers: { Authorization: `Bearer ${token}` } },
-          auth: { persistSession: false, autoRefreshToken: false, storage: undefined },
-        });
-        const { data: claimsData, error: claimsErr } = await supabase.auth.getClaims(token);
-        if (claimsErr || !claimsData?.claims?.sub) return new Response("Unauthorized", { status: 401 });
-        const { data: isAdmin } = await supabase.rpc("has_role", {
-          _user_id: claimsData.claims.sub,
+        let userId: string;
+        try {
+          const claims = await verifyToken(token, { secretKey });
+          if (!claims.sub) return new Response("Unauthorized", { status: 401 });
+          userId = claims.sub;
+        } catch {
+          return new Response("Unauthorized", { status: 401 });
+        }
+
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { data: isAdmin } = await supabaseAdmin.rpc("has_role", {
+          _user_id: userId,
           _role: "admin",
         });
         if (!isAdmin) return new Response("Forbidden", { status: 403 });
@@ -58,7 +54,6 @@ export const Route = createFileRoute("/api/public/admin/bunny-download")({
         };
         if ((info.status ?? 0) < 4) return new Response("Video is still processing on Bunny Stream.", { status: 409 });
 
-        // Try candidate URLs in order: original first, then MP4-fallback resolutions high→low.
         const resolutions = (info.availableResolutions ?? "")
           .split(",")
           .map((r) => r.trim())
@@ -74,13 +69,11 @@ export const Route = createFileRoute("/api/public/admin/bunny-download")({
         for (const candidate of candidates) {
           const r = await fetch(candidate, { redirect: "follow" });
           const ct = r.headers.get("content-type") ?? "";
-          // Bunny's 404 page returns HTML; skip anything that isn't a real binary.
           if (r.ok && !ct.startsWith("text/")) {
             upstream = r;
             break;
           }
-          // Drain body so the socket can be reused.
-          try { await r.arrayBuffer(); } catch {}
+          try { await r.arrayBuffer(); } catch { /* drain */ }
         }
         if (!upstream || !upstream.body) {
           return new Response(
