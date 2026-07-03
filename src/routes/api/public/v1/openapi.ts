@@ -98,6 +98,92 @@ export const Route = createFileRoute("/api/public/v1/openapi")({
                 responses: { "200": { description: "OK" } },
               },
             },
+            "/publications": {
+              get: {
+                summary: "List publications in the workspace (filter by from/to/status/account_id)",
+                parameters: [
+                  { name: "from", in: "query", schema: { type: "string", format: "date-time" } },
+                  { name: "to", in: "query", schema: { type: "string", format: "date-time" } },
+                  { name: "status", in: "query", schema: { type: "string" } },
+                  { name: "account_id", in: "query", schema: { type: "string", format: "uuid" } },
+                ],
+                responses: { "200": { description: "OK" } },
+              },
+              post: {
+                summary: "Create a scheduled publication",
+                requestBody: {
+                  required: true,
+                  content: {
+                    "application/json": {
+                      schema: {
+                        type: "object",
+                        required: ["account_id", "scheduled_at", "media"],
+                        properties: {
+                          account_id: { type: "string", format: "uuid" },
+                          type: { type: "string", enum: ["reel", "image", "carousel", "video"] },
+                          caption: { type: "string", maxLength: 2200 },
+                          hashtags: { type: "array", items: { type: "string" } },
+                          scheduled_at: { type: "string", format: "date-time" },
+                          notes: { type: "string" },
+                          status: { type: "string", enum: ["draft", "scheduled"] },
+                          media: {
+                            type: "array",
+                            minItems: 1,
+                            items: {
+                              type: "object",
+                              required: ["kind"],
+                              properties: {
+                                kind: { type: "string", enum: ["video", "image"] },
+                                bunny_video_id: { type: "string" },
+                                bunny_library_id: { type: "string" },
+                                thumbnail_url: { type: "string" },
+                                image_url: { type: "string" },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                responses: { "201": { description: "Created" } },
+              },
+            },
+            "/publications/{id}": {
+              get: {
+                summary: "Fetch a publication with media",
+                parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+                responses: { "200": { description: "OK" } },
+              },
+              patch: {
+                summary: "Update caption, schedule, status or hashtags",
+                parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+                responses: { "200": { description: "OK" } },
+              },
+              delete: {
+                summary: "Delete a draft or scheduled publication",
+                parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+                responses: { "200": { description: "OK" } },
+              },
+            },
+            "/publications/{id}/publish": {
+              post: {
+                summary: "Mark a publication as published (records Instagram URL)",
+                parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+                responses: { "200": { description: "OK" } },
+              },
+            },
+            "/calendar": {
+              get: {
+                summary: "List publications grouped by day for a date range",
+                parameters: [
+                  { name: "from", in: "query", schema: { type: "string", format: "date-time" } },
+                  { name: "to", in: "query", schema: { type: "string", format: "date-time" } },
+                ],
+                responses: { "200": { description: "OK" } },
+              },
+            },
+
           },
         };
         return new Response(JSON.stringify(spec, null, 2), {
