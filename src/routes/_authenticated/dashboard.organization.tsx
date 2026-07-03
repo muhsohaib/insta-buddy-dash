@@ -1,5 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { OrganizationProfile, useOrganization, CreateOrganization } from "@clerk/tanstack-react-start";
+import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { DashboardShell } from "@/components/dashboard-shell";
 
 export const Route = createFileRoute("/_authenticated/dashboard/organization")({
