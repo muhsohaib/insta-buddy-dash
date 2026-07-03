@@ -26,6 +26,7 @@ import {
   Loader2,
   User as UserIcon,
   Building2,
+  CreditCard,
   LogOut,
   Trash2,
   Mail,
@@ -34,9 +35,10 @@ import {
 } from "lucide-react";
 import { getMyProfile, updateMyProfile } from "@/lib/profile.functions";
 import { inviteOrgMember } from "@/lib/organization.functions";
+import { getMySubscription } from "@/lib/accounts.functions";
 import { cn } from "@/lib/utils";
 
-export type SettingsTab = "account" | "workspace";
+export type SettingsTab = "account" | "workspace" | "billing";
 
 interface SettingsPanelProps {
   initialTab?: SettingsTab;
