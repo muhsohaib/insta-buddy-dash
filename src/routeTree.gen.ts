@@ -17,6 +17,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
+import { Route as AuthenticatedDashboardOrganizationRouteImport } from './routes/_authenticated/dashboard.organization'
 import { Route as AuthenticatedDashboardLibraryRouteImport } from './routes/_authenticated/dashboard.library'
 import { Route as AuthenticatedDashboardBillingRouteImport } from './routes/_authenticated/dashboard.billing'
 import { Route as AuthenticatedDashboardAnalyticsRouteImport } from './routes/_authenticated/dashboard.analytics'
@@ -66,6 +67,12 @@ const AuthenticatedDashboardSettingsRoute =
   AuthenticatedDashboardSettingsRouteImport.update({
     id: '/dashboard/settings',
     path: '/dashboard/settings',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardOrganizationRoute =
+  AuthenticatedDashboardOrganizationRouteImport.update({
+    id: '/dashboard/organization',
+    path: '/dashboard/organization',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardLibraryRoute =
@@ -131,6 +138,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
   '/dashboard/library': typeof AuthenticatedDashboardLibraryRoute
+  '/dashboard/organization': typeof AuthenticatedDashboardOrganizationRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
@@ -149,6 +157,7 @@ export interface FileRoutesByTo {
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
   '/dashboard/library': typeof AuthenticatedDashboardLibraryRoute
+  '/dashboard/organization': typeof AuthenticatedDashboardOrganizationRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
@@ -169,6 +178,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/_authenticated/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
   '/_authenticated/dashboard/library': typeof AuthenticatedDashboardLibraryRoute
+  '/_authenticated/dashboard/organization': typeof AuthenticatedDashboardOrganizationRoute
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
@@ -189,6 +199,7 @@ export interface FileRouteTypes {
     | '/dashboard/analytics'
     | '/dashboard/billing'
     | '/dashboard/library'
+    | '/dashboard/organization'
     | '/dashboard/settings'
     | '/admin/'
     | '/dashboard/'
@@ -207,6 +218,7 @@ export interface FileRouteTypes {
     | '/dashboard/analytics'
     | '/dashboard/billing'
     | '/dashboard/library'
+    | '/dashboard/organization'
     | '/dashboard/settings'
     | '/admin'
     | '/dashboard'
@@ -226,6 +238,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/analytics'
     | '/_authenticated/dashboard/billing'
     | '/_authenticated/dashboard/library'
+    | '/_authenticated/dashboard/organization'
     | '/_authenticated/dashboard/settings'
     | '/_authenticated/admin/'
     | '/_authenticated/dashboard/'
@@ -303,6 +316,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardSettingsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard/organization': {
+      id: '/_authenticated/dashboard/organization'
+      path: '/dashboard/organization'
+      fullPath: '/dashboard/organization'
+      preLoaderRoute: typeof AuthenticatedDashboardOrganizationRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard/library': {
       id: '/_authenticated/dashboard/library'
       path: '/dashboard/library'
@@ -375,6 +395,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardAnalyticsRoute: typeof AuthenticatedDashboardAnalyticsRoute
   AuthenticatedDashboardBillingRoute: typeof AuthenticatedDashboardBillingRoute
   AuthenticatedDashboardLibraryRoute: typeof AuthenticatedDashboardLibraryRoute
+  AuthenticatedDashboardOrganizationRoute: typeof AuthenticatedDashboardOrganizationRoute
   AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
@@ -388,6 +409,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardAnalyticsRoute: AuthenticatedDashboardAnalyticsRoute,
   AuthenticatedDashboardBillingRoute: AuthenticatedDashboardBillingRoute,
   AuthenticatedDashboardLibraryRoute: AuthenticatedDashboardLibraryRoute,
+  AuthenticatedDashboardOrganizationRoute:
+    AuthenticatedDashboardOrganizationRoute,
   AuthenticatedDashboardSettingsRoute: AuthenticatedDashboardSettingsRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,

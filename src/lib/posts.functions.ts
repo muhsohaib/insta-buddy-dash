@@ -1,15 +1,16 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { requireClerkAuth } from "@/integrations/clerk/auth-middleware";
+import { requireClerkOrg } from "@/integrations/clerk/auth-middleware";
 
 export const listMyPostsForAccount = createServerFn({ method: "GET" })
-  .middleware([requireClerkAuth])
+  .middleware([requireClerkOrg])
   .inputValidator((input) => z.object({ account_id: z.string().uuid() }).parse(input))
   .handler(async ({ context, data }) => {
     const { data: posts, error } = await context.supabase
       .from("scheduled_posts")
       .select("*")
       .eq("account_id", data.account_id)
+      .eq("org_id", context.orgId)
       .order("scheduled_at", { ascending: true });
     if (error) throw new Error(error.message);
     return posts ?? [];
@@ -25,17 +26,17 @@ const createPostSchema = z.object({
 });
 
 export const createScheduledPost = createServerFn({ method: "POST" })
-  .middleware([requireClerkAuth])
+  .middleware([requireClerkOrg])
   .inputValidator((input) => createPostSchema.parse(input))
   .handler(async ({ context, data }) => {
-    // Ensure the account is Ready and owned by user
+    // Ensure the account is Ready and owned by the active org
     const { data: acct, error: acctErr } = await context.supabase
       .from("instagram_accounts")
-      .select("id, status, user_id")
+      .select("id, status, org_id")
       .eq("id", data.account_id)
       .maybeSingle();
     if (acctErr) throw new Error(acctErr.message);
-    if (!acct || acct.user_id !== context.userId) throw new Error("Account not found");
+    if (!acct || acct.org_id !== context.orgId) throw new Error("Account not found");
     if (acct.status !== "ready") throw new Error("Account is not ready for scheduling yet");
 
     const { data: post, error } = await context.supabase
@@ -43,6 +44,7 @@ export const createScheduledPost = createServerFn({ method: "POST" })
       .insert({
         account_id: data.account_id,
         user_id: context.userId,
+        org_id: context.orgId,
         caption: data.caption,
         scheduled_at: data.scheduled_at,
         bunny_video_id: data.bunny_video_id,
@@ -56,13 +58,14 @@ export const createScheduledPost = createServerFn({ method: "POST" })
   });
 
 export const deleteScheduledPost = createServerFn({ method: "POST" })
-  .middleware([requireClerkAuth])
+  .middleware([requireClerkOrg])
   .inputValidator((input) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ context, data }) => {
     const { error } = await context.supabase
       .from("scheduled_posts")
       .delete()
-      .eq("id", data.id);
+      .eq("id", data.id)
+      .eq("org_id", context.orgId);
     if (error) throw new Error(error.message);
     return { ok: true };
   });

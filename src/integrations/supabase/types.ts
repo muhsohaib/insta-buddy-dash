@@ -25,6 +25,7 @@ export type Database = {
           ig_username: string | null
           niche: string
           notes: string | null
+          org_id: string
           profile_photo_url: string | null
           target_country: string
           updated_at: string
@@ -41,6 +42,7 @@ export type Database = {
           ig_username?: string | null
           niche: string
           notes?: string | null
+          org_id: string
           profile_photo_url?: string | null
           target_country: string
           updated_at?: string
@@ -57,6 +59,7 @@ export type Database = {
           ig_username?: string | null
           niche?: string
           notes?: string | null
+          org_id?: string
           profile_photo_url?: string | null
           target_country?: string
           updated_at?: string
@@ -78,6 +81,7 @@ export type Database = {
           created_at: string
           id: string
           label: string | null
+          org_id: string
           status: Database["public"]["Enums"]["account_status"]
           updated_at: string
           user_id: string
@@ -86,6 +90,7 @@ export type Database = {
           created_at?: string
           id?: string
           label?: string | null
+          org_id: string
           status?: Database["public"]["Enums"]["account_status"]
           updated_at?: string
           user_id: string
@@ -94,6 +99,7 @@ export type Database = {
           created_at?: string
           id?: string
           label?: string | null
+          org_id?: string
           status?: Database["public"]["Enums"]["account_status"]
           updated_at?: string
           user_id?: string
@@ -140,6 +146,7 @@ export type Database = {
           completed_by: string | null
           created_at: string
           id: string
+          org_id: string
           scheduled_at: string
           status: Database["public"]["Enums"]["post_status"]
           thumbnail_url: string | null
@@ -155,6 +162,7 @@ export type Database = {
           completed_by?: string | null
           created_at?: string
           id?: string
+          org_id: string
           scheduled_at: string
           status?: Database["public"]["Enums"]["post_status"]
           thumbnail_url?: string | null
@@ -170,6 +178,7 @@ export type Database = {
           completed_by?: string | null
           created_at?: string
           id?: string
+          org_id?: string
           scheduled_at?: string
           status?: Database["public"]["Enums"]["post_status"]
           thumbnail_url?: string | null
@@ -191,6 +200,7 @@ export type Database = {
           created_at: string
           current_period_end: string | null
           id: string
+          org_id: string
           quantity: number
           status: Database["public"]["Enums"]["subscription_status"]
           updated_at: string
@@ -202,6 +212,7 @@ export type Database = {
           created_at?: string
           current_period_end?: string | null
           id?: string
+          org_id: string
           quantity?: number
           status?: Database["public"]["Enums"]["subscription_status"]
           updated_at?: string
@@ -213,6 +224,7 @@ export type Database = {
           created_at?: string
           current_period_end?: string | null
           id?: string
+          org_id?: string
           quantity?: number
           status?: Database["public"]["Enums"]["subscription_status"]
           updated_at?: string
