@@ -58,27 +58,45 @@ function OnboardingPage() {
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!createOrganization || !setActive) return;
+    if (!createOrganization || !setActive) {
+      toast.error("Workspace client not ready — please refresh and try again");
+      return;
+    }
     const trimmed = name.trim();
     if (!trimmed) {
       toast.error("Workspace name is required");
       return;
     }
     setSubmitting(true);
+    redirectedRef.current = true; // prevent the memberships effect from racing
     try {
+      console.log("[onboarding] creating workspace", trimmed);
       const org = await createOrganization({ name: trimmed });
+      console.log("[onboarding] workspace created", org.id);
+
       if (logoFile) {
-        try {
-          await org.setLogo({ file: logoFile });
-        } catch (err) {
-          console.error("setLogo failed", err);
-        }
+        // Don't let a stuck setLogo call block onboarding.
+        await Promise.race([
+          org.setLogo({ file: logoFile }).catch((err) => {
+            console.error("[onboarding] setLogo failed", err);
+          }),
+          new Promise((resolve) => setTimeout(resolve, 8000)),
+        ]);
       }
-      await setActive({ organization: org.id });
-      navigate({ to: "/dashboard", replace: true });
+
+      try {
+        await setActive({ organization: org.id });
+      } catch (err) {
+        console.error("[onboarding] setActive failed", err);
+      }
+
+      // Hard redirect — guarantees the authenticated layout re-runs with the
+      // new active organization even if TanStack's client navigation stalls.
+      window.location.assign("/dashboard");
     } catch (err) {
+      console.error("[onboarding] createOrganization failed", err);
+      redirectedRef.current = false;
       toast.error(err instanceof Error ? err.message : "Failed to create workspace");
-    } finally {
       setSubmitting(false);
     }
   }
