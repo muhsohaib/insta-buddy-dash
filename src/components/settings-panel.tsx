@@ -30,6 +30,7 @@ import {
   Trash2,
   Mail,
   X,
+  Pencil,
 } from "lucide-react";
 import { getMyProfile, updateMyProfile } from "@/lib/profile.functions";
 import { inviteOrgMember } from "@/lib/organization.functions";
@@ -247,7 +248,7 @@ function AccountTab() {
 /* ============================ WORKSPACE TAB ============================ */
 
 function WorkspaceTab({ onClosed }: { onClosed?: () => void }) {
-  const { organization, membership, memberships, invitations, isLoaded } = useOrganization({
+  const { organization, membership, memberships, isLoaded } = useOrganization({
     memberships: { infinite: true, keepPreviousData: true },
     invitations: { infinite: true, keepPreviousData: true },
   });
@@ -257,6 +258,7 @@ function WorkspaceTab({ onClosed }: { onClosed?: () => void }) {
   const isAdmin = membership?.role === "org:admin";
   const logoRef = useRef<HTMLInputElement>(null);
   const [name, setName] = useState("");
+  const [editingName, setEditingName] = useState(false);
   const [savingName, setSavingName] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [confirmLeave, setConfirmLeave] = useState(false);
@@ -264,6 +266,7 @@ function WorkspaceTab({ onClosed }: { onClosed?: () => void }) {
 
   useEffect(() => {
     setName(organization?.name ?? "");
+    setEditingName(false);
   }, [organization?.id, organization?.name]);
 
   if (!isLoaded) {
@@ -292,11 +295,16 @@ function WorkspaceTab({ onClosed }: { onClosed?: () => void }) {
   }
 
   async function saveName() {
-    if (!organization || !name.trim() || name === organization.name) return;
+    if (!organization || !name.trim() || name === organization.name) {
+      setEditingName(false);
+      setName(organization?.name ?? "");
+      return;
+    }
     setSavingName(true);
     try {
       await organization.update({ name: name.trim() });
       toast.success("Workspace updated");
+      setEditingName(false);
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Update failed");
     } finally {
@@ -350,82 +358,102 @@ function WorkspaceTab({ onClosed }: { onClosed?: () => void }) {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
+      {/* Header card */}
       <div className="flex items-center gap-4 rounded-xl border border-hairline bg-muted/30 p-4">
-        <div className="relative">
+        <button
+          type="button"
+          onClick={() => isAdmin && logoRef.current?.click()}
+          disabled={!isAdmin || uploadingLogo}
+          className="group relative shrink-0 disabled:cursor-default"
+          title={isAdmin ? "Change logo" : undefined}
+        >
           <Avatar className="h-14 w-14 rounded-xl">
             <AvatarImage src={organization.imageUrl} alt={organization.name} />
             <AvatarFallback className="rounded-xl gradient-accent text-background">
               {initial}
             </AvatarFallback>
           </Avatar>
+          {isAdmin && (
+            <div className="pointer-events-none absolute inset-0 grid place-items-center rounded-xl bg-background/60 opacity-0 transition group-hover:opacity-100">
+              <Camera className="h-5 w-5" />
+            </div>
+          )}
           {uploadingLogo && (
             <div className="absolute inset-0 grid place-items-center rounded-xl bg-background/70">
               <Loader2 className="h-4 w-4 animate-spin" />
             </div>
           )}
-        </div>
+        </button>
+        {isAdmin && (
+          <input
+            ref={logoRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={onPickLogo}
+          />
+        )}
+
         <div className="min-w-0 flex-1">
-          <div className="truncate text-base font-semibold">{organization.name}</div>
+          {editingName ? (
+            <div className="flex items-center gap-2">
+              <Input
+                autoFocus
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") saveName();
+                  if (e.key === "Escape") {
+                    setEditingName(false);
+                    setName(organization.name ?? "");
+                  }
+                }}
+                className="h-8"
+              />
+              <Button size="sm" onClick={saveName} disabled={savingName}>
+                {savingName ? "…" : "Save"}
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1.5">
+              <div className="truncate text-base font-semibold">{organization.name}</div>
+              {isAdmin && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6"
+                  onClick={() => setEditingName(true)}
+                  title="Edit name"
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                </Button>
+              )}
+            </div>
+          )}
           <div className="text-xs text-muted-foreground">
             {organization.membersCount ?? memberships?.data?.length ?? 0} member
             {(organization.membersCount ?? 1) === 1 ? "" : "s"} · You are{" "}
             {isAdmin ? "an admin" : "a member"}
           </div>
         </div>
-        {isAdmin && (
-          <>
+
+        <div className="flex items-center gap-2">
+          {isAdmin ? (
             <Button
-              type="button"
               variant="outline"
               size="sm"
-              onClick={() => logoRef.current?.click()}
-              disabled={uploadingLogo}
+              onClick={() => setConfirmDelete(true)}
+              className="text-destructive hover:text-destructive"
             >
-              <Camera className="mr-2 h-4 w-4" />
-              Logo
+              <Trash2 className="mr-2 h-4 w-4" /> Delete
             </Button>
-            <input
-              ref={logoRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={onPickLogo}
-            />
-          </>
-        )}
-      </div>
-
-      {/* General */}
-      <Section title="General" description="Workspace profile shown to your team.">
-        <div className="space-y-4">
-          <div>
-            <Label>Workspace name</Label>
-            <div className="mt-1.5 flex gap-2">
-              <Input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                disabled={!isAdmin}
-                placeholder="Workspace name"
-              />
-              {isAdmin && (
-                <Button
-                  onClick={saveName}
-                  disabled={savingName || !name.trim() || name === organization.name}
-                >
-                  {savingName ? "Saving…" : "Save"}
-                </Button>
-              )}
-            </div>
-          </div>
-          {organization.slug && (
-            <div>
-              <Label>Slug</Label>
-              <Input value={organization.slug} disabled className="mt-1.5" />
-            </div>
+          ) : (
+            <Button variant="outline" size="sm" onClick={() => setConfirmLeave(true)}>
+              <LogOut className="mr-2 h-4 w-4" /> Leave
+            </Button>
           )}
         </div>
-      </Section>
+      </div>
 
       {/* Members */}
       <Section
@@ -435,36 +463,6 @@ function WorkspaceTab({ onClosed }: { onClosed?: () => void }) {
         {isAdmin && <InviteRow organizationId={organization.id} />}
         <MembersList canManage={isAdmin} />
         {isAdmin && <InvitationsList />}
-      </Section>
-
-      {/* Danger */}
-      <Section title="Danger zone" description="Irreversible actions.">
-        <div className="space-y-2 rounded-xl border border-destructive/30 bg-destructive/5 p-4">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <div className="text-sm font-medium">Leave workspace</div>
-              <div className="text-xs text-muted-foreground">
-                Remove yourself from this workspace.
-              </div>
-            </div>
-            <Button variant="outline" size="sm" onClick={() => setConfirmLeave(true)}>
-              <LogOut className="mr-2 h-4 w-4" /> Leave
-            </Button>
-          </div>
-          {isAdmin && (
-            <div className="flex items-center justify-between gap-4 border-t border-destructive/20 pt-3">
-              <div>
-                <div className="text-sm font-medium">Delete workspace</div>
-                <div className="text-xs text-muted-foreground">
-                  Permanently delete this workspace and its data.
-                </div>
-              </div>
-              <Button variant="destructive" size="sm" onClick={() => setConfirmDelete(true)}>
-                <Trash2 className="mr-2 h-4 w-4" /> Delete
-              </Button>
-            </div>
-          )}
-        </div>
       </Section>
 
       <AlertDialog open={confirmLeave} onOpenChange={setConfirmLeave}>
