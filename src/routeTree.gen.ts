@@ -38,6 +38,7 @@ import { Route as AuthenticatedDashboardAccountsIdRouteImport } from './routes/_
 import { Route as AuthenticatedAdminOrdersIdRouteImport } from './routes/_authenticated/admin.orders.$id'
 import { Route as ApiPublicV1OrdersIdRouteImport } from './routes/api/public/v1/orders/$id'
 import { Route as ApiPublicV1OrdersIdStatusRouteImport } from './routes/api/public/v1/orders/$id/status'
+import { Route as ApiPublicV1OrdersIdDetailsRouteImport } from './routes/api/public/v1/orders/$id/details'
 import { Route as ApiPublicV1OrdersIdDeliverablesRouteImport } from './routes/api/public/v1/orders/$id/deliverables'
 
 const SignUpRoute = SignUpRouteImport.update({
@@ -200,6 +201,12 @@ const ApiPublicV1OrdersIdStatusRoute =
     path: '/status',
     getParentRoute: () => ApiPublicV1OrdersIdRoute,
   } as any)
+const ApiPublicV1OrdersIdDetailsRoute =
+  ApiPublicV1OrdersIdDetailsRouteImport.update({
+    id: '/details',
+    path: '/details',
+    getParentRoute: () => ApiPublicV1OrdersIdRoute,
+  } as any)
 const ApiPublicV1OrdersIdDeliverablesRoute =
   ApiPublicV1OrdersIdDeliverablesRouteImport.update({
     id: '/deliverables',
@@ -236,6 +243,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/orders/': typeof AuthenticatedDashboardOrdersIndexRoute
   '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRouteWithChildren
   '/api/public/v1/orders/$id/deliverables': typeof ApiPublicV1OrdersIdDeliverablesRoute
+  '/api/public/v1/orders/$id/details': typeof ApiPublicV1OrdersIdDetailsRoute
   '/api/public/v1/orders/$id/status': typeof ApiPublicV1OrdersIdStatusRoute
 }
 export interface FileRoutesByTo {
@@ -267,6 +275,7 @@ export interface FileRoutesByTo {
   '/dashboard/orders': typeof AuthenticatedDashboardOrdersIndexRoute
   '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRouteWithChildren
   '/api/public/v1/orders/$id/deliverables': typeof ApiPublicV1OrdersIdDeliverablesRoute
+  '/api/public/v1/orders/$id/details': typeof ApiPublicV1OrdersIdDetailsRoute
   '/api/public/v1/orders/$id/status': typeof ApiPublicV1OrdersIdStatusRoute
 }
 export interface FileRoutesById {
@@ -300,6 +309,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/orders/': typeof AuthenticatedDashboardOrdersIndexRoute
   '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRouteWithChildren
   '/api/public/v1/orders/$id/deliverables': typeof ApiPublicV1OrdersIdDeliverablesRoute
+  '/api/public/v1/orders/$id/details': typeof ApiPublicV1OrdersIdDetailsRoute
   '/api/public/v1/orders/$id/status': typeof ApiPublicV1OrdersIdStatusRoute
 }
 export interface FileRouteTypes {
@@ -333,6 +343,7 @@ export interface FileRouteTypes {
     | '/dashboard/orders/'
     | '/api/public/v1/orders/$id'
     | '/api/public/v1/orders/$id/deliverables'
+    | '/api/public/v1/orders/$id/details'
     | '/api/public/v1/orders/$id/status'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -364,6 +375,7 @@ export interface FileRouteTypes {
     | '/dashboard/orders'
     | '/api/public/v1/orders/$id'
     | '/api/public/v1/orders/$id/deliverables'
+    | '/api/public/v1/orders/$id/details'
     | '/api/public/v1/orders/$id/status'
   id:
     | '__root__'
@@ -396,6 +408,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/orders/'
     | '/api/public/v1/orders/$id'
     | '/api/public/v1/orders/$id/deliverables'
+    | '/api/public/v1/orders/$id/details'
     | '/api/public/v1/orders/$id/status'
   fileRoutesById: FileRoutesById
 }
@@ -617,6 +630,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicV1OrdersIdStatusRouteImport
       parentRoute: typeof ApiPublicV1OrdersIdRoute
     }
+    '/api/public/v1/orders/$id/details': {
+      id: '/api/public/v1/orders/$id/details'
+      path: '/details'
+      fullPath: '/api/public/v1/orders/$id/details'
+      preLoaderRoute: typeof ApiPublicV1OrdersIdDetailsRouteImport
+      parentRoute: typeof ApiPublicV1OrdersIdRoute
+    }
     '/api/public/v1/orders/$id/deliverables': {
       id: '/api/public/v1/orders/$id/deliverables'
       path: '/deliverables'
@@ -675,11 +695,13 @@ const AuthenticatedRouteRouteWithChildren =
 
 interface ApiPublicV1OrdersIdRouteChildren {
   ApiPublicV1OrdersIdDeliverablesRoute: typeof ApiPublicV1OrdersIdDeliverablesRoute
+  ApiPublicV1OrdersIdDetailsRoute: typeof ApiPublicV1OrdersIdDetailsRoute
   ApiPublicV1OrdersIdStatusRoute: typeof ApiPublicV1OrdersIdStatusRoute
 }
 
 const ApiPublicV1OrdersIdRouteChildren: ApiPublicV1OrdersIdRouteChildren = {
   ApiPublicV1OrdersIdDeliverablesRoute: ApiPublicV1OrdersIdDeliverablesRoute,
+  ApiPublicV1OrdersIdDetailsRoute: ApiPublicV1OrdersIdDetailsRoute,
   ApiPublicV1OrdersIdStatusRoute: ApiPublicV1OrdersIdStatusRoute,
 }
 
