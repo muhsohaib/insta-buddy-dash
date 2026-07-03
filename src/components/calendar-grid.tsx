@@ -19,17 +19,23 @@ export type CalendarPost = {
   scheduled_at: string;
   caption: string;
   account_label?: string | null;
+  bunny_video_id?: string | null;
+  bunny_library_id?: string | null;
+  thumbnail_url?: string | null;
 };
 
 export function CalendarGrid({
   posts,
   onCreate,
+  onEditPost,
 }: {
   posts: CalendarPost[];
   onCreate: (date: Date) => void;
+  onEditPost?: (post: CalendarPost) => void;
 }) {
   const [monthAnchor, setMonthAnchor] = useState<Date>(() => startOfMonth(new Date()));
   const [hovered, setHovered] = useState<string | null>(null);
+  const [hoveringPost, setHoveringPost] = useState(false);
 
   const days = useMemo(() => {
     const start = startOfWeek(startOfMonth(monthAnchor));
@@ -121,15 +127,22 @@ export function CalendarGrid({
 
               <div className="mt-2 space-y-1">
                 {dayPosts.slice(0, 2).map((p) => (
-                  <div
+                  <button
+                    type="button"
                     key={p.id}
-                    className="truncate rounded-md border border-hairline bg-surface px-1.5 py-1 text-[11px] text-foreground/80"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onEditPost?.(p);
+                    }}
+                    onMouseEnter={() => setHoveringPost(true)}
+                    onMouseLeave={() => setHoveringPost(false)}
+                    className="block w-full truncate rounded-md border border-hairline bg-surface px-1.5 py-1 text-left text-[11px] text-foreground/80 transition hover:border-[var(--color-cyan-accent)] hover:bg-surface-2"
                   >
                     <span className="mr-1 font-medium text-[var(--color-cyan-accent)]">
                       {format(new Date(p.scheduled_at), "HH:mm")}
                     </span>
                     {p.caption?.slice(0, 22) || "Video post"}
-                  </div>
+                  </button>
                 ))}
                 {dayPosts.length > 2 && (
                   <div className="pl-1 text-[10px] text-muted-foreground">+{dayPosts.length - 2} more</div>
@@ -137,7 +150,7 @@ export function CalendarGrid({
               </div>
 
               <AnimatePresence>
-                {isHovered && inMonth && (
+                {isHovered && inMonth && !hoveringPost && (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}

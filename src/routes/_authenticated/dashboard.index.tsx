@@ -12,6 +12,7 @@ import { CalendarGrid, type CalendarPost } from "@/components/calendar-grid";
 import { CreateAccountDialog, type AccountGateState } from "@/components/create-account-dialog";
 import { SchedulePostDialog, type ReadyAccount } from "@/components/schedule-post-dialog";
 import { PickAccountDialog, type PickableAccount } from "@/components/pick-account-dialog";
+import { EditPostDialog, type EditablePost } from "@/components/edit-post-dialog";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
@@ -60,6 +61,9 @@ function DashboardPage() {
               scheduled_at: p.scheduled_at,
               caption: p.caption,
               account_label: acct?.username ?? acct?.label ?? null,
+              bunny_video_id: p.bunny_video_id,
+              bunny_library_id: p.bunny_library_id,
+              thumbnail_url: p.thumbnail_url,
             });
           }
         });
@@ -74,6 +78,7 @@ function DashboardPage() {
   const [showPicker, setShowPicker] = useState(false);
   const [pickerDate, setPickerDate] = useState<Date | null>(null);
   const [creatingAccount, setCreatingAccount] = useState(false);
+  const [editingPost, setEditingPost] = useState<EditablePost | null>(null);
   const navigate = useNavigate();
 
   const hasReady = readyAccounts.length > 0;
@@ -178,9 +183,19 @@ function DashboardPage() {
         {accountsQ.data.length === 0 ? (
           <EmptyCalendar onCreate={onEmptyCreateAccount} />
         ) : (
-          <CalendarGrid posts={postsQueries.data} onCreate={onCreateFromDay} />
+          <CalendarGrid
+            posts={postsQueries.data}
+            onCreate={onCreateFromDay}
+            onEditPost={(p) => setEditingPost(p)}
+          />
         )}
       </div>
+
+      <EditPostDialog
+        post={editingPost}
+        onClose={() => setEditingPost(null)}
+        onChanged={() => queryClient.invalidateQueries({ queryKey: ["posts"] })}
+      />
 
       {/* Dialogs */}
       <CreateAccountDialog open={showCreateAccount} onClose={() => setShowCreateAccount(false)} state={gateState} />
