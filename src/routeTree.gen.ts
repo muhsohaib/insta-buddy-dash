@@ -44,6 +44,7 @@ import { Route as ApiPublicV1PublicationsIdRouteImport } from './routes/api/publ
 import { Route as ApiPublicV1OrdersIdRouteImport } from './routes/api/public/v1/orders/$id'
 import { Route as ApiPublicV1PublicationsIdStatusRouteImport } from './routes/api/public/v1/publications/$id/status'
 import { Route as ApiPublicV1PublicationsIdPublishRouteImport } from './routes/api/public/v1/publications/$id/publish'
+import { Route as ApiPublicV1PublicationsIdCancelRouteImport } from './routes/api/public/v1/publications/$id/cancel'
 import { Route as ApiPublicV1OrdersIdStatusRouteImport } from './routes/api/public/v1/orders/$id/status'
 import { Route as ApiPublicV1OrdersIdDetailsRouteImport } from './routes/api/public/v1/orders/$id/details'
 import { Route as ApiPublicV1OrdersIdDeliverablesRouteImport } from './routes/api/public/v1/orders/$id/deliverables'
@@ -241,6 +242,12 @@ const ApiPublicV1PublicationsIdPublishRoute =
     path: '/publish',
     getParentRoute: () => ApiPublicV1PublicationsIdRoute,
   } as any)
+const ApiPublicV1PublicationsIdCancelRoute =
+  ApiPublicV1PublicationsIdCancelRouteImport.update({
+    id: '/cancel',
+    path: '/cancel',
+    getParentRoute: () => ApiPublicV1PublicationsIdRoute,
+  } as any)
 const ApiPublicV1OrdersIdStatusRoute =
   ApiPublicV1OrdersIdStatusRouteImport.update({
     id: '/status',
@@ -296,6 +303,7 @@ export interface FileRoutesByFullPath {
   '/api/public/v1/orders/$id/deliverables': typeof ApiPublicV1OrdersIdDeliverablesRoute
   '/api/public/v1/orders/$id/details': typeof ApiPublicV1OrdersIdDetailsRoute
   '/api/public/v1/orders/$id/status': typeof ApiPublicV1OrdersIdStatusRoute
+  '/api/public/v1/publications/$id/cancel': typeof ApiPublicV1PublicationsIdCancelRoute
   '/api/public/v1/publications/$id/publish': typeof ApiPublicV1PublicationsIdPublishRoute
   '/api/public/v1/publications/$id/status': typeof ApiPublicV1PublicationsIdStatusRoute
 }
@@ -335,6 +343,7 @@ export interface FileRoutesByTo {
   '/api/public/v1/orders/$id/deliverables': typeof ApiPublicV1OrdersIdDeliverablesRoute
   '/api/public/v1/orders/$id/details': typeof ApiPublicV1OrdersIdDetailsRoute
   '/api/public/v1/orders/$id/status': typeof ApiPublicV1OrdersIdStatusRoute
+  '/api/public/v1/publications/$id/cancel': typeof ApiPublicV1PublicationsIdCancelRoute
   '/api/public/v1/publications/$id/publish': typeof ApiPublicV1PublicationsIdPublishRoute
   '/api/public/v1/publications/$id/status': typeof ApiPublicV1PublicationsIdStatusRoute
 }
@@ -376,6 +385,7 @@ export interface FileRoutesById {
   '/api/public/v1/orders/$id/deliverables': typeof ApiPublicV1OrdersIdDeliverablesRoute
   '/api/public/v1/orders/$id/details': typeof ApiPublicV1OrdersIdDetailsRoute
   '/api/public/v1/orders/$id/status': typeof ApiPublicV1OrdersIdStatusRoute
+  '/api/public/v1/publications/$id/cancel': typeof ApiPublicV1PublicationsIdCancelRoute
   '/api/public/v1/publications/$id/publish': typeof ApiPublicV1PublicationsIdPublishRoute
   '/api/public/v1/publications/$id/status': typeof ApiPublicV1PublicationsIdStatusRoute
 }
@@ -417,6 +427,7 @@ export interface FileRouteTypes {
     | '/api/public/v1/orders/$id/deliverables'
     | '/api/public/v1/orders/$id/details'
     | '/api/public/v1/orders/$id/status'
+    | '/api/public/v1/publications/$id/cancel'
     | '/api/public/v1/publications/$id/publish'
     | '/api/public/v1/publications/$id/status'
   fileRoutesByTo: FileRoutesByTo
@@ -456,6 +467,7 @@ export interface FileRouteTypes {
     | '/api/public/v1/orders/$id/deliverables'
     | '/api/public/v1/orders/$id/details'
     | '/api/public/v1/orders/$id/status'
+    | '/api/public/v1/publications/$id/cancel'
     | '/api/public/v1/publications/$id/publish'
     | '/api/public/v1/publications/$id/status'
   id:
@@ -496,6 +508,7 @@ export interface FileRouteTypes {
     | '/api/public/v1/orders/$id/deliverables'
     | '/api/public/v1/orders/$id/details'
     | '/api/public/v1/orders/$id/status'
+    | '/api/public/v1/publications/$id/cancel'
     | '/api/public/v1/publications/$id/publish'
     | '/api/public/v1/publications/$id/status'
   fileRoutesById: FileRoutesById
@@ -763,6 +776,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicV1PublicationsIdPublishRouteImport
       parentRoute: typeof ApiPublicV1PublicationsIdRoute
     }
+    '/api/public/v1/publications/$id/cancel': {
+      id: '/api/public/v1/publications/$id/cancel'
+      path: '/cancel'
+      fullPath: '/api/public/v1/publications/$id/cancel'
+      preLoaderRoute: typeof ApiPublicV1PublicationsIdCancelRouteImport
+      parentRoute: typeof ApiPublicV1PublicationsIdRoute
+    }
     '/api/public/v1/orders/$id/status': {
       id: '/api/public/v1/orders/$id/status'
       path: '/status'
@@ -862,12 +882,14 @@ const ApiPublicV1OrdersRouteWithChildren =
   ApiPublicV1OrdersRoute._addFileChildren(ApiPublicV1OrdersRouteChildren)
 
 interface ApiPublicV1PublicationsIdRouteChildren {
+  ApiPublicV1PublicationsIdCancelRoute: typeof ApiPublicV1PublicationsIdCancelRoute
   ApiPublicV1PublicationsIdPublishRoute: typeof ApiPublicV1PublicationsIdPublishRoute
   ApiPublicV1PublicationsIdStatusRoute: typeof ApiPublicV1PublicationsIdStatusRoute
 }
 
 const ApiPublicV1PublicationsIdRouteChildren: ApiPublicV1PublicationsIdRouteChildren =
   {
+    ApiPublicV1PublicationsIdCancelRoute: ApiPublicV1PublicationsIdCancelRoute,
     ApiPublicV1PublicationsIdPublishRoute:
       ApiPublicV1PublicationsIdPublishRoute,
     ApiPublicV1PublicationsIdStatusRoute: ApiPublicV1PublicationsIdStatusRoute,
