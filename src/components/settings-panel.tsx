@@ -82,6 +82,12 @@ export function SettingsPanel({ initialTab = "account", onRequestClose }: Settin
             icon={<CreditCard className="h-4 w-4" />}
             label="Billing"
           />
+          <TabButton
+            active={tab === "api"}
+            onClick={() => setTab("api")}
+            icon={<Key className="h-4 w-4" />}
+            label="API keys"
+          />
         </nav>
       </aside>
 
@@ -91,8 +97,10 @@ export function SettingsPanel({ initialTab = "account", onRequestClose }: Settin
           <AccountTab />
         ) : tab === "workspace" ? (
           <WorkspaceTab onClosed={onRequestClose} />
-        ) : (
+        ) : tab === "billing" ? (
           <BillingTab />
+        ) : (
+          <ApiKeysTab />
         )}
       </div>
     </div>
