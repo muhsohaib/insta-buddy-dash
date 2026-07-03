@@ -37,6 +37,7 @@ import { Route as AuthenticatedDashboardOrdersIdRouteImport } from './routes/_au
 import { Route as AuthenticatedDashboardAccountsIdRouteImport } from './routes/_authenticated/dashboard.accounts.$id'
 import { Route as AuthenticatedAdminOrdersIdRouteImport } from './routes/_authenticated/admin.orders.$id'
 import { Route as ApiPublicV1OrdersIdRouteImport } from './routes/api/public/v1/orders/$id'
+import { Route as ApiPublicV1OrdersIdStatusRouteImport } from './routes/api/public/v1/orders/$id/status'
 
 const SignUpRoute = SignUpRouteImport.update({
   id: '/sign-up',
@@ -192,6 +193,12 @@ const ApiPublicV1OrdersIdRoute = ApiPublicV1OrdersIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => ApiPublicV1OrdersRoute,
 } as any)
+const ApiPublicV1OrdersIdStatusRoute =
+  ApiPublicV1OrdersIdStatusRouteImport.update({
+    id: '/status',
+    path: '/status',
+    getParentRoute: () => ApiPublicV1OrdersIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -220,7 +227,8 @@ export interface FileRoutesByFullPath {
   '/admin/orders/': typeof AuthenticatedAdminOrdersIndexRoute
   '/dashboard/accounts/': typeof AuthenticatedDashboardAccountsIndexRoute
   '/dashboard/orders/': typeof AuthenticatedDashboardOrdersIndexRoute
-  '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRoute
+  '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRouteWithChildren
+  '/api/public/v1/orders/$id/status': typeof ApiPublicV1OrdersIdStatusRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -249,7 +257,8 @@ export interface FileRoutesByTo {
   '/admin/orders': typeof AuthenticatedAdminOrdersIndexRoute
   '/dashboard/accounts': typeof AuthenticatedDashboardAccountsIndexRoute
   '/dashboard/orders': typeof AuthenticatedDashboardOrdersIndexRoute
-  '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRoute
+  '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRouteWithChildren
+  '/api/public/v1/orders/$id/status': typeof ApiPublicV1OrdersIdStatusRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -280,7 +289,8 @@ export interface FileRoutesById {
   '/_authenticated/admin/orders/': typeof AuthenticatedAdminOrdersIndexRoute
   '/_authenticated/dashboard/accounts/': typeof AuthenticatedDashboardAccountsIndexRoute
   '/_authenticated/dashboard/orders/': typeof AuthenticatedDashboardOrdersIndexRoute
-  '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRoute
+  '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRouteWithChildren
+  '/api/public/v1/orders/$id/status': typeof ApiPublicV1OrdersIdStatusRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -312,6 +322,7 @@ export interface FileRouteTypes {
     | '/dashboard/accounts/'
     | '/dashboard/orders/'
     | '/api/public/v1/orders/$id'
+    | '/api/public/v1/orders/$id/status'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -341,6 +352,7 @@ export interface FileRouteTypes {
     | '/dashboard/accounts'
     | '/dashboard/orders'
     | '/api/public/v1/orders/$id'
+    | '/api/public/v1/orders/$id/status'
   id:
     | '__root__'
     | '/'
@@ -371,6 +383,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/accounts/'
     | '/_authenticated/dashboard/orders/'
     | '/api/public/v1/orders/$id'
+    | '/api/public/v1/orders/$id/status'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -584,6 +597,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicV1OrdersIdRouteImport
       parentRoute: typeof ApiPublicV1OrdersRoute
     }
+    '/api/public/v1/orders/$id/status': {
+      id: '/api/public/v1/orders/$id/status'
+      path: '/status'
+      fullPath: '/api/public/v1/orders/$id/status'
+      preLoaderRoute: typeof ApiPublicV1OrdersIdStatusRouteImport
+      parentRoute: typeof ApiPublicV1OrdersIdRoute
+    }
   }
 }
 
@@ -633,12 +653,23 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface ApiPublicV1OrdersIdRouteChildren {
+  ApiPublicV1OrdersIdStatusRoute: typeof ApiPublicV1OrdersIdStatusRoute
+}
+
+const ApiPublicV1OrdersIdRouteChildren: ApiPublicV1OrdersIdRouteChildren = {
+  ApiPublicV1OrdersIdStatusRoute: ApiPublicV1OrdersIdStatusRoute,
+}
+
+const ApiPublicV1OrdersIdRouteWithChildren =
+  ApiPublicV1OrdersIdRoute._addFileChildren(ApiPublicV1OrdersIdRouteChildren)
+
 interface ApiPublicV1OrdersRouteChildren {
-  ApiPublicV1OrdersIdRoute: typeof ApiPublicV1OrdersIdRoute
+  ApiPublicV1OrdersIdRoute: typeof ApiPublicV1OrdersIdRouteWithChildren
 }
 
 const ApiPublicV1OrdersRouteChildren: ApiPublicV1OrdersRouteChildren = {
-  ApiPublicV1OrdersIdRoute: ApiPublicV1OrdersIdRoute,
+  ApiPublicV1OrdersIdRoute: ApiPublicV1OrdersIdRouteWithChildren,
 }
 
 const ApiPublicV1OrdersRouteWithChildren =
