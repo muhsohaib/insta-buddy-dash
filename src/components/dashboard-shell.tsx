@@ -96,20 +96,36 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                   {memberships.map((m) => {
                     const active = m.organization.id === organization?.id;
                     return (
-                      <DropdownMenuItem
-                        key={m.organization.id}
-                        onSelect={() => {
-                          if (!active && setActive) {
-                            setActive({ organization: m.organization.id }).catch(() => {});
-                          }
-                        }}
-                      >
-                        <Building2 className="mr-2 h-4 w-4" />
-                        <span className="flex-1 truncate">{m.organization.name}</span>
-                        {active && <Check className="ml-2 h-4 w-4 text-primary" />}
-                      </DropdownMenuItem>
+                      <div key={m.organization.id} className="flex items-center gap-1">
+                        <DropdownMenuItem
+                          className="flex-1"
+                          onSelect={() => {
+                            if (!active && setActive) {
+                              setActive({ organization: m.organization.id }).catch(() => {});
+                            }
+                          }}
+                        >
+                          <Building2 className="mr-2 h-4 w-4" />
+                          <span className="flex-1 truncate">{m.organization.name}</span>
+                          {active && <Check className="ml-2 h-4 w-4 text-primary" />}
+                        </DropdownMenuItem>
+                        {active && (
+                          <DropdownMenuItem
+                            className="p-2"
+                            onSelect={(e) => {
+                              e.preventDefault();
+                              openModal("workspace-settings");
+                            }}
+                            aria-label="Workspace settings"
+                            title="Workspace settings"
+                          >
+                            <Settings className="h-4 w-4 text-muted-foreground" />
+                          </DropdownMenuItem>
+                        )}
+                      </div>
                     );
                   })}
+
                   <DropdownMenuSeparator />
                 </>
               )}
