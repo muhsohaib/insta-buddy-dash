@@ -1,5 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { OrganizationProfile, useOrganization, CreateOrganization } from "@clerk/tanstack-react-start";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { OrganizationProfile, useOrganization } from "@clerk/tanstack-react-start";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
@@ -15,30 +16,33 @@ export const Route = createFileRoute("/_authenticated/dashboard/organization")({
 
 function OrganizationPage() {
   const { organization, isLoaded } = useOrganization();
+  const navigate = useNavigate();
+
+  // Every signed-in user should have an active workspace. If not, send them
+  // through onboarding — never render the raw Clerk "create organization" UI.
+  useEffect(() => {
+    if (isLoaded && !organization) {
+      navigate({ to: "/onboarding", replace: true });
+    }
+  }, [isLoaded, organization, navigate]);
 
   return (
     <DashboardShell>
       <div className="mb-6">
         <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Workspace</div>
-        <h1 className="mt-1 text-3xl font-semibold tracking-tight">
-          {organization ? "Members & settings" : "Create an organization"}
-        </h1>
+        <h1 className="mt-1 text-3xl font-semibold tracking-tight">Members & settings</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          {organization
-            ? "Invite teammates, manage roles, and update workspace settings."
-            : "You're currently in your personal workspace. Create an organization to invite teammates and share resources."}
+          Invite teammates, manage roles, and update workspace settings.
         </p>
       </div>
 
       {organization && <InviteForm organizationId={organization.id} />}
 
       <div className="rounded-xl border border-hairline bg-background p-2">
-        {!isLoaded ? (
+        {!isLoaded || !organization ? (
           <div className="p-6 text-sm text-muted-foreground">Loading…</div>
-        ) : organization ? (
-          <OrganizationProfile routing="hash" />
         ) : (
-          <CreateOrganization afterCreateOrganizationUrl="/dashboard/organization" />
+          <OrganizationProfile routing="hash" />
         )}
       </div>
     </DashboardShell>

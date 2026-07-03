@@ -99,7 +99,7 @@ function RootComponent() {
   const { publishableKey } = Route.useLoaderData();
 
   return (
-    <ClerkProvider publishableKey={publishableKey}>
+    <ClerkProvider publishableKey={publishableKey} localization={workspaceLocalization}>
       <QueryClientProvider client={queryClient}>
         <ClerkAuthSync />
         <Outlet />
@@ -108,6 +108,79 @@ function RootComponent() {
     </ClerkProvider>
   );
 }
+
+// Relabel Clerk's "Organization" surfaces as "Workspace" so the term never
+// leaks into the UI. Clerk Organizations remain the backend for members,
+// invitations, roles, and switching.
+const workspaceLocalization = {
+  organizationSwitcher: {
+    action__createOrganization: "Create workspace",
+    action__manageOrganization: "Manage workspace",
+    action__invitationAccept: "Join",
+    action__suggestionsAccept: "Request to join",
+    notSelected: "No workspace selected",
+    personalWorkspace: "Personal workspace",
+    suggestionsAcceptedLabel: "Pending approval",
+  },
+  createOrganization: {
+    title: "Create workspace",
+    formButtonSubmit: "Create workspace",
+    invitePage: {
+      formButtonReset: "Skip",
+    },
+  },
+  organizationProfile: {
+    navbar: {
+      title: "Workspace",
+      description: "Manage your workspace.",
+      general: "General",
+      members: "Members",
+    },
+    start: {
+      headerTitle__members: "Members",
+      headerTitle__general: "General",
+      profileSection: { title: "Workspace profile", primaryButton: "Update workspace" },
+    },
+    profilePage: {
+      title: "Update workspace",
+      subtitle: "Update your workspace profile.",
+      successMessage: "The workspace has been updated.",
+    },
+    membersPage: {
+      requestsTab: { autoSuggestions: { headerTitle: "Invitations", headerSubtitle: "" } },
+      action__invite: "Invite",
+      start: { headerTitle__members: "Members", headerTitle__invitations: "Invitations" },
+    },
+    dangerSection: {
+      leaveOrganization: {
+        title: "Leave workspace",
+        messageLine1: "Are you sure you want to leave this workspace? You will lose access to it and its resources.",
+        messageLine2: "This action is permanent and irreversible.",
+        successMessage: "You've left the workspace.",
+        actionDescription: "Type {{organizationName}} below to continue.",
+      },
+      deleteOrganization: {
+        title: "Delete workspace",
+        messageLine1: "Are you sure you want to delete this workspace?",
+        messageLine2: "This action is permanent and irreversible.",
+        successMessage: "You've deleted the workspace.",
+        actionDescription: "Type {{organizationName}} below to continue.",
+      },
+    },
+  },
+  organizationList: {
+    createOrganization: "Create workspace",
+    title: "Choose a workspace",
+    titleWithoutPersonal: "Choose a workspace",
+    subtitle: "to continue to {{applicationName}}",
+    action__createOrganization: "Create workspace",
+    action__invitationAccept: "Join",
+    action__suggestionsAccept: "Request to join",
+    invitationAcceptedLabel: "Joined",
+    suggestionsAcceptedLabel: "Pending approval",
+  },
+} as const;
+
 
 // Refetches loader/queries when auth state changes so protected routes react.
 function ClerkAuthSync() {
