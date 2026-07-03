@@ -26,13 +26,18 @@ function DashboardPage() {
 
   const accountsQ = useSuspenseQuery(queryOptions({ queryKey: ["accounts"], queryFn: () => listFn() }));
 
-  const readyAccounts: ReadyAccount[] = useMemo(
+  const readyAccounts: PickerAccount[] = useMemo(
     () =>
       accountsQ.data
         .filter((a) => a.status === "ready")
         .map((a) => {
           const d = Array.isArray(a.account_details) ? a.account_details[0] : a.account_details;
-          return { id: a.id, username: d?.ig_username ?? "", label: a.label };
+          return {
+            id: a.id,
+            username: d?.ig_username ?? "",
+            label: a.label,
+            photo: d?.profile_photo_url ?? null,
+          };
         }),
     [accountsQ.data]
   );
