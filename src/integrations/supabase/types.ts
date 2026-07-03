@@ -81,6 +81,7 @@ export type Database = {
           created_at: string
           id: string
           label: string | null
+          order_item_id: string | null
           org_id: string
           status: Database["public"]["Enums"]["account_status"]
           updated_at: string
@@ -90,6 +91,7 @@ export type Database = {
           created_at?: string
           id?: string
           label?: string | null
+          order_item_id?: string | null
           org_id: string
           status?: Database["public"]["Enums"]["account_status"]
           updated_at?: string
@@ -99,10 +101,334 @@ export type Database = {
           created_at?: string
           id?: string
           label?: string | null
+          order_item_id?: string | null
           org_id?: string
           status?: Database["public"]["Enums"]["account_status"]
           updated_at?: string
           user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "instagram_accounts_order_item_id_fkey"
+            columns: ["order_item_id"]
+            isOneToOne: false
+            referencedRelation: "order_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      order_events: {
+        Row: {
+          actor_user_id: string | null
+          created_at: string
+          id: string
+          order_id: string
+          order_item_id: string | null
+          payload: Json
+          type: string
+        }
+        Insert: {
+          actor_user_id?: string | null
+          created_at?: string
+          id?: string
+          order_id: string
+          order_item_id?: string | null
+          payload?: Json
+          type: string
+        }
+        Update: {
+          actor_user_id?: string | null
+          created_at?: string
+          id?: string
+          order_id?: string
+          order_item_id?: string | null
+          payload?: Json
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_events_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_events_order_item_id_fkey"
+            columns: ["order_item_id"]
+            isOneToOne: false
+            referencedRelation: "order_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      order_item_deliverables: {
+        Row: {
+          created_at: string
+          data: Json
+          delivered_at: string | null
+          delivered_by: string | null
+          id: string
+          order_item_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json
+          delivered_at?: string | null
+          delivered_by?: string | null
+          id?: string
+          order_item_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json
+          delivered_at?: string | null
+          delivered_by?: string | null
+          id?: string
+          order_item_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_item_deliverables_order_item_id_fkey"
+            columns: ["order_item_id"]
+            isOneToOne: true
+            referencedRelation: "order_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      order_item_details: {
+        Row: {
+          created_at: string
+          data: Json
+          id: string
+          order_item_id: string
+          submitted_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json
+          id?: string
+          order_item_id: string
+          submitted_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json
+          id?: string
+          order_item_id?: string
+          submitted_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_item_details_order_item_id_fkey"
+            columns: ["order_item_id"]
+            isOneToOne: true
+            referencedRelation: "order_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      order_items: {
+        Row: {
+          admin_notes: string | null
+          assigned_admin_id: string | null
+          cancelled_at: string | null
+          created_at: string
+          delivered_at: string | null
+          id: string
+          order_id: string
+          position: number
+          product_id: string
+          ready_at: string | null
+          started_at: string | null
+          status: Database["public"]["Enums"]["order_item_status"]
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          assigned_admin_id?: string | null
+          cancelled_at?: string | null
+          created_at?: string
+          delivered_at?: string | null
+          id?: string
+          order_id: string
+          position: number
+          product_id: string
+          ready_at?: string | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["order_item_status"]
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          assigned_admin_id?: string | null
+          cancelled_at?: string | null
+          created_at?: string
+          delivered_at?: string | null
+          id?: string
+          order_id?: string
+          position?: number
+          product_id?: string
+          ready_at?: string | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["order_item_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          cancelled_at: string | null
+          created_at: string
+          created_by_user_id: string
+          currency: string
+          current_period_end: string | null
+          delivered_at: string | null
+          details_submitted_at: string | null
+          id: string
+          order_number: number
+          org_id: string
+          paid_at: string | null
+          payment_provider: string
+          payment_ref: string | null
+          payment_status: Database["public"]["Enums"]["order_payment_status"]
+          product_id: string
+          quantity: number
+          ready_at: string | null
+          status: Database["public"]["Enums"]["order_status"]
+          subtotal_cents: number
+          total_cents: number
+          unit_price_cents: number
+          updated_at: string
+          whop_membership_id: string | null
+          whop_subscription_id: string | null
+        }
+        Insert: {
+          cancelled_at?: string | null
+          created_at?: string
+          created_by_user_id: string
+          currency?: string
+          current_period_end?: string | null
+          delivered_at?: string | null
+          details_submitted_at?: string | null
+          id?: string
+          order_number?: number
+          org_id: string
+          paid_at?: string | null
+          payment_provider?: string
+          payment_ref?: string | null
+          payment_status?: Database["public"]["Enums"]["order_payment_status"]
+          product_id: string
+          quantity: number
+          ready_at?: string | null
+          status?: Database["public"]["Enums"]["order_status"]
+          subtotal_cents: number
+          total_cents: number
+          unit_price_cents: number
+          updated_at?: string
+          whop_membership_id?: string | null
+          whop_subscription_id?: string | null
+        }
+        Update: {
+          cancelled_at?: string | null
+          created_at?: string
+          created_by_user_id?: string
+          currency?: string
+          current_period_end?: string | null
+          delivered_at?: string | null
+          details_submitted_at?: string | null
+          id?: string
+          order_number?: number
+          org_id?: string
+          paid_at?: string | null
+          payment_provider?: string
+          payment_ref?: string | null
+          payment_status?: Database["public"]["Enums"]["order_payment_status"]
+          product_id?: string
+          quantity?: number
+          ready_at?: string | null
+          status?: Database["public"]["Enums"]["order_status"]
+          subtotal_cents?: number
+          total_cents?: number
+          unit_price_cents?: number
+          updated_at?: string
+          whop_membership_id?: string | null
+          whop_subscription_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          active: boolean
+          billing_interval: string
+          code: string
+          created_at: string
+          currency: string
+          deliverable_schema: Json
+          description: string | null
+          details_schema: Json
+          id: string
+          name: string
+          unit_price_cents: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          billing_interval?: string
+          code: string
+          created_at?: string
+          currency?: string
+          deliverable_schema?: Json
+          description?: string | null
+          details_schema?: Json
+          id?: string
+          name: string
+          unit_price_cents: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          billing_interval?: string
+          code?: string
+          created_at?: string
+          currency?: string
+          deliverable_schema?: Json
+          description?: string | null
+          details_schema?: Json
+          id?: string
+          name?: string
+          unit_price_cents?: number
+          updated_at?: string
         }
         Relationships: []
       }
@@ -267,6 +593,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      recompute_order_status: {
+        Args: { p_order_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       account_status:
@@ -276,6 +606,23 @@ export type Database = {
         | "ready"
         | "cancelled"
       app_role: "admin" | "client"
+      order_item_status:
+        | "waiting"
+        | "creating"
+        | "warming"
+        | "ready"
+        | "delivered"
+        | "cancelled"
+      order_payment_status: "pending" | "paid" | "failed" | "refunded"
+      order_status:
+        | "draft"
+        | "awaiting_payment"
+        | "awaiting_details"
+        | "pending"
+        | "in_progress"
+        | "ready"
+        | "delivered"
+        | "cancelled"
       post_status: "scheduled" | "completed" | "cancelled"
       subscription_status: "active" | "past_due" | "cancelled" | "expired"
     }
@@ -413,6 +760,25 @@ export const Constants = {
         "cancelled",
       ],
       app_role: ["admin", "client"],
+      order_item_status: [
+        "waiting",
+        "creating",
+        "warming",
+        "ready",
+        "delivered",
+        "cancelled",
+      ],
+      order_payment_status: ["pending", "paid", "failed", "refunded"],
+      order_status: [
+        "draft",
+        "awaiting_payment",
+        "awaiting_details",
+        "pending",
+        "in_progress",
+        "ready",
+        "delivered",
+        "cancelled",
+      ],
       post_status: ["scheduled", "completed", "cancelled"],
       subscription_status: ["active", "past_due", "cancelled", "expired"],
     },

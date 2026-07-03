@@ -12,6 +12,7 @@ import {
   Plus,
   Sparkles,
   Check,
+  Package,
 } from "lucide-react";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -30,8 +31,10 @@ import { DashboardModals, useOpenModal } from "@/components/dashboard-modals";
 type NavItem = { to: string; label: string; icon: typeof CalendarIcon; exact?: boolean };
 const NAV: NavItem[] = [
   { to: "/dashboard", label: "Calendar", icon: CalendarIcon, exact: true },
+  { to: "/dashboard/orders", label: "Orders", icon: Package },
   { to: "/dashboard/accounts", label: "Accounts", icon: Users },
 ];
+
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();

@@ -25,6 +25,7 @@ export function AdminNav() {
   return (
     <div className="mb-6 flex gap-4 border-b border-border">
       {[
+        { to: "/admin/orders", label: "Orders" },
         { to: "/admin", label: "Clients" },
         { to: "/admin/accounts", label: "Accounts" },
         { to: "/admin/posts", label: "Scheduled posts" },
