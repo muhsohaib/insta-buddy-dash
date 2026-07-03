@@ -19,17 +19,23 @@ export type CalendarPost = {
   scheduled_at: string;
   caption: string;
   account_label?: string | null;
+  bunny_video_id?: string | null;
+  bunny_library_id?: string | null;
+  thumbnail_url?: string | null;
 };
 
 export function CalendarGrid({
   posts,
   onCreate,
+  onEditPost,
 }: {
   posts: CalendarPost[];
   onCreate: (date: Date) => void;
+  onEditPost?: (post: CalendarPost) => void;
 }) {
   const [monthAnchor, setMonthAnchor] = useState<Date>(() => startOfMonth(new Date()));
   const [hovered, setHovered] = useState<string | null>(null);
+  const [hoveringPost, setHoveringPost] = useState(false);
 
   const days = useMemo(() => {
     const start = startOfWeek(startOfMonth(monthAnchor));
