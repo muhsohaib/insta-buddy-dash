@@ -53,6 +53,12 @@ export const Route = createFileRoute("/api/public/webhooks/whop")({
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
+        // Ensure a profiles row exists for this Clerk user (userId is a
+        // Clerk id string, e.g. `user_2abc…`, passed in metadata).
+        await supabaseAdmin.from("profiles").upsert({ id: userId }, { onConflict: "id" });
+
+
+
         if (kind.includes("valid") || kind.includes("created") || kind.includes("succeeded")) {
           // Upsert subscription
           const { data: sub, error: subErr } = await supabaseAdmin

@@ -1,11 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { useUser } from "@clerk/tanstack-react-start";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { getMyProfile, updateMyProfile } from "@/lib/profile.functions";
 
 export const Route = createFileRoute("/_authenticated/dashboard/settings")({
   component: SettingsPage,
@@ -13,29 +15,28 @@ export const Route = createFileRoute("/_authenticated/dashboard/settings")({
 });
 
 function SettingsPage() {
+  const { user } = useUser();
   const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
   const [saving, setSaving] = useState(false);
+  const getProfileFn = useServerFn(getMyProfile);
+  const updateProfileFn = useServerFn(updateMyProfile);
+
+  const email = user?.primaryEmailAddress?.emailAddress ?? "";
 
   useEffect(() => {
-    (async () => {
-      const { data: userData } = await supabase.auth.getUser();
-      const uid = userData.user?.id;
-      setEmail(userData.user?.email ?? "");
-      if (!uid) return;
-      const { data } = await supabase.from("profiles").select("full_name").eq("id", uid).maybeSingle();
-      setFullName(data?.full_name ?? "");
-    })();
-  }, []);
+    getProfileFn().then((p) => setFullName(p?.full_name ?? "")).catch(() => {});
+  }, [getProfileFn]);
 
   async function save() {
     setSaving(true);
-    const { data: userData } = await supabase.auth.getUser();
-    const uid = userData.user?.id;
-    if (!uid) { setSaving(false); return; }
-    const { error } = await supabase.from("profiles").update({ full_name: fullName }).eq("id", uid);
-    setSaving(false);
-    if (error) toast.error(error.message); else toast.success("Saved");
+    try {
+      await updateProfileFn({ data: { full_name: fullName } });
+      toast.success("Saved");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Save failed");
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (

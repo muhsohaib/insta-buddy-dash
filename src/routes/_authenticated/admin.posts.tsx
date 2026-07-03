@@ -2,11 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
+import { useAuth } from "@clerk/tanstack-react-start";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { AdminGate } from "@/components/admin-gate";
 import { AdminNav } from "./admin.index";
 import { adminListPosts, adminMarkPostCompleted } from "@/lib/admin.functions";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { toast } from "sonner";
@@ -34,6 +34,7 @@ function PostsTable() {
   const listFn = useServerFn(adminListPosts);
   const completeFn = useServerFn(adminMarkPostCompleted);
   const queryClient = useQueryClient();
+  const { getToken } = useAuth();
 
   const q = useSuspenseQuery(queryOptions({
     queryKey: ["admin", "posts", filter],
@@ -50,8 +51,7 @@ function PostsTable() {
     if (!video_id || !library_id) return;
     const toastId = toast.loading("Preparing download…");
     try {
-      const { data: sessionData } = await supabase.auth.getSession();
-      const token = sessionData.session?.access_token;
+      const token = await getToken();
       if (!token) throw new Error("Not signed in");
 
       const res = await fetch(
