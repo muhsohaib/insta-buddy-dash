@@ -62,7 +62,11 @@ export const Route = createFileRoute("/api/public/admin/bunny-download")({
 
         const candidates = [
           `https://${hostname}/${videoId}/original`,
-          ...resolutions.map((r) => `https://${hostname}/${videoId}/play_${r}.mp4`),
+          ...resolutions.flatMap((r) => [
+            `https://${hostname}/${videoId}/play_${r}p.mp4`,
+            `https://${hostname}/${videoId}/play_${r}.mp4`,
+          ]),
+          `https://${hostname}/${videoId}/playlist.m3u8`,
         ];
 
         let upstream: Response | null = null;
