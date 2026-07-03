@@ -9,8 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { CalendarGrid, type CalendarPost } from "@/components/calendar-grid";
 import { CreateAccountDialog, type AccountGateState } from "@/components/create-account-dialog";
-import { SchedulePostDialog, type ReadyAccount } from "@/components/schedule-post-dialog";
-import { PickAccountDialog, type PickableAccount } from "@/components/pick-account-dialog";
+import { CreatePostDialog, type PickerAccount } from "@/components/create-post-dialog";
 import { EditPostDialog, type EditablePost } from "@/components/edit-post-dialog";
 import { toast } from "sonner";
 
@@ -27,13 +26,18 @@ function DashboardPage() {
 
   const accountsQ = useSuspenseQuery(queryOptions({ queryKey: ["accounts"], queryFn: () => listFn() }));
 
-  const readyAccounts: ReadyAccount[] = useMemo(
+  const readyAccounts: PickerAccount[] = useMemo(
     () =>
       accountsQ.data
         .filter((a) => a.status === "ready")
         .map((a) => {
           const d = Array.isArray(a.account_details) ? a.account_details[0] : a.account_details;
-          return { id: a.id, username: d?.ig_username ?? "", label: a.label };
+          return {
+            id: a.id,
+            username: d?.ig_username ?? "",
+            label: a.label,
+            photo: d?.profile_photo_url ?? null,
+          };
         }),
     [accountsQ.data]
   );
@@ -70,10 +74,7 @@ function DashboardPage() {
   );
 
   const [openDate, setOpenDate] = useState<Date | null>(null);
-  const [scheduleAccountId, setScheduleAccountId] = useState<string | undefined>(undefined);
   const [showCreateAccount, setShowCreateAccount] = useState(false);
-  const [showPicker, setShowPicker] = useState(false);
-  const [pickerDate, setPickerDate] = useState<Date | null>(null);
   const [creatingAccount, setCreatingAccount] = useState(false);
   const [editingPost, setEditingPost] = useState<EditablePost | null>(null);
   const navigate = useNavigate();
@@ -83,38 +84,13 @@ function DashboardPage() {
   const hasCreating = accountsQ.data.some((a) => a.status === "creating");
   const gateState: AccountGateState = hasWarming ? "warming_up" : hasCreating ? "creating" : "none";
 
-  const pickable: PickableAccount[] = useMemo(
-    () =>
-      accountsQ.data
-        .filter((a) => ["ready", "warming_up", "creating", "pending_details"].includes(a.status))
-        .map((a) => {
-          const d = Array.isArray(a.account_details) ? a.account_details[0] : a.account_details;
-          return {
-            id: a.id,
-            username: d?.ig_username ?? null,
-            label: a.label ?? d?.app_name ?? null,
-            status: a.status,
-            photo: d?.profile_photo_url ?? null,
-          };
-        }),
-    [accountsQ.data]
-  );
-
   function onCreateFromDay(date: Date) {
-    // No accounts at all → gate to pricing / status.
-    if (pickable.length === 0) {
+    // No ready accounts → gate to pricing / status.
+    if (!hasReady) {
       setShowCreateAccount(true);
       return;
     }
-    // Only one account and it's ready → straight to scheduler.
-    if (pickable.length === 1 && hasReady) {
-      setScheduleAccountId(pickable[0].id);
-      setOpenDate(date);
-      return;
-    }
-    // Multiple accounts (or a single non-ready one) → let the user pick.
-    setPickerDate(date);
-    setShowPicker(true);
+    setOpenDate(date);
   }
 
   async function onCreateAccount() {
@@ -163,21 +139,11 @@ function DashboardPage() {
 
       {/* Dialogs */}
       <CreateAccountDialog open={showCreateAccount} onClose={() => setShowCreateAccount(false)} state={gateState} />
-      <PickAccountDialog
-        open={showPicker}
-        onClose={() => setShowPicker(false)}
-        accounts={pickable}
-        onPickReady={(id) => {
-          setScheduleAccountId(id);
-          setOpenDate(pickerDate ?? new Date());
-        }}
-      />
-      <SchedulePostDialog
+      <CreatePostDialog
         open={openDate !== null}
         initialDate={openDate}
         accounts={readyAccounts}
-        defaultAccountId={scheduleAccountId}
-        onClose={() => { setOpenDate(null); setScheduleAccountId(undefined); }}
+        onClose={() => setOpenDate(null)}
         onCreated={() => {
           queryClient.invalidateQueries({ queryKey: ["posts"] });
         }}
