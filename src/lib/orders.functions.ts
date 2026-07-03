@@ -211,7 +211,7 @@ export const saveItemDetails = createServerFn({ method: "POST" })
         .upsert(
           {
             order_item_id: item.order_item_id,
-            data: item.data,
+            data: item.data as any,
             submitted_at: data.submit ? new Date().toISOString() : null,
           },
           { onConflict: "order_item_id" },
@@ -331,7 +331,7 @@ export const adminSaveDeliverable = createServerFn({ method: "POST" })
       .upsert(
         {
           order_item_id: data.order_item_id,
-          data: data.data,
+          data: data.data as any,
           delivered_at: new Date().toISOString(),
           delivered_by: context.userId,
         },
