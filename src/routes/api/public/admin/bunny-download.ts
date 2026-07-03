@@ -3,11 +3,25 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { verifyToken } from "@clerk/backend";
 
+function normalizeResolution(value: string) {
+  return value.trim().toLowerCase().replace(/p$/, "");
+}
+
+function hostnameFromUrl(value: string | null | undefined) {
+  if (!value) return null;
+  try {
+    return new URL(value).hostname;
+  } catch {
+    return null;
+  }
+}
+
 export const Route = createFileRoute("/api/public/admin/bunny-download")({
   server: {
     handlers: {
       GET: async ({ request }) => {
         const url = new URL(request.url);
+        const appOrigin = url.origin;
         const videoId = url.searchParams.get("video");
         const libraryId = url.searchParams.get("library");
         if (!videoId || !libraryId) return new Response("Missing params", { status: 400 });
@@ -54,26 +68,53 @@ export const Route = createFileRoute("/api/public/admin/bunny-download")({
         };
         if ((info.status ?? 0) < 4) return new Response("Video is still processing on Bunny Stream.", { status: 409 });
 
+        const playRes = await fetch(`https://video.bunnycdn.com/library/${libraryId}/videos/${videoId}/play`);
+        const playInfo = playRes.ok
+          ? ((await playRes.json()) as {
+              fallbackUrl?: string | null;
+              originalUrl?: string | null;
+              videoPlaylistUrl?: string | null;
+            })
+          : null;
+
+        const hostnames = Array.from(
+          new Set(
+            [
+              hostname,
+              hostnameFromUrl(playInfo?.fallbackUrl),
+              hostnameFromUrl(playInfo?.originalUrl),
+              hostnameFromUrl(playInfo?.videoPlaylistUrl),
+            ].filter(Boolean) as string[],
+          ),
+        );
+
         const resolutions = (info.availableResolutions ?? "")
           .split(",")
-          .map((r) => r.trim())
+          .map(normalizeResolution)
           .filter(Boolean)
           .sort((a, b) => parseInt(b) - parseInt(a));
 
-        const candidates = [
-          `https://${hostname}/${videoId}/original`,
-          ...resolutions.flatMap((r) => [
-            `https://${hostname}/${videoId}/play_${r}p.mp4`,
-            `https://${hostname}/${videoId}/play_${r}.mp4`,
-          ]),
-          `https://${hostname}/${videoId}/playlist.m3u8`,
-        ];
+        const candidates = Array.from(
+          new Set([
+            playInfo?.originalUrl ?? undefined,
+            ...hostnames.map((host) => `https://${host}/${videoId}/original`),
+            ...hostnames.flatMap((host) => resolutions.map((r) => `https://${host}/${videoId}/play_${r}p.mp4`)),
+          ].filter(Boolean) as string[]),
+        );
 
         let upstream: Response | null = null;
         for (const candidate of candidates) {
-          const r = await fetch(candidate, { redirect: "follow" });
+          const r = await fetch(candidate, {
+            redirect: "follow",
+            headers: {
+              // Bunny direct file access can be restricted by allowed referrers.
+              // Server-side fetches do not include one by default, so pass the
+              // app origin that Bunny is configured to allow.
+              Referer: `${appOrigin}/`,
+            },
+          });
           const ct = r.headers.get("content-type") ?? "";
-          if (r.ok && !ct.startsWith("text/")) {
+          if (r.ok && ct.startsWith("video/")) {
             upstream = r;
             break;
           }
