@@ -37,7 +37,9 @@ export const Route = createFileRoute("/api/public/webhooks/whop")({
           org_id?: string;
           user_id?: string;
           quantity?: number;
+          order_id?: string;
         };
+        const orderId = meta.order_id ?? null;
 
         const orgId = meta.org_id;
         const userId = meta.user_id ?? null;
