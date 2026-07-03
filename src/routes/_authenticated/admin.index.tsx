@@ -28,8 +28,10 @@ export function AdminNav() {
         { to: "/admin/orders", label: "Orders" },
         { to: "/admin", label: "Clients" },
         { to: "/admin/accounts", label: "Accounts" },
+        { to: "/admin/publications", label: "Publications" },
         { to: "/admin/posts", label: "Scheduled posts" },
       ].map((t) => (
+
         <Link
           key={t.to}
           to={t.to}

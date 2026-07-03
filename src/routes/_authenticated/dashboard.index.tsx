@@ -5,6 +5,8 @@ import { useMemo, useState } from "react";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { listMyAccounts, createAdditionalAccount } from "@/lib/accounts.functions";
 import { listMyPostsForAccount } from "@/lib/posts.functions";
+import { listPublicationsInRange } from "@/lib/publications.functions";
+
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { CalendarGrid, type CalendarPost } from "@/components/calendar-grid";
@@ -21,7 +23,9 @@ export const Route = createFileRoute("/_authenticated/dashboard/")({
 function DashboardPage() {
   const listFn = useServerFn(listMyAccounts);
   const listPostsFn = useServerFn(listMyPostsForAccount);
+  const listPubsFn = useServerFn(listPublicationsInRange);
   const createAccountFn = useServerFn(createAdditionalAccount);
+
   const queryClient = useQueryClient();
 
   const accountsQ = useSuspenseQuery(queryOptions({ queryKey: ["accounts"], queryFn: () => listFn() }));
@@ -44,17 +48,20 @@ function DashboardPage() {
 
   const readyIds = useMemo(() => readyAccounts.map((a) => a.id), [readyAccounts]);
 
-  // Aggregate posts across ready accounts
+  // Aggregate publications (new) + legacy scheduled_posts (during transition)
   const postsQueries = useSuspenseQuery(
     queryOptions({
       queryKey: ["posts", "all", readyIds],
       queryFn: async () => {
-        if (readyIds.length === 0) return [] as CalendarPost[];
-        const results = await Promise.all(
-          readyIds.map((id) => listPostsFn({ data: { account_id: id } }))
-        );
+        const [pubs, legacyResults] = await Promise.all([
+          listPubsFn(),
+          readyIds.length === 0
+            ? Promise.resolve([])
+            : Promise.all(readyIds.map((id) => listPostsFn({ data: { account_id: id } }))),
+        ]);
         const out: CalendarPost[] = [];
-        results.forEach((posts, idx) => {
+        // Legacy scheduled_posts
+        (legacyResults as Awaited<ReturnType<typeof listPostsFn>>[]).forEach((posts, idx) => {
           const acct = readyAccounts[idx];
           for (const p of posts) {
             out.push({
@@ -68,10 +75,39 @@ function DashboardPage() {
             });
           }
         });
+        // Publications
+        type PubMedia = {
+          bunny_video_id: string | null;
+          bunny_library_id: string | null;
+          thumbnail_url: string | null;
+          position: number;
+        };
+        type PubRow = {
+          id: string;
+          scheduled_at: string;
+          caption: string;
+          account_id: string;
+          publication_media?: PubMedia[];
+        };
+        for (const p of pubs as unknown as PubRow[]) {
+          const media = (p.publication_media ?? []).slice().sort((a, b) => a.position - b.position);
+          const first = media[0];
+          const acct = readyAccounts.find((a) => a.id === p.account_id);
+          out.push({
+            id: p.id,
+            scheduled_at: p.scheduled_at,
+            caption: p.caption,
+            account_label: acct?.username ?? acct?.label ?? null,
+            bunny_video_id: first?.bunny_video_id ?? null,
+            bunny_library_id: first?.bunny_library_id ?? null,
+            thumbnail_url: first?.thumbnail_url ?? null,
+          });
+        }
         return out;
       },
     })
   );
+
 
   const [openDate, setOpenDate] = useState<Date | null>(null);
   const [showCreateAccount, setShowCreateAccount] = useState(false);

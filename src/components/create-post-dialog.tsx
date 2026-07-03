@@ -17,7 +17,8 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
 import { createBunnyUpload } from "@/lib/bunny.functions";
-import { createScheduledPost } from "@/lib/posts.functions";
+import { createPublication } from "@/lib/publications.functions";
+
 import {
   UploadCloud,
   Film,
@@ -67,7 +68,8 @@ export function CreatePostDialog({
   onCreated: () => void;
 }) {
   const createBunnyFn = useServerFn(createBunnyUpload);
-  const createPostFn = useServerFn(createScheduledPost);
+  const createPostFn = useServerFn(createPublication);
+
 
   const [step, setStep] = useState<Step>(1);
   const [file, setFile] = useState<File | null>(null);
@@ -197,15 +199,23 @@ export function CreatePostDialog({
           createPostFn({
             data: {
               account_id: accountId,
+              type: "reel",
               caption,
               scheduled_at: iso,
-              bunny_video_id: upload.videoId,
-              bunny_library_id: upload.libraryId,
-              thumbnail_url: upload.thumbnailUrl,
+              status: "scheduled",
+              media: [
+                {
+                  kind: "video",
+                  bunny_video_id: upload.videoId,
+                  bunny_library_id: upload.libraryId,
+                  thumbnail_url: upload.thumbnailUrl,
+                },
+              ],
             },
           })
         )
       );
+
       toast.success(
         selectedIds.length > 1
           ? `Scheduled to ${selectedIds.length} accounts`

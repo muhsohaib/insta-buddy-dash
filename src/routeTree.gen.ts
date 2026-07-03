@@ -23,21 +23,26 @@ import { Route as AuthenticatedDashboardOrganizationRouteImport } from './routes
 import { Route as AuthenticatedDashboardLibraryRouteImport } from './routes/_authenticated/dashboard.library'
 import { Route as AuthenticatedDashboardBillingRouteImport } from './routes/_authenticated/dashboard.billing'
 import { Route as AuthenticatedDashboardAnalyticsRouteImport } from './routes/_authenticated/dashboard.analytics'
+import { Route as AuthenticatedAdminPublicationsRouteImport } from './routes/_authenticated/admin.publications'
 import { Route as AuthenticatedAdminPostsRouteImport } from './routes/_authenticated/admin.posts'
 import { Route as AuthenticatedAdminAccountsRouteImport } from './routes/_authenticated/admin.accounts'
 import { Route as AuthenticatedDashboardOrdersIndexRouteImport } from './routes/_authenticated/dashboard.orders.index'
 import { Route as AuthenticatedDashboardAccountsIndexRouteImport } from './routes/_authenticated/dashboard.accounts.index'
 import { Route as AuthenticatedAdminOrdersIndexRouteImport } from './routes/_authenticated/admin.orders.index'
 import { Route as ApiPublicWebhooksWhopRouteImport } from './routes/api/public/webhooks/whop'
+import { Route as ApiPublicV1PublicationsRouteImport } from './routes/api/public/v1/publications'
 import { Route as ApiPublicV1ProductsRouteImport } from './routes/api/public/v1/products'
 import { Route as ApiPublicV1OrdersRouteImport } from './routes/api/public/v1/orders'
 import { Route as ApiPublicV1OpenapiRouteImport } from './routes/api/public/v1/openapi'
+import { Route as ApiPublicV1CalendarRouteImport } from './routes/api/public/v1/calendar'
 import { Route as ApiPublicAdminBunnyDownloadRouteImport } from './routes/api/public/admin/bunny-download'
 import { Route as AuthenticatedDashboardOrdersNewRouteImport } from './routes/_authenticated/dashboard.orders.new'
 import { Route as AuthenticatedDashboardOrdersIdRouteImport } from './routes/_authenticated/dashboard.orders.$id'
 import { Route as AuthenticatedDashboardAccountsIdRouteImport } from './routes/_authenticated/dashboard.accounts.$id'
 import { Route as AuthenticatedAdminOrdersIdRouteImport } from './routes/_authenticated/admin.orders.$id'
+import { Route as ApiPublicV1PublicationsIdRouteImport } from './routes/api/public/v1/publications/$id'
 import { Route as ApiPublicV1OrdersIdRouteImport } from './routes/api/public/v1/orders/$id'
+import { Route as ApiPublicV1PublicationsIdPublishRouteImport } from './routes/api/public/v1/publications/$id/publish'
 import { Route as ApiPublicV1OrdersIdStatusRouteImport } from './routes/api/public/v1/orders/$id/status'
 import { Route as ApiPublicV1OrdersIdDetailsRouteImport } from './routes/api/public/v1/orders/$id/details'
 import { Route as ApiPublicV1OrdersIdDeliverablesRouteImport } from './routes/api/public/v1/orders/$id/deliverables'
@@ -117,6 +122,12 @@ const AuthenticatedDashboardAnalyticsRoute =
     path: '/dashboard/analytics',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminPublicationsRoute =
+  AuthenticatedAdminPublicationsRouteImport.update({
+    id: '/admin/publications',
+    path: '/admin/publications',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminPostsRoute = AuthenticatedAdminPostsRouteImport.update({
   id: '/admin/posts',
   path: '/admin/posts',
@@ -151,6 +162,11 @@ const ApiPublicWebhooksWhopRoute = ApiPublicWebhooksWhopRouteImport.update({
   path: '/api/public/webhooks/whop',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicV1PublicationsRoute = ApiPublicV1PublicationsRouteImport.update({
+  id: '/api/public/v1/publications',
+  path: '/api/public/v1/publications',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicV1ProductsRoute = ApiPublicV1ProductsRouteImport.update({
   id: '/api/public/v1/products',
   path: '/api/public/v1/products',
@@ -164,6 +180,11 @@ const ApiPublicV1OrdersRoute = ApiPublicV1OrdersRouteImport.update({
 const ApiPublicV1OpenapiRoute = ApiPublicV1OpenapiRouteImport.update({
   id: '/api/public/v1/openapi',
   path: '/api/public/v1/openapi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicV1CalendarRoute = ApiPublicV1CalendarRouteImport.update({
+  id: '/api/public/v1/calendar',
+  path: '/api/public/v1/calendar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicAdminBunnyDownloadRoute =
@@ -196,11 +217,23 @@ const AuthenticatedAdminOrdersIdRoute =
     path: '/admin/orders/$id',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiPublicV1PublicationsIdRoute =
+  ApiPublicV1PublicationsIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => ApiPublicV1PublicationsRoute,
+  } as any)
 const ApiPublicV1OrdersIdRoute = ApiPublicV1OrdersIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => ApiPublicV1OrdersRoute,
 } as any)
+const ApiPublicV1PublicationsIdPublishRoute =
+  ApiPublicV1PublicationsIdPublishRouteImport.update({
+    id: '/publish',
+    path: '/publish',
+    getParentRoute: () => ApiPublicV1PublicationsIdRoute,
+  } as any)
 const ApiPublicV1OrdersIdStatusRoute =
   ApiPublicV1OrdersIdStatusRouteImport.update({
     id: '/status',
@@ -229,6 +262,7 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/admin/accounts': typeof AuthenticatedAdminAccountsRoute
   '/admin/posts': typeof AuthenticatedAdminPostsRoute
+  '/admin/publications': typeof AuthenticatedAdminPublicationsRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
   '/dashboard/library': typeof AuthenticatedDashboardLibraryRoute
@@ -241,17 +275,21 @@ export interface FileRoutesByFullPath {
   '/dashboard/orders/$id': typeof AuthenticatedDashboardOrdersIdRoute
   '/dashboard/orders/new': typeof AuthenticatedDashboardOrdersNewRoute
   '/api/public/admin/bunny-download': typeof ApiPublicAdminBunnyDownloadRoute
+  '/api/public/v1/calendar': typeof ApiPublicV1CalendarRoute
   '/api/public/v1/openapi': typeof ApiPublicV1OpenapiRoute
   '/api/public/v1/orders': typeof ApiPublicV1OrdersRouteWithChildren
   '/api/public/v1/products': typeof ApiPublicV1ProductsRoute
+  '/api/public/v1/publications': typeof ApiPublicV1PublicationsRouteWithChildren
   '/api/public/webhooks/whop': typeof ApiPublicWebhooksWhopRoute
   '/admin/orders/': typeof AuthenticatedAdminOrdersIndexRoute
   '/dashboard/accounts/': typeof AuthenticatedDashboardAccountsIndexRoute
   '/dashboard/orders/': typeof AuthenticatedDashboardOrdersIndexRoute
   '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRouteWithChildren
+  '/api/public/v1/publications/$id': typeof ApiPublicV1PublicationsIdRouteWithChildren
   '/api/public/v1/orders/$id/deliverables': typeof ApiPublicV1OrdersIdDeliverablesRoute
   '/api/public/v1/orders/$id/details': typeof ApiPublicV1OrdersIdDetailsRoute
   '/api/public/v1/orders/$id/status': typeof ApiPublicV1OrdersIdStatusRoute
+  '/api/public/v1/publications/$id/publish': typeof ApiPublicV1PublicationsIdPublishRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -262,6 +300,7 @@ export interface FileRoutesByTo {
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/admin/accounts': typeof AuthenticatedAdminAccountsRoute
   '/admin/posts': typeof AuthenticatedAdminPostsRoute
+  '/admin/publications': typeof AuthenticatedAdminPublicationsRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
   '/dashboard/library': typeof AuthenticatedDashboardLibraryRoute
@@ -274,17 +313,21 @@ export interface FileRoutesByTo {
   '/dashboard/orders/$id': typeof AuthenticatedDashboardOrdersIdRoute
   '/dashboard/orders/new': typeof AuthenticatedDashboardOrdersNewRoute
   '/api/public/admin/bunny-download': typeof ApiPublicAdminBunnyDownloadRoute
+  '/api/public/v1/calendar': typeof ApiPublicV1CalendarRoute
   '/api/public/v1/openapi': typeof ApiPublicV1OpenapiRoute
   '/api/public/v1/orders': typeof ApiPublicV1OrdersRouteWithChildren
   '/api/public/v1/products': typeof ApiPublicV1ProductsRoute
+  '/api/public/v1/publications': typeof ApiPublicV1PublicationsRouteWithChildren
   '/api/public/webhooks/whop': typeof ApiPublicWebhooksWhopRoute
   '/admin/orders': typeof AuthenticatedAdminOrdersIndexRoute
   '/dashboard/accounts': typeof AuthenticatedDashboardAccountsIndexRoute
   '/dashboard/orders': typeof AuthenticatedDashboardOrdersIndexRoute
   '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRouteWithChildren
+  '/api/public/v1/publications/$id': typeof ApiPublicV1PublicationsIdRouteWithChildren
   '/api/public/v1/orders/$id/deliverables': typeof ApiPublicV1OrdersIdDeliverablesRoute
   '/api/public/v1/orders/$id/details': typeof ApiPublicV1OrdersIdDetailsRoute
   '/api/public/v1/orders/$id/status': typeof ApiPublicV1OrdersIdStatusRoute
+  '/api/public/v1/publications/$id/publish': typeof ApiPublicV1PublicationsIdPublishRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -297,6 +340,7 @@ export interface FileRoutesById {
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/admin/accounts': typeof AuthenticatedAdminAccountsRoute
   '/_authenticated/admin/posts': typeof AuthenticatedAdminPostsRoute
+  '/_authenticated/admin/publications': typeof AuthenticatedAdminPublicationsRoute
   '/_authenticated/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/_authenticated/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
   '/_authenticated/dashboard/library': typeof AuthenticatedDashboardLibraryRoute
@@ -309,17 +353,21 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/orders/$id': typeof AuthenticatedDashboardOrdersIdRoute
   '/_authenticated/dashboard/orders/new': typeof AuthenticatedDashboardOrdersNewRoute
   '/api/public/admin/bunny-download': typeof ApiPublicAdminBunnyDownloadRoute
+  '/api/public/v1/calendar': typeof ApiPublicV1CalendarRoute
   '/api/public/v1/openapi': typeof ApiPublicV1OpenapiRoute
   '/api/public/v1/orders': typeof ApiPublicV1OrdersRouteWithChildren
   '/api/public/v1/products': typeof ApiPublicV1ProductsRoute
+  '/api/public/v1/publications': typeof ApiPublicV1PublicationsRouteWithChildren
   '/api/public/webhooks/whop': typeof ApiPublicWebhooksWhopRoute
   '/_authenticated/admin/orders/': typeof AuthenticatedAdminOrdersIndexRoute
   '/_authenticated/dashboard/accounts/': typeof AuthenticatedDashboardAccountsIndexRoute
   '/_authenticated/dashboard/orders/': typeof AuthenticatedDashboardOrdersIndexRoute
   '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRouteWithChildren
+  '/api/public/v1/publications/$id': typeof ApiPublicV1PublicationsIdRouteWithChildren
   '/api/public/v1/orders/$id/deliverables': typeof ApiPublicV1OrdersIdDeliverablesRoute
   '/api/public/v1/orders/$id/details': typeof ApiPublicV1OrdersIdDetailsRoute
   '/api/public/v1/orders/$id/status': typeof ApiPublicV1OrdersIdStatusRoute
+  '/api/public/v1/publications/$id/publish': typeof ApiPublicV1PublicationsIdPublishRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -332,6 +380,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/admin/accounts'
     | '/admin/posts'
+    | '/admin/publications'
     | '/dashboard/analytics'
     | '/dashboard/billing'
     | '/dashboard/library'
@@ -344,17 +393,21 @@ export interface FileRouteTypes {
     | '/dashboard/orders/$id'
     | '/dashboard/orders/new'
     | '/api/public/admin/bunny-download'
+    | '/api/public/v1/calendar'
     | '/api/public/v1/openapi'
     | '/api/public/v1/orders'
     | '/api/public/v1/products'
+    | '/api/public/v1/publications'
     | '/api/public/webhooks/whop'
     | '/admin/orders/'
     | '/dashboard/accounts/'
     | '/dashboard/orders/'
     | '/api/public/v1/orders/$id'
+    | '/api/public/v1/publications/$id'
     | '/api/public/v1/orders/$id/deliverables'
     | '/api/public/v1/orders/$id/details'
     | '/api/public/v1/orders/$id/status'
+    | '/api/public/v1/publications/$id/publish'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -365,6 +418,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/admin/accounts'
     | '/admin/posts'
+    | '/admin/publications'
     | '/dashboard/analytics'
     | '/dashboard/billing'
     | '/dashboard/library'
@@ -377,17 +431,21 @@ export interface FileRouteTypes {
     | '/dashboard/orders/$id'
     | '/dashboard/orders/new'
     | '/api/public/admin/bunny-download'
+    | '/api/public/v1/calendar'
     | '/api/public/v1/openapi'
     | '/api/public/v1/orders'
     | '/api/public/v1/products'
+    | '/api/public/v1/publications'
     | '/api/public/webhooks/whop'
     | '/admin/orders'
     | '/dashboard/accounts'
     | '/dashboard/orders'
     | '/api/public/v1/orders/$id'
+    | '/api/public/v1/publications/$id'
     | '/api/public/v1/orders/$id/deliverables'
     | '/api/public/v1/orders/$id/details'
     | '/api/public/v1/orders/$id/status'
+    | '/api/public/v1/publications/$id/publish'
   id:
     | '__root__'
     | '/'
@@ -399,6 +457,7 @@ export interface FileRouteTypes {
     | '/_authenticated/onboarding'
     | '/_authenticated/admin/accounts'
     | '/_authenticated/admin/posts'
+    | '/_authenticated/admin/publications'
     | '/_authenticated/dashboard/analytics'
     | '/_authenticated/dashboard/billing'
     | '/_authenticated/dashboard/library'
@@ -411,17 +470,21 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/orders/$id'
     | '/_authenticated/dashboard/orders/new'
     | '/api/public/admin/bunny-download'
+    | '/api/public/v1/calendar'
     | '/api/public/v1/openapi'
     | '/api/public/v1/orders'
     | '/api/public/v1/products'
+    | '/api/public/v1/publications'
     | '/api/public/webhooks/whop'
     | '/_authenticated/admin/orders/'
     | '/_authenticated/dashboard/accounts/'
     | '/_authenticated/dashboard/orders/'
     | '/api/public/v1/orders/$id'
+    | '/api/public/v1/publications/$id'
     | '/api/public/v1/orders/$id/deliverables'
     | '/api/public/v1/orders/$id/details'
     | '/api/public/v1/orders/$id/status'
+    | '/api/public/v1/publications/$id/publish'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -432,9 +495,11 @@ export interface RootRouteChildren {
   PricingRoute: typeof PricingRoute
   SignUpRoute: typeof SignUpRoute
   ApiPublicAdminBunnyDownloadRoute: typeof ApiPublicAdminBunnyDownloadRoute
+  ApiPublicV1CalendarRoute: typeof ApiPublicV1CalendarRoute
   ApiPublicV1OpenapiRoute: typeof ApiPublicV1OpenapiRoute
   ApiPublicV1OrdersRoute: typeof ApiPublicV1OrdersRouteWithChildren
   ApiPublicV1ProductsRoute: typeof ApiPublicV1ProductsRoute
+  ApiPublicV1PublicationsRoute: typeof ApiPublicV1PublicationsRouteWithChildren
   ApiPublicWebhooksWhopRoute: typeof ApiPublicWebhooksWhopRoute
 }
 
@@ -538,6 +603,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAnalyticsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/publications': {
+      id: '/_authenticated/admin/publications'
+      path: '/admin/publications'
+      fullPath: '/admin/publications'
+      preLoaderRoute: typeof AuthenticatedAdminPublicationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin/posts': {
       id: '/_authenticated/admin/posts'
       path: '/admin/posts'
@@ -580,6 +652,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicWebhooksWhopRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/v1/publications': {
+      id: '/api/public/v1/publications'
+      path: '/api/public/v1/publications'
+      fullPath: '/api/public/v1/publications'
+      preLoaderRoute: typeof ApiPublicV1PublicationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/v1/products': {
       id: '/api/public/v1/products'
       path: '/api/public/v1/products'
@@ -599,6 +678,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/v1/openapi'
       fullPath: '/api/public/v1/openapi'
       preLoaderRoute: typeof ApiPublicV1OpenapiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/v1/calendar': {
+      id: '/api/public/v1/calendar'
+      path: '/api/public/v1/calendar'
+      fullPath: '/api/public/v1/calendar'
+      preLoaderRoute: typeof ApiPublicV1CalendarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/admin/bunny-download': {
@@ -636,12 +722,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminOrdersIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/v1/publications/$id': {
+      id: '/api/public/v1/publications/$id'
+      path: '/$id'
+      fullPath: '/api/public/v1/publications/$id'
+      preLoaderRoute: typeof ApiPublicV1PublicationsIdRouteImport
+      parentRoute: typeof ApiPublicV1PublicationsRoute
+    }
     '/api/public/v1/orders/$id': {
       id: '/api/public/v1/orders/$id'
       path: '/$id'
       fullPath: '/api/public/v1/orders/$id'
       preLoaderRoute: typeof ApiPublicV1OrdersIdRouteImport
       parentRoute: typeof ApiPublicV1OrdersRoute
+    }
+    '/api/public/v1/publications/$id/publish': {
+      id: '/api/public/v1/publications/$id/publish'
+      path: '/publish'
+      fullPath: '/api/public/v1/publications/$id/publish'
+      preLoaderRoute: typeof ApiPublicV1PublicationsIdPublishRouteImport
+      parentRoute: typeof ApiPublicV1PublicationsIdRoute
     }
     '/api/public/v1/orders/$id/status': {
       id: '/api/public/v1/orders/$id/status'
@@ -671,6 +771,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedAdminAccountsRoute: typeof AuthenticatedAdminAccountsRoute
   AuthenticatedAdminPostsRoute: typeof AuthenticatedAdminPostsRoute
+  AuthenticatedAdminPublicationsRoute: typeof AuthenticatedAdminPublicationsRoute
   AuthenticatedDashboardAnalyticsRoute: typeof AuthenticatedDashboardAnalyticsRoute
   AuthenticatedDashboardBillingRoute: typeof AuthenticatedDashboardBillingRoute
   AuthenticatedDashboardLibraryRoute: typeof AuthenticatedDashboardLibraryRoute
@@ -691,6 +792,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedAdminAccountsRoute: AuthenticatedAdminAccountsRoute,
   AuthenticatedAdminPostsRoute: AuthenticatedAdminPostsRoute,
+  AuthenticatedAdminPublicationsRoute: AuthenticatedAdminPublicationsRoute,
   AuthenticatedDashboardAnalyticsRoute: AuthenticatedDashboardAnalyticsRoute,
   AuthenticatedDashboardBillingRoute: AuthenticatedDashboardBillingRoute,
   AuthenticatedDashboardLibraryRoute: AuthenticatedDashboardLibraryRoute,
@@ -739,6 +841,35 @@ const ApiPublicV1OrdersRouteChildren: ApiPublicV1OrdersRouteChildren = {
 const ApiPublicV1OrdersRouteWithChildren =
   ApiPublicV1OrdersRoute._addFileChildren(ApiPublicV1OrdersRouteChildren)
 
+interface ApiPublicV1PublicationsIdRouteChildren {
+  ApiPublicV1PublicationsIdPublishRoute: typeof ApiPublicV1PublicationsIdPublishRoute
+}
+
+const ApiPublicV1PublicationsIdRouteChildren: ApiPublicV1PublicationsIdRouteChildren =
+  {
+    ApiPublicV1PublicationsIdPublishRoute:
+      ApiPublicV1PublicationsIdPublishRoute,
+  }
+
+const ApiPublicV1PublicationsIdRouteWithChildren =
+  ApiPublicV1PublicationsIdRoute._addFileChildren(
+    ApiPublicV1PublicationsIdRouteChildren,
+  )
+
+interface ApiPublicV1PublicationsRouteChildren {
+  ApiPublicV1PublicationsIdRoute: typeof ApiPublicV1PublicationsIdRouteWithChildren
+}
+
+const ApiPublicV1PublicationsRouteChildren: ApiPublicV1PublicationsRouteChildren =
+  {
+    ApiPublicV1PublicationsIdRoute: ApiPublicV1PublicationsIdRouteWithChildren,
+  }
+
+const ApiPublicV1PublicationsRouteWithChildren =
+  ApiPublicV1PublicationsRoute._addFileChildren(
+    ApiPublicV1PublicationsRouteChildren,
+  )
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
@@ -747,21 +878,13 @@ const rootRouteChildren: RootRouteChildren = {
   PricingRoute: PricingRoute,
   SignUpRoute: SignUpRoute,
   ApiPublicAdminBunnyDownloadRoute: ApiPublicAdminBunnyDownloadRoute,
+  ApiPublicV1CalendarRoute: ApiPublicV1CalendarRoute,
   ApiPublicV1OpenapiRoute: ApiPublicV1OpenapiRoute,
   ApiPublicV1OrdersRoute: ApiPublicV1OrdersRouteWithChildren,
   ApiPublicV1ProductsRoute: ApiPublicV1ProductsRoute,
+  ApiPublicV1PublicationsRoute: ApiPublicV1PublicationsRouteWithChildren,
   ApiPublicWebhooksWhopRoute: ApiPublicWebhooksWhopRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

@@ -115,6 +115,42 @@ export type Database = {
         }
         Relationships: []
       }
+      campaigns: {
+        Row: {
+          created_at: string
+          created_by: string
+          description: string
+          ends_at: string | null
+          id: string
+          name: string
+          org_id: string
+          starts_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          description?: string
+          ends_at?: string | null
+          id?: string
+          name: string
+          org_id: string
+          starts_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          description?: string
+          ends_at?: string | null
+          id?: string
+          name?: string
+          org_id?: string
+          starts_at?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       instagram_accounts: {
         Row: {
           created_at: string
@@ -501,6 +537,166 @@ export type Database = {
         }
         Relationships: []
       }
+      publication_events: {
+        Row: {
+          actor_id: string | null
+          actor_type: Database["public"]["Enums"]["publication_actor_type"]
+          created_at: string
+          event_type: string
+          id: string
+          payload: Json
+          publication_id: string
+        }
+        Insert: {
+          actor_id?: string | null
+          actor_type?: Database["public"]["Enums"]["publication_actor_type"]
+          created_at?: string
+          event_type: string
+          id?: string
+          payload?: Json
+          publication_id: string
+        }
+        Update: {
+          actor_id?: string | null
+          actor_type?: Database["public"]["Enums"]["publication_actor_type"]
+          created_at?: string
+          event_type?: string
+          id?: string
+          payload?: Json
+          publication_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "publication_events_publication_id_fkey"
+            columns: ["publication_id"]
+            isOneToOne: false
+            referencedRelation: "publications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      publication_media: {
+        Row: {
+          bunny_library_id: string | null
+          bunny_video_id: string | null
+          created_at: string
+          id: string
+          image_url: string | null
+          kind: string
+          position: number
+          publication_id: string
+          thumbnail_url: string | null
+        }
+        Insert: {
+          bunny_library_id?: string | null
+          bunny_video_id?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          kind: string
+          position?: number
+          publication_id: string
+          thumbnail_url?: string | null
+        }
+        Update: {
+          bunny_library_id?: string | null
+          bunny_video_id?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          kind?: string
+          position?: number
+          publication_id?: string
+          thumbnail_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "publication_media_publication_id_fkey"
+            columns: ["publication_id"]
+            isOneToOne: false
+            referencedRelation: "publications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      publications: {
+        Row: {
+          account_id: string
+          assigned_to: string | null
+          campaign_id: string | null
+          caption: string
+          created_at: string
+          created_by: string
+          failure_reason: string | null
+          hashtags: string[]
+          id: string
+          instagram_post_url: string | null
+          notes: string
+          org_id: string
+          published_at: string | null
+          scheduled_at: string
+          source: string
+          status: Database["public"]["Enums"]["publication_status"]
+          type: Database["public"]["Enums"]["publication_type"]
+          updated_at: string
+        }
+        Insert: {
+          account_id: string
+          assigned_to?: string | null
+          campaign_id?: string | null
+          caption?: string
+          created_at?: string
+          created_by: string
+          failure_reason?: string | null
+          hashtags?: string[]
+          id?: string
+          instagram_post_url?: string | null
+          notes?: string
+          org_id: string
+          published_at?: string | null
+          scheduled_at: string
+          source?: string
+          status?: Database["public"]["Enums"]["publication_status"]
+          type?: Database["public"]["Enums"]["publication_type"]
+          updated_at?: string
+        }
+        Update: {
+          account_id?: string
+          assigned_to?: string | null
+          campaign_id?: string | null
+          caption?: string
+          created_at?: string
+          created_by?: string
+          failure_reason?: string | null
+          hashtags?: string[]
+          id?: string
+          instagram_post_url?: string | null
+          notes?: string
+          org_id?: string
+          published_at?: string | null
+          scheduled_at?: string
+          source?: string
+          status?: Database["public"]["Enums"]["publication_status"]
+          type?: Database["public"]["Enums"]["publication_type"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "publications_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "instagram_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "publications_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       scheduled_posts: {
         Row: {
           account_id: string
@@ -663,6 +859,15 @@ export type Database = {
         | "delivered"
         | "cancelled"
       post_status: "scheduled" | "completed" | "cancelled"
+      publication_actor_type: "user" | "api_key" | "system"
+      publication_status:
+        | "draft"
+        | "scheduled"
+        | "ready_for_publishing"
+        | "publishing"
+        | "published"
+        | "failed"
+      publication_type: "reel" | "image" | "carousel" | "video"
       subscription_status: "active" | "past_due" | "cancelled" | "expired"
     }
     CompositeTypes: {
@@ -819,6 +1024,16 @@ export const Constants = {
         "cancelled",
       ],
       post_status: ["scheduled", "completed", "cancelled"],
+      publication_actor_type: ["user", "api_key", "system"],
+      publication_status: [
+        "draft",
+        "scheduled",
+        "ready_for_publishing",
+        "publishing",
+        "published",
+        "failed",
+      ],
+      publication_type: ["reel", "image", "carousel", "video"],
       subscription_status: ["active", "past_due", "cancelled", "expired"],
     },
   },
