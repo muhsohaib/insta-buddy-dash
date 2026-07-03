@@ -56,7 +56,7 @@ function OrdersList() {
         <div className="mt-8 space-y-3">
           {q.data.map((o) => {
             const items = o.order_items ?? [];
-            const ready = items.filter((i) => i.status === "ready" || i.status === "delivered").length;
+            const ready = items.filter((i: { status: string }) => i.status === "ready" || i.status === "delivered").length;
             const status = STATUS_COPY[o.status] ?? { label: o.status, tone: "bg-secondary" };
             return (
               <Link
