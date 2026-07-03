@@ -1,11 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import {
-  useSignIn,
-  useSignUp,
-  useAuth,
-  useClerk,
-} from "@clerk/tanstack-react-start";
+import { useAuth, useClerk } from "@clerk/tanstack-react-start";
+import { useSignIn, useSignUp } from "@clerk/tanstack-react-start/legacy";
 
 export const Route = createFileRoute("/accept-invitation")({
   ssr: false,
