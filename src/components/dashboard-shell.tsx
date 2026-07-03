@@ -143,9 +143,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
             <div className="ml-auto flex items-center gap-2">
               <OrganizationSwitcher
-                hidePersonal
                 afterCreateOrganizationUrl="/dashboard"
                 afterSelectOrganizationUrl="/dashboard"
+                afterLeaveOrganizationUrl="/dashboard"
                 organizationProfileUrl="/dashboard/organization"
                 organizationProfileMode="navigation"
               />
