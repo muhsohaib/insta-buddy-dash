@@ -76,6 +76,7 @@ function DashboardPage() {
   const [pickerDate, setPickerDate] = useState<Date | null>(null);
   const [creatingAccount, setCreatingAccount] = useState(false);
   const [editingPost, setEditingPost] = useState<EditablePost | null>(null);
+  const navigate = useNavigate();
 
   const hasReady = readyAccounts.length > 0;
   const hasWarming = accountsQ.data.some((a) => a.status === "warming_up");
