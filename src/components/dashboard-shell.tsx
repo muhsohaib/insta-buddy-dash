@@ -66,8 +66,6 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   }
 
 
-    .map((s) => s[0]?.toUpperCase())
-    .join("");
 
   const workspaceName = organization?.name ?? "Personal workspace";
   const workspaceInitial = workspaceName.charAt(0).toUpperCase();
