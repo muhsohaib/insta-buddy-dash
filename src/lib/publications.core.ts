@@ -20,7 +20,8 @@ export type PublicationStatus =
   | "ready_for_publishing"
   | "publishing"
   | "published"
-  | "failed";
+  | "failed"
+  | "cancelled";
 
 export type MediaInput = {
   kind: "video" | "image";
