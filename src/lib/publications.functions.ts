@@ -119,6 +119,7 @@ export const adminListPublications = createServerFn({ method: "GET" })
             "publishing",
             "published",
             "failed",
+            "cancelled",
           ])
           .optional(),
       })
@@ -142,6 +143,7 @@ export const adminTransitionPublication = createServerFn({ method: "POST" })
           "publishing",
           "published",
           "failed",
+          "cancelled",
         ]),
         instagram_post_url: z.string().nullable().optional(),
         failure_reason: z.string().nullable().optional(),
