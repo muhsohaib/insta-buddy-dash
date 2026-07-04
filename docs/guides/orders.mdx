@@ -1,0 +1,23 @@
+---
+title: "Orders"
+description: "Buy Instagram accounts. Orders drive checkout, per-item details, and delivery."
+---
+
+## Lifecycle
+
+```text
+POST /orders  ─▶  checkout URL  ─▶  paid  ─▶  submit details  ─▶  delivered
+```
+
+1. `POST /orders` with a quantity. The response contains a checkout URL.
+2. After payment the order transitions to `paid`.
+3. Submit per-item details with `POST /orders/{id}/details`.
+4. Fetch delivered credentials with `GET /orders/{id}/deliverables`.
+
+## Polling
+
+`GET /orders/{id}/status` returns a small payload suitable for polling
+every few seconds. Use `GET /orders/{id}` for the full order with items
+and deliverables.
+
+See the [full endpoint reference](/api-reference).

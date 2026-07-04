@@ -1,0 +1,18 @@
+---
+title: "Workspaces"
+description: "Every resource — publications, orders, accounts, media — belongs to exactly one workspace."
+---
+
+A **workspace** is a Clerk Organization. Users can belong to multiple
+workspaces and switch between them in the dashboard; API keys belong to
+one workspace forever.
+
+You never pass a `workspace_id` in the API. The workspace is derived from
+the bearer token, and every query and mutation is filtered by it on the
+server.
+
+## Consequences
+
+- An API key created in Workspace A can never see resources in Workspace B.
+- Sharing a key across workspaces is impossible — create one per workspace.
+- Deleting a workspace revokes all its keys.

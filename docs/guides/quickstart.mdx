@@ -1,0 +1,51 @@
+---
+title: "Quickstart"
+description: "Create a publication with a single HTTP request."
+---
+
+## 1. Get an API key
+
+Open the app, go to **Settings → API Keys** and click **Create key**. Copy
+the key — it is only shown once.
+
+## 2. Discover a valid account and media asset
+
+```bash
+curl https://insta-buddy-dash.lovable.app/api/public/v1/accounts \
+  -H "Authorization: Bearer $LOOMLY_API_KEY"
+
+curl https://insta-buddy-dash.lovable.app/api/public/v1/media \
+  -H "Authorization: Bearer $LOOMLY_API_KEY"
+```
+
+Copy an `account_id` from the first response and a media asset from the
+second.
+
+## 3. Create a publication
+
+```bash
+curl -X POST https://insta-buddy-dash.lovable.app/api/public/v1/publications \
+  -H "Authorization: Bearer $LOOMLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "account_id": "00000000-0000-0000-0000-000000000000",
+    "type": "reel",
+    "caption": "Shipped from the API",
+    "hashtags": ["launch"],
+    "scheduled_at": "2026-07-10T15:00:00Z",
+    "media": [
+      { "kind": "video", "bunny_video_id": "abc", "bunny_library_id": "123" }
+    ]
+  }'
+```
+
+The publication appears on the calendar in the dashboard immediately.
+
+## 4. Poll status
+
+```bash
+curl https://insta-buddy-dash.lovable.app/api/public/v1/publications/$ID/status \
+  -H "Authorization: Bearer $LOOMLY_API_KEY"
+```
+
+Continue with the [full API Reference](/api-reference).

@@ -1,0 +1,37 @@
+---
+title: "Resource Discovery"
+description: "Read-only endpoints that let agents discover valid IDs before creating publications."
+---
+
+Agents can't guess `account_id` or media identifiers. Use the discovery
+endpoints to enumerate valid values in the current workspace.
+
+## Accounts
+
+```bash
+GET /accounts        # list Instagram accounts
+GET /accounts/{id}   # fetch one
+```
+
+Use the returned `id` as `account_id` on `POST /publications`.
+
+## Media
+
+```bash
+GET /media           # list uploaded media assets (video and image)
+GET /media/{id}      # fetch one
+```
+
+Use `bunny_video_id` + `bunny_library_id` (video) or `image_url` (image)
+in the `media` array on `POST /publications`.
+
+## Typical agent flow
+
+```text
+1. GET /accounts         → pick account_id
+2. GET /media            → pick media asset
+3. POST /publications    → schedule it
+4. GET /publications/{id}/status  → confirm state
+```
+
+See the [full endpoint reference](/api-reference).

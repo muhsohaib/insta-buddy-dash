@@ -1,0 +1,59 @@
+---
+title: "Introduction"
+description: "The Loomly API is the same API the Loomly web app uses. Every publication, order and Instagram account you see in the dashboard is reachable programmatically."
+---
+
+## What you can build
+
+Loomly is API-first. The dashboard, CLI, MCP server and third-party
+integrations (Zapier, Make, n8n) all talk to the same REST endpoints and
+operate on the same resources.
+
+<CardGroup cols={2}>
+  <Card title="Schedule publications" icon="calendar" href="/guides/publications">
+    Create Instagram publications from any client. They appear on the
+    calendar immediately.
+  </Card>
+  <Card title="Manage orders" icon="cart-shopping" href="/guides/orders">
+    Create orders, submit per-item details and fetch delivered Instagram
+    account credentials.
+  </Card>
+  <Card title="Discover resources" icon="magnifying-glass" href="/guides/resource-discovery">
+    List Instagram accounts and media assets so agents can build valid
+    requests without hard-coded IDs.
+  </Card>
+  <Card title="Full REST reference" icon="code" href="/api-reference">
+    Interactive OpenAPI reference generated from the live spec.
+  </Card>
+</CardGroup>
+
+## Architecture
+
+Everything routes through a single core:
+
+```text
+        Website / Calendar UI ─┐
+                CLI ───────────┼──▶  Public REST API  ──▶  Core logic  ──▶  Database
+                MCP ───────────┤        (/api/public/v1)
+        Zapier / Make / n8n ───┘
+```
+
+There is no separate "agent API": humans and agents call the same endpoints
+with the same auth.
+
+## Base URL
+
+```
+https://insta-buddy-dash.lovable.app/api/public/v1
+```
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/guides/quickstart">
+    Make your first API call in under 2 minutes.
+  </Card>
+  <Card title="Authentication" icon="key" href="/guides/authentication">
+    Get an API key and learn how requests are scoped.
+  </Card>
+</CardGroup>

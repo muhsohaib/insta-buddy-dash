@@ -1,0 +1,23 @@
+---
+title: "Webhooks"
+description: "Get notified when publications and orders change state."
+---
+
+<Note>
+  Webhooks are on the roadmap. Until they ship, poll
+  `GET /publications/{id}/status` or `GET /orders/{id}/status` — both
+  endpoints are cheap and designed for polling.
+</Note>
+
+## Polling pattern
+
+```bash
+while true; do
+  curl -s https://insta-buddy-dash.lovable.app/api/public/v1/publications/$ID/status \
+    -H "Authorization: Bearer $LOOMLY_API_KEY" \
+    | jq -r '.data.status'
+  sleep 5
+done
+```
+
+Stop polling once status is `published`, `failed` or `cancelled`.

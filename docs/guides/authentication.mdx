@@ -1,0 +1,41 @@
+---
+title: "Authentication"
+description: "Every request is authenticated with a bearer token and scoped to a single workspace."
+---
+
+## Two token types
+
+| Token             | Who uses it            | Where it comes from                         |
+| ----------------- | ---------------------- | ------------------------------------------- |
+| Clerk session JWT | The Loomly web app     | Set automatically by the browser            |
+| Workspace API key | CLI, MCP, agents, cURL | **Settings → API Keys** in the dashboard    |
+
+Both are sent as `Authorization: Bearer <token>`.
+
+## Workspace scoping
+
+Every request is scoped to the workspace (Clerk Organization) that issued
+the token. You can never read or modify data belonging to another
+workspace — the API enforces this server-side, regardless of the IDs you
+pass.
+
+## Example
+
+```bash
+curl https://insta-buddy-dash.lovable.app/api/public/v1/publications \
+  -H "Authorization: Bearer $LOOMLY_API_KEY"
+```
+
+## Rotating a key
+
+Delete the old key from **Settings → API Keys** and create a new one.
+Keys are opaque; Loomly never displays a key after the moment it is
+created.
+
+## Errors
+
+| Status | Meaning                                       |
+| ------ | --------------------------------------------- |
+| 401    | Missing, malformed or revoked token           |
+| 403    | Token is valid but not allowed for this scope |
+| 404    | Resource does not exist in this workspace     |
