@@ -84,6 +84,9 @@ export async function listPublicationsInRangeCore(
   if (opts.to) q = q.lte("scheduled_at", opts.to);
   if (opts.account_id) q = q.eq("account_id", opts.account_id);
   if (opts.status) q = q.eq("status", opts.status);
+  // By default hide cancelled publications from calendar/list views; callers
+  // that want them must pass status: "cancelled" explicitly.
+  else q = q.neq("status", "cancelled");
   const { data, error } = await q;
   if (error) throw new Error(error.message);
   return data ?? [];
