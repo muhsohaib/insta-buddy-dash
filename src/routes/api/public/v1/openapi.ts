@@ -313,8 +313,111 @@ export const Route = createFileRoute("/api/public/v1/openapi")({
                 },
               },
             },
-
-
+            "/accounts": {
+              get: {
+                operationId: "listAccounts",
+                summary: "List Instagram accounts in the workspace",
+                description:
+                  "Resource discovery: returns every Instagram account belonging to the authenticated workspace. Use the returned `id` as `account_id` when calling POST /publications.",
+                responses: {
+                  "200": {
+                    description: "List of accounts",
+                    content: {
+                      "application/json": {
+                        example: {
+                          data: [
+                            {
+                              id: "00000000-0000-0000-0000-000000000000",
+                              username: "brand.official",
+                              display_name: "Brand",
+                              niche: "fashion",
+                              status: "ready",
+                              profile_picture_url: "https://…/photo.jpg",
+                              created_at: "2026-01-01T00:00:00Z",
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  "401": { description: "Unauthorized" },
+                },
+              },
+            },
+            "/accounts/{id}": {
+              get: {
+                operationId: "getAccount",
+                summary: "Fetch one Instagram account",
+                parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+                responses: {
+                  "200": {
+                    description: "Account",
+                    content: {
+                      "application/json": {
+                        example: {
+                          data: {
+                            id: "00000000-0000-0000-0000-000000000000",
+                            username: "brand.official",
+                            display_name: "Brand",
+                            niche: "fashion",
+                            status: "ready",
+                            profile_picture_url: "https://…/photo.jpg",
+                            created_at: "2026-01-01T00:00:00Z",
+                          },
+                        },
+                      },
+                    },
+                  },
+                  "401": { description: "Unauthorized" },
+                  "404": { description: "Not found" },
+                },
+              },
+            },
+            "/media": {
+              get: {
+                operationId: "listMedia",
+                summary: "List uploaded media assets in the workspace",
+                description:
+                  "Resource discovery: returns every media asset (video or image) available to the authenticated workspace. Use `bunny_video_id` + `bunny_library_id` (videos) or `image_url` (images) when supplying `media` to POST /publications.",
+                responses: {
+                  "200": {
+                    description: "List of media assets",
+                    content: {
+                      "application/json": {
+                        example: {
+                          data: [
+                            {
+                              id: "11111111-1111-1111-1111-111111111111",
+                              filename: null,
+                              media_type: "video",
+                              thumbnail_url: "https://…/thumb.jpg",
+                              bunny_video_id: "abc123",
+                              bunny_library_id: "555",
+                              image_url: null,
+                              duration: null,
+                              uploaded_at: "2026-06-15T12:00:00Z",
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  "401": { description: "Unauthorized" },
+                },
+              },
+            },
+            "/media/{id}": {
+              get: {
+                operationId: "getMedia",
+                summary: "Fetch one media asset",
+                parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+                responses: {
+                  "200": { description: "Media asset" },
+                  "401": { description: "Unauthorized" },
+                  "404": { description: "Not found" },
+                },
+              },
+            },
           },
         };
         return new Response(JSON.stringify(spec, null, 2), {
