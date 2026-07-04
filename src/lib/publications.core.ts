@@ -225,8 +225,15 @@ export async function cancelPublicationCore(ctx: PubCtx, id: string) {
   if (LOCKED_STATUSES.includes(current.status as PublicationStatus)) {
     throw new Error("Cannot cancel a publication that is publishing or published");
   }
+  if (current.status === "cancelled") return current;
+  const { error } = await ctx.supabase
+    .from("publications")
+    .update({ status: "cancelled" })
+    .eq("id", id)
+    .eq("org_id", ctx.orgId);
+  if (error) throw new Error(error.message);
   await logEvent(ctx, id, "cancelled", { previous_status: current.status });
-  return deletePublicationCore(ctx, id);
+  return getPublicationCore(ctx, id);
 }
 
 // -------- Admin queue --------
