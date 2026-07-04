@@ -158,7 +158,7 @@ export type UpdatePublicationInput = Partial<{
   failure_reason: string | null;
 }>;
 
-const LOCKED_STATUSES: PublicationStatus[] = ["publishing", "published"];
+const LOCKED_STATUSES: PublicationStatus[] = ["publishing", "published", "cancelled"];
 
 export async function updatePublicationCore(
   ctx: PubCtx,
