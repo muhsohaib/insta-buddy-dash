@@ -1,0 +1,29 @@
+---
+title: "Zapier, Make & n8n"
+description: "Use Loomly from no-code automation platforms."
+---
+
+Loomly works with any tool that can make authenticated HTTP requests.
+For Zapier, Make and n8n we recommend the generic **HTTP** module —
+there is no custom app to install.
+
+## Setup
+
+1. Create an API key in **Settings → API Keys**.
+2. In your automation tool, add an HTTP request module.
+3. Set the URL to any endpoint under
+   `https://insta-buddy-dash.lovable.app/api/public/v1`.
+4. Add header `Authorization: Bearer <your key>`.
+
+## Example: schedule a publication when a new row is added to a spreadsheet
+
+- Trigger: New row in Google Sheets.
+- Action: `POST /publications` with a JSON body mapped from the row.
+
+## Example: notify Slack when a publication fails
+
+- Trigger: Schedule (every 5 minutes).
+- Action 1: `GET /publications?status=failed`.
+- Action 2: For each item, post to Slack.
+
+See the [API Reference](/api-reference) for the full list of endpoints.

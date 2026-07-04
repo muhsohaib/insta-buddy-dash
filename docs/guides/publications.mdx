@@ -1,0 +1,37 @@
+---
+title: "Publications"
+description: "A publication is one scheduled Instagram post. It is the same object the calendar renders."
+---
+
+## Lifecycle
+
+```text
+draft ─▶ scheduled ─▶ ready_for_publishing ─▶ publishing ─▶ published
+                    ╲                                    ╲
+                     ╲─▶ cancelled                        ╲─▶ failed
+```
+
+| Status                 | Meaning                                                     | Editable |
+| ---------------------- | ----------------------------------------------------------- | -------- |
+| `draft`                | Saved but not scheduled.                                    | Yes      |
+| `scheduled`            | Will publish at `scheduled_at`.                             | Yes      |
+| `ready_for_publishing` | Handed to the publishing worker.                            | No       |
+| `publishing`           | Actively being posted to Instagram.                         | No       |
+| `published`            | Live. `instagram_post_url` is set.                          | No       |
+| `failed`               | Publishing failed. `failure_reason` is set.                 | No       |
+| `cancelled`            | Cancelled before publishing. Hidden from the calendar.      | No       |
+
+## Calendar semantics
+
+The calendar UI is a **view** over publications. Dragging a card on the
+calendar sends a `PATCH /publications/{id}` with a new `scheduled_at`.
+There is no separate calendar object.
+
+## Cancelling vs deleting
+
+- `POST /publications/{id}/cancel` — soft-cancel. The publication becomes
+  queryable in status `cancelled` and disappears from the calendar.
+- `DELETE /publications/{id}` — hard-delete. Only allowed while `draft`
+  or `scheduled`.
+
+See the [full endpoint reference](/api-reference).

@@ -1,0 +1,71 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Loomly Docs",
+  "colors": {
+    "primary": "#0F172A",
+    "light": "#3B82F6",
+    "dark": "#0F172A"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Guides",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "guides/introduction",
+              "guides/quickstart",
+              "guides/authentication"
+            ]
+          },
+          {
+            "group": "Concepts",
+            "pages": [
+              "guides/workspaces",
+              "guides/publications",
+              "guides/orders",
+              "guides/resource-discovery"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "guides/cli",
+              "guides/mcp",
+              "guides/zapier",
+              "guides/webhooks"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "openapi": {
+          "source": "https://insta-buddy-dash.lovable.app/api/public/v1/openapi",
+          "directory": "api-reference"
+        }
+      }
+    ]
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Dashboard",
+        "href": "https://insta-buddy-dash.lovable.app/dashboard"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Get API Key",
+      "href": "https://insta-buddy-dash.lovable.app/dashboard/settings"
+    }
+  },
+  "footer": {
+    "socials": {
+      "website": "https://insta-buddy-dash.lovable.app"
+    }
+  }
+}

@@ -1,0 +1,41 @@
+---
+title: "CLI"
+description: "Drive Loomly from your terminal."
+---
+
+The CLI is a thin wrapper around the REST API — anything the CLI can do,
+`curl` can do too.
+
+## Install
+
+```bash
+npm i -g @loomly/cli
+```
+
+## Authenticate
+
+```bash
+loomly login
+# paste your workspace API key
+```
+
+The key is stored in `~/.loomly/config.json` and sent as
+`Authorization: Bearer <key>` on every request.
+
+## Common commands
+
+```bash
+loomly accounts list
+loomly media list
+
+loomly publications create \
+  --account 00000000-0000-0000-0000-000000000000 \
+  --caption "New drop" \
+  --scheduled-at 2026-07-10T15:00:00Z \
+  --video abc:123
+
+loomly publications list --status scheduled
+loomly publications cancel <id>
+```
+
+Every command maps 1:1 to an endpoint in the [API Reference](/api-reference).

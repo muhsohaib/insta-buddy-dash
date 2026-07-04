@@ -1,0 +1,47 @@
+---
+title: "MCP Server"
+description: "Expose Loomly to Claude, Cursor and other MCP-compatible AI clients."
+---
+
+The Loomly MCP server wraps the public API as [Model Context Protocol](https://modelcontextprotocol.io)
+tools so LLMs can create publications, discover accounts and check
+status without custom glue code.
+
+## Install
+
+```json
+{
+  "mcpServers": {
+    "loomly": {
+      "command": "npx",
+      "args": ["-y", "@loomly/mcp"],
+      "env": {
+        "LOOMLY_API_KEY": "sk_live_..."
+      }
+    }
+  }
+}
+```
+
+Add the block above to your MCP client config (Claude Desktop, Cursor,
+Zed, etc.) and restart the client.
+
+## Tools exposed
+
+Each REST endpoint maps to one MCP tool. Tool names match the
+`operationId` in the [OpenAPI spec](/api-reference):
+
+- `listAccounts`, `getAccount`
+- `listMedia`, `getMedia`
+- `listPublications`, `createPublication`, `getPublication`,
+  `updatePublication`, `deletePublication`
+- `getPublicationStatus`, `publishPublication`, `cancelPublication`
+- `getCalendar`
+
+## Typical prompt
+
+> "Schedule a reel on my main account for next Tuesday at 3pm using the
+> most recent video I uploaded."
+
+The model calls `listAccounts` → `listMedia` → `createPublication`
+without you writing any code.
