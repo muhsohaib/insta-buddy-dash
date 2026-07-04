@@ -34,7 +34,9 @@ import { Route as ApiPublicV1PublicationsRouteImport } from './routes/api/public
 import { Route as ApiPublicV1ProductsRouteImport } from './routes/api/public/v1/products'
 import { Route as ApiPublicV1OrdersRouteImport } from './routes/api/public/v1/orders'
 import { Route as ApiPublicV1OpenapiRouteImport } from './routes/api/public/v1/openapi'
+import { Route as ApiPublicV1MediaRouteImport } from './routes/api/public/v1/media'
 import { Route as ApiPublicV1CalendarRouteImport } from './routes/api/public/v1/calendar'
+import { Route as ApiPublicV1AccountsRouteImport } from './routes/api/public/v1/accounts'
 import { Route as ApiPublicAdminBunnyDownloadRouteImport } from './routes/api/public/admin/bunny-download'
 import { Route as AuthenticatedDashboardOrdersNewRouteImport } from './routes/_authenticated/dashboard.orders.new'
 import { Route as AuthenticatedDashboardOrdersIdRouteImport } from './routes/_authenticated/dashboard.orders.$id'
@@ -42,6 +44,8 @@ import { Route as AuthenticatedDashboardAccountsIdRouteImport } from './routes/_
 import { Route as AuthenticatedAdminOrdersIdRouteImport } from './routes/_authenticated/admin.orders.$id'
 import { Route as ApiPublicV1PublicationsIdRouteImport } from './routes/api/public/v1/publications/$id'
 import { Route as ApiPublicV1OrdersIdRouteImport } from './routes/api/public/v1/orders/$id'
+import { Route as ApiPublicV1MediaIdRouteImport } from './routes/api/public/v1/media/$id'
+import { Route as ApiPublicV1AccountsIdRouteImport } from './routes/api/public/v1/accounts/$id'
 import { Route as ApiPublicV1PublicationsIdStatusRouteImport } from './routes/api/public/v1/publications/$id/status'
 import { Route as ApiPublicV1PublicationsIdPublishRouteImport } from './routes/api/public/v1/publications/$id/publish'
 import { Route as ApiPublicV1PublicationsIdCancelRouteImport } from './routes/api/public/v1/publications/$id/cancel'
@@ -184,9 +188,19 @@ const ApiPublicV1OpenapiRoute = ApiPublicV1OpenapiRouteImport.update({
   path: '/api/public/v1/openapi',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicV1MediaRoute = ApiPublicV1MediaRouteImport.update({
+  id: '/api/public/v1/media',
+  path: '/api/public/v1/media',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicV1CalendarRoute = ApiPublicV1CalendarRouteImport.update({
   id: '/api/public/v1/calendar',
   path: '/api/public/v1/calendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicV1AccountsRoute = ApiPublicV1AccountsRouteImport.update({
+  id: '/api/public/v1/accounts',
+  path: '/api/public/v1/accounts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicAdminBunnyDownloadRoute =
@@ -229,6 +243,16 @@ const ApiPublicV1OrdersIdRoute = ApiPublicV1OrdersIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => ApiPublicV1OrdersRoute,
+} as any)
+const ApiPublicV1MediaIdRoute = ApiPublicV1MediaIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiPublicV1MediaRoute,
+} as any)
+const ApiPublicV1AccountsIdRoute = ApiPublicV1AccountsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiPublicV1AccountsRoute,
 } as any)
 const ApiPublicV1PublicationsIdStatusRoute =
   ApiPublicV1PublicationsIdStatusRouteImport.update({
@@ -289,7 +313,9 @@ export interface FileRoutesByFullPath {
   '/dashboard/orders/$id': typeof AuthenticatedDashboardOrdersIdRoute
   '/dashboard/orders/new': typeof AuthenticatedDashboardOrdersNewRoute
   '/api/public/admin/bunny-download': typeof ApiPublicAdminBunnyDownloadRoute
+  '/api/public/v1/accounts': typeof ApiPublicV1AccountsRouteWithChildren
   '/api/public/v1/calendar': typeof ApiPublicV1CalendarRoute
+  '/api/public/v1/media': typeof ApiPublicV1MediaRouteWithChildren
   '/api/public/v1/openapi': typeof ApiPublicV1OpenapiRoute
   '/api/public/v1/orders': typeof ApiPublicV1OrdersRouteWithChildren
   '/api/public/v1/products': typeof ApiPublicV1ProductsRoute
@@ -298,6 +324,8 @@ export interface FileRoutesByFullPath {
   '/admin/orders/': typeof AuthenticatedAdminOrdersIndexRoute
   '/dashboard/accounts/': typeof AuthenticatedDashboardAccountsIndexRoute
   '/dashboard/orders/': typeof AuthenticatedDashboardOrdersIndexRoute
+  '/api/public/v1/accounts/$id': typeof ApiPublicV1AccountsIdRoute
+  '/api/public/v1/media/$id': typeof ApiPublicV1MediaIdRoute
   '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRouteWithChildren
   '/api/public/v1/publications/$id': typeof ApiPublicV1PublicationsIdRouteWithChildren
   '/api/public/v1/orders/$id/deliverables': typeof ApiPublicV1OrdersIdDeliverablesRoute
@@ -329,7 +357,9 @@ export interface FileRoutesByTo {
   '/dashboard/orders/$id': typeof AuthenticatedDashboardOrdersIdRoute
   '/dashboard/orders/new': typeof AuthenticatedDashboardOrdersNewRoute
   '/api/public/admin/bunny-download': typeof ApiPublicAdminBunnyDownloadRoute
+  '/api/public/v1/accounts': typeof ApiPublicV1AccountsRouteWithChildren
   '/api/public/v1/calendar': typeof ApiPublicV1CalendarRoute
+  '/api/public/v1/media': typeof ApiPublicV1MediaRouteWithChildren
   '/api/public/v1/openapi': typeof ApiPublicV1OpenapiRoute
   '/api/public/v1/orders': typeof ApiPublicV1OrdersRouteWithChildren
   '/api/public/v1/products': typeof ApiPublicV1ProductsRoute
@@ -338,6 +368,8 @@ export interface FileRoutesByTo {
   '/admin/orders': typeof AuthenticatedAdminOrdersIndexRoute
   '/dashboard/accounts': typeof AuthenticatedDashboardAccountsIndexRoute
   '/dashboard/orders': typeof AuthenticatedDashboardOrdersIndexRoute
+  '/api/public/v1/accounts/$id': typeof ApiPublicV1AccountsIdRoute
+  '/api/public/v1/media/$id': typeof ApiPublicV1MediaIdRoute
   '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRouteWithChildren
   '/api/public/v1/publications/$id': typeof ApiPublicV1PublicationsIdRouteWithChildren
   '/api/public/v1/orders/$id/deliverables': typeof ApiPublicV1OrdersIdDeliverablesRoute
@@ -371,7 +403,9 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/orders/$id': typeof AuthenticatedDashboardOrdersIdRoute
   '/_authenticated/dashboard/orders/new': typeof AuthenticatedDashboardOrdersNewRoute
   '/api/public/admin/bunny-download': typeof ApiPublicAdminBunnyDownloadRoute
+  '/api/public/v1/accounts': typeof ApiPublicV1AccountsRouteWithChildren
   '/api/public/v1/calendar': typeof ApiPublicV1CalendarRoute
+  '/api/public/v1/media': typeof ApiPublicV1MediaRouteWithChildren
   '/api/public/v1/openapi': typeof ApiPublicV1OpenapiRoute
   '/api/public/v1/orders': typeof ApiPublicV1OrdersRouteWithChildren
   '/api/public/v1/products': typeof ApiPublicV1ProductsRoute
@@ -380,6 +414,8 @@ export interface FileRoutesById {
   '/_authenticated/admin/orders/': typeof AuthenticatedAdminOrdersIndexRoute
   '/_authenticated/dashboard/accounts/': typeof AuthenticatedDashboardAccountsIndexRoute
   '/_authenticated/dashboard/orders/': typeof AuthenticatedDashboardOrdersIndexRoute
+  '/api/public/v1/accounts/$id': typeof ApiPublicV1AccountsIdRoute
+  '/api/public/v1/media/$id': typeof ApiPublicV1MediaIdRoute
   '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRouteWithChildren
   '/api/public/v1/publications/$id': typeof ApiPublicV1PublicationsIdRouteWithChildren
   '/api/public/v1/orders/$id/deliverables': typeof ApiPublicV1OrdersIdDeliverablesRoute
@@ -413,7 +449,9 @@ export interface FileRouteTypes {
     | '/dashboard/orders/$id'
     | '/dashboard/orders/new'
     | '/api/public/admin/bunny-download'
+    | '/api/public/v1/accounts'
     | '/api/public/v1/calendar'
+    | '/api/public/v1/media'
     | '/api/public/v1/openapi'
     | '/api/public/v1/orders'
     | '/api/public/v1/products'
@@ -422,6 +460,8 @@ export interface FileRouteTypes {
     | '/admin/orders/'
     | '/dashboard/accounts/'
     | '/dashboard/orders/'
+    | '/api/public/v1/accounts/$id'
+    | '/api/public/v1/media/$id'
     | '/api/public/v1/orders/$id'
     | '/api/public/v1/publications/$id'
     | '/api/public/v1/orders/$id/deliverables'
@@ -453,7 +493,9 @@ export interface FileRouteTypes {
     | '/dashboard/orders/$id'
     | '/dashboard/orders/new'
     | '/api/public/admin/bunny-download'
+    | '/api/public/v1/accounts'
     | '/api/public/v1/calendar'
+    | '/api/public/v1/media'
     | '/api/public/v1/openapi'
     | '/api/public/v1/orders'
     | '/api/public/v1/products'
@@ -462,6 +504,8 @@ export interface FileRouteTypes {
     | '/admin/orders'
     | '/dashboard/accounts'
     | '/dashboard/orders'
+    | '/api/public/v1/accounts/$id'
+    | '/api/public/v1/media/$id'
     | '/api/public/v1/orders/$id'
     | '/api/public/v1/publications/$id'
     | '/api/public/v1/orders/$id/deliverables'
@@ -494,7 +538,9 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/orders/$id'
     | '/_authenticated/dashboard/orders/new'
     | '/api/public/admin/bunny-download'
+    | '/api/public/v1/accounts'
     | '/api/public/v1/calendar'
+    | '/api/public/v1/media'
     | '/api/public/v1/openapi'
     | '/api/public/v1/orders'
     | '/api/public/v1/products'
@@ -503,6 +549,8 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/orders/'
     | '/_authenticated/dashboard/accounts/'
     | '/_authenticated/dashboard/orders/'
+    | '/api/public/v1/accounts/$id'
+    | '/api/public/v1/media/$id'
     | '/api/public/v1/orders/$id'
     | '/api/public/v1/publications/$id'
     | '/api/public/v1/orders/$id/deliverables'
@@ -521,7 +569,9 @@ export interface RootRouteChildren {
   PricingRoute: typeof PricingRoute
   SignUpRoute: typeof SignUpRoute
   ApiPublicAdminBunnyDownloadRoute: typeof ApiPublicAdminBunnyDownloadRoute
+  ApiPublicV1AccountsRoute: typeof ApiPublicV1AccountsRouteWithChildren
   ApiPublicV1CalendarRoute: typeof ApiPublicV1CalendarRoute
+  ApiPublicV1MediaRoute: typeof ApiPublicV1MediaRouteWithChildren
   ApiPublicV1OpenapiRoute: typeof ApiPublicV1OpenapiRoute
   ApiPublicV1OrdersRoute: typeof ApiPublicV1OrdersRouteWithChildren
   ApiPublicV1ProductsRoute: typeof ApiPublicV1ProductsRoute
@@ -706,11 +756,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicV1OpenapiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/v1/media': {
+      id: '/api/public/v1/media'
+      path: '/api/public/v1/media'
+      fullPath: '/api/public/v1/media'
+      preLoaderRoute: typeof ApiPublicV1MediaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/v1/calendar': {
       id: '/api/public/v1/calendar'
       path: '/api/public/v1/calendar'
       fullPath: '/api/public/v1/calendar'
       preLoaderRoute: typeof ApiPublicV1CalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/v1/accounts': {
+      id: '/api/public/v1/accounts'
+      path: '/api/public/v1/accounts'
+      fullPath: '/api/public/v1/accounts'
+      preLoaderRoute: typeof ApiPublicV1AccountsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/admin/bunny-download': {
@@ -761,6 +825,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/public/v1/orders/$id'
       preLoaderRoute: typeof ApiPublicV1OrdersIdRouteImport
       parentRoute: typeof ApiPublicV1OrdersRoute
+    }
+    '/api/public/v1/media/$id': {
+      id: '/api/public/v1/media/$id'
+      path: '/$id'
+      fullPath: '/api/public/v1/media/$id'
+      preLoaderRoute: typeof ApiPublicV1MediaIdRouteImport
+      parentRoute: typeof ApiPublicV1MediaRoute
+    }
+    '/api/public/v1/accounts/$id': {
+      id: '/api/public/v1/accounts/$id'
+      path: '/$id'
+      fullPath: '/api/public/v1/accounts/$id'
+      preLoaderRoute: typeof ApiPublicV1AccountsIdRouteImport
+      parentRoute: typeof ApiPublicV1AccountsRoute
     }
     '/api/public/v1/publications/$id/status': {
       id: '/api/public/v1/publications/$id/status'
@@ -855,6 +933,28 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface ApiPublicV1AccountsRouteChildren {
+  ApiPublicV1AccountsIdRoute: typeof ApiPublicV1AccountsIdRoute
+}
+
+const ApiPublicV1AccountsRouteChildren: ApiPublicV1AccountsRouteChildren = {
+  ApiPublicV1AccountsIdRoute: ApiPublicV1AccountsIdRoute,
+}
+
+const ApiPublicV1AccountsRouteWithChildren =
+  ApiPublicV1AccountsRoute._addFileChildren(ApiPublicV1AccountsRouteChildren)
+
+interface ApiPublicV1MediaRouteChildren {
+  ApiPublicV1MediaIdRoute: typeof ApiPublicV1MediaIdRoute
+}
+
+const ApiPublicV1MediaRouteChildren: ApiPublicV1MediaRouteChildren = {
+  ApiPublicV1MediaIdRoute: ApiPublicV1MediaIdRoute,
+}
+
+const ApiPublicV1MediaRouteWithChildren =
+  ApiPublicV1MediaRoute._addFileChildren(ApiPublicV1MediaRouteChildren)
+
 interface ApiPublicV1OrdersIdRouteChildren {
   ApiPublicV1OrdersIdDeliverablesRoute: typeof ApiPublicV1OrdersIdDeliverablesRoute
   ApiPublicV1OrdersIdDetailsRoute: typeof ApiPublicV1OrdersIdDetailsRoute
@@ -922,7 +1022,9 @@ const rootRouteChildren: RootRouteChildren = {
   PricingRoute: PricingRoute,
   SignUpRoute: SignUpRoute,
   ApiPublicAdminBunnyDownloadRoute: ApiPublicAdminBunnyDownloadRoute,
+  ApiPublicV1AccountsRoute: ApiPublicV1AccountsRouteWithChildren,
   ApiPublicV1CalendarRoute: ApiPublicV1CalendarRoute,
+  ApiPublicV1MediaRoute: ApiPublicV1MediaRouteWithChildren,
   ApiPublicV1OpenapiRoute: ApiPublicV1OpenapiRoute,
   ApiPublicV1OrdersRoute: ApiPublicV1OrdersRouteWithChildren,
   ApiPublicV1ProductsRoute: ApiPublicV1ProductsRoute,
@@ -932,13 +1034,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
