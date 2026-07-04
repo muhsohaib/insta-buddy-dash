@@ -20,7 +20,8 @@ export type PublicationStatus =
   | "ready_for_publishing"
   | "publishing"
   | "published"
-  | "failed";
+  | "failed"
+  | "cancelled";
 
 export type MediaInput = {
   kind: "video" | "image";
@@ -83,6 +84,9 @@ export async function listPublicationsInRangeCore(
   if (opts.to) q = q.lte("scheduled_at", opts.to);
   if (opts.account_id) q = q.eq("account_id", opts.account_id);
   if (opts.status) q = q.eq("status", opts.status);
+  // By default hide cancelled publications from calendar/list views; callers
+  // that want them must pass status: "cancelled" explicitly.
+  else q = q.neq("status", "cancelled");
   const { data, error } = await q;
   if (error) throw new Error(error.message);
   return data ?? [];
@@ -154,7 +158,7 @@ export type UpdatePublicationInput = Partial<{
   failure_reason: string | null;
 }>;
 
-const LOCKED_STATUSES: PublicationStatus[] = ["publishing", "published"];
+const LOCKED_STATUSES: PublicationStatus[] = ["publishing", "published", "cancelled"];
 
 export async function updatePublicationCore(
   ctx: PubCtx,
@@ -221,8 +225,15 @@ export async function cancelPublicationCore(ctx: PubCtx, id: string) {
   if (LOCKED_STATUSES.includes(current.status as PublicationStatus)) {
     throw new Error("Cannot cancel a publication that is publishing or published");
   }
+  if (current.status === "cancelled") return current;
+  const { error } = await ctx.supabase
+    .from("publications")
+    .update({ status: "cancelled" })
+    .eq("id", id)
+    .eq("org_id", ctx.orgId);
+  if (error) throw new Error(error.message);
   await logEvent(ctx, id, "cancelled", { previous_status: current.status });
-  return deletePublicationCore(ctx, id);
+  return getPublicationCore(ctx, id);
 }
 
 // -------- Admin queue --------
