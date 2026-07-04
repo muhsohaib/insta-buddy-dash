@@ -867,6 +867,7 @@ export type Database = {
         | "publishing"
         | "published"
         | "failed"
+        | "cancelled"
       publication_type: "reel" | "image" | "carousel" | "video"
       subscription_status: "active" | "past_due" | "cancelled" | "expired"
     }
@@ -1032,6 +1033,7 @@ export const Constants = {
         "publishing",
         "published",
         "failed",
+        "cancelled",
       ],
       publication_type: ["reel", "image", "carousel", "video"],
       subscription_status: ["active", "past_due", "cancelled", "expired"],
