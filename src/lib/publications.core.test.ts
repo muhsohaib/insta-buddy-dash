@@ -54,8 +54,8 @@ function makeSupabase(seed: Row[]) {
         let result: unknown;
         if (mode === "insert") {
           const withIds = insertPayload.map((r, i) => ({
-            id: (r.id as string) ?? `gen-${name}-${rows().length + i}`,
             ...r,
+            id: (r.id as string) ?? `gen-${name}-${rows().length + i}`,
           })) as Row[];
           rows().push(...withIds);
           result = { data: single ? withIds[0] : withIds, error: null };
