@@ -47,7 +47,7 @@ const updateSchema = z.object({
       campaign_id: z.string().uuid().nullable().optional(),
       assigned_to: z.string().nullable().optional(),
       status: z
-        .enum(["draft", "scheduled", "ready_for_publishing", "publishing", "published", "failed"])
+        .enum(["draft", "scheduled", "ready_for_publishing", "publishing", "published", "failed", "cancelled"])
         .optional(),
       instagram_post_url: z.string().nullable().optional(),
       failure_reason: z.string().nullable().optional(),
@@ -74,7 +74,7 @@ export const listPublicationsInRange = createServerFn({ method: "GET" })
         to: z.string().optional(),
         account_id: z.string().uuid().optional(),
         status: z
-          .enum(["draft", "scheduled", "ready_for_publishing", "publishing", "published", "failed"])
+          .enum(["draft", "scheduled", "ready_for_publishing", "publishing", "published", "failed", "cancelled"])
           .optional(),
       })
       .parse(i ?? {}),
