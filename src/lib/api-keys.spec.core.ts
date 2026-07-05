@@ -1,4 +1,5 @@
 // API keys spec core — bridges `api_keys` → spec ApiKey.
+// `scopes` doesn't yet exist on the DB row; treated as [] until schema adds it.
 import type { ApiAuth } from "./api-auth.server";
 import { generateApiKey } from "./api-auth.server";
 import { SpecError } from "./api/envelope";
