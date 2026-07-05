@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { listMyAccounts, createAdditionalAccount } from "@/lib/accounts.functions";
 import { listMyPostsForAccount } from "@/lib/posts.functions";
-import { listPublicationsInRange } from "@/lib/publications.functions";
+import { useApiClient } from "@/lib/api/client";
 
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -23,7 +23,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/")({
 function DashboardPage() {
   const listFn = useServerFn(listMyAccounts);
   const listPostsFn = useServerFn(listMyPostsForAccount);
-  const listPubsFn = useServerFn(listPublicationsInRange);
+  const api = useApiClient();
   const createAccountFn = useServerFn(createAdditionalAccount);
 
   const queryClient = useQueryClient();
@@ -53,8 +53,21 @@ function DashboardPage() {
     queryOptions({
       queryKey: ["posts", "all", readyIds],
       queryFn: async () => {
+        type PubMedia = {
+          bunny_video_id: string | null;
+          bunny_library_id: string | null;
+          thumbnail_url: string | null;
+          position: number;
+        };
+        type PubRow = {
+          id: string;
+          scheduled_at: string;
+          caption: string;
+          account_id: string;
+          publication_media?: PubMedia[];
+        };
         const [pubs, legacyResults] = await Promise.all([
-          listPubsFn(),
+          api.get<PubRow[]>("/publications"),
           readyIds.length === 0
             ? Promise.resolve([])
             : Promise.all(readyIds.map((id) => listPostsFn({ data: { account_id: id } }))),
@@ -76,20 +89,7 @@ function DashboardPage() {
           }
         });
         // Publications
-        type PubMedia = {
-          bunny_video_id: string | null;
-          bunny_library_id: string | null;
-          thumbnail_url: string | null;
-          position: number;
-        };
-        type PubRow = {
-          id: string;
-          scheduled_at: string;
-          caption: string;
-          account_id: string;
-          publication_media?: PubMedia[];
-        };
-        for (const p of pubs as unknown as PubRow[]) {
+        for (const p of pubs) {
           const media = (p.publication_media ?? []).slice().sort((a, b) => a.position - b.position);
           const first = media[0];
           const acct = readyAccounts.find((a) => a.id === p.account_id);

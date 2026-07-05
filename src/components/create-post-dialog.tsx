@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
 import { createBunnyUpload } from "@/lib/bunny.functions";
-import { createPublication } from "@/lib/publications.functions";
+import { useApiClient } from "@/lib/api/client";
 
 import {
   UploadCloud,
@@ -68,7 +68,9 @@ export function CreatePostDialog({
   onCreated: () => void;
 }) {
   const createBunnyFn = useServerFn(createBunnyUpload);
-  const createPostFn = useServerFn(createPublication);
+  const api = useApiClient();
+
+
 
 
   const [step, setStep] = useState<Step>(1);
@@ -196,24 +198,22 @@ export function CreatePostDialog({
       const iso = new Date(datetime).toISOString();
       await Promise.all(
         selectedIds.map((accountId) =>
-          createPostFn({
-            data: {
-              account_id: accountId,
-              type: "reel",
-              caption,
-              scheduled_at: iso,
-              status: "scheduled",
-              media: [
-                {
-                  kind: "video",
-                  bunny_video_id: upload.videoId,
-                  bunny_library_id: upload.libraryId,
-                  thumbnail_url: upload.thumbnailUrl,
-                },
-              ],
-            },
-          })
-        )
+          api.post("/publications", {
+            account_id: accountId,
+            type: "reel",
+            caption,
+            scheduled_at: iso,
+            status: "scheduled",
+            media: [
+              {
+                kind: "video",
+                bunny_video_id: upload.videoId,
+                bunny_library_id: upload.libraryId,
+                thumbnail_url: upload.thumbnailUrl,
+              },
+            ],
+          }),
+        ),
       );
 
       toast.success(

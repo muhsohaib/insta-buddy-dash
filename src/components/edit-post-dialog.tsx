@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
+
 import { format } from "date-fns";
 import { toast } from "sonner";
 import {
@@ -24,7 +24,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Trash2, Film } from "lucide-react";
-import { deletePublication, updatePublication } from "@/lib/publications.functions";
+import { useApiClient } from "@/lib/api/client";
 
 export type EditablePost = {
   id: string;
@@ -52,8 +52,7 @@ export function EditPostDialog({
   const [deleting, setDeleting] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
-  const updateFn = useServerFn(updatePublication);
-  const deleteFn = useServerFn(deletePublication);
+  const api = useApiClient();
 
 
   useEffect(() => {
@@ -75,14 +74,9 @@ export function EditPostDialog({
     if (!post) return;
     setSaving(true);
     try {
-      await updateFn({
-        data: {
-          id: post.id,
-          patch: {
-            caption,
-            scheduled_at: new Date(datetime).toISOString(),
-          },
-        },
+      await api.patch(`/publications/${post.id}`, {
+        caption,
+        scheduled_at: new Date(datetime).toISOString(),
       });
 
       toast.success("Post updated");
@@ -99,7 +93,7 @@ export function EditPostDialog({
     if (!post) return;
     setDeleting(true);
     try {
-      await deleteFn({ data: { id: post.id } });
+      await api.del(`/publications/${post.id}`);
       toast.success("Post deleted");
       onChanged();
       setConfirmDelete(false);
