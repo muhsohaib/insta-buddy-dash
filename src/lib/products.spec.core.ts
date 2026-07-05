@@ -6,24 +6,26 @@ import { encodeCursor, type ParsedCursor } from "./api/pagination";
 export type ProductView = {
   id: string;
   object: "product";
+  code: string;
   name: string;
   description: string;
   price_cents: number;
   currency: string;
+  billing_interval: string;
   status: "active" | "inactive";
-  metadata: Record<string, unknown>;
   created_at: string;
   updated_at: string;
 };
 
 type ProductRow = {
   id: string;
+  code: string;
   name: string;
   description: string | null;
-  price_cents: number;
+  unit_price_cents: number;
   currency: string;
+  billing_interval: string;
   active: boolean;
-  metadata: unknown;
   created_at: string;
   updated_at: string;
 };
@@ -32,12 +34,13 @@ function toView(r: ProductRow): ProductView {
   return {
     id: r.id,
     object: "product",
+    code: r.code,
     name: r.name,
     description: r.description ?? "",
-    price_cents: r.price_cents,
+    price_cents: r.unit_price_cents,
     currency: r.currency,
+    billing_interval: r.billing_interval,
     status: r.active ? "active" : "inactive",
-    metadata: (r.metadata as Record<string, unknown>) ?? {},
     created_at: r.created_at,
     updated_at: r.updated_at,
   };

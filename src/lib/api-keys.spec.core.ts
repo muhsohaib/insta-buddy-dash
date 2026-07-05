@@ -100,18 +100,19 @@ export async function createApiKey(
   input: { label: string; scopes?: string[]; expires_at?: string | null },
 ): Promise<ApiKeyView & { token: string }> {
   if (!input.label) throw new SpecError("invalid_input", "label required", { label: "required" });
+  if (!auth.userId) throw new SpecError("forbidden", "Machine callers cannot create API keys");
   const { raw, prefix, hash } = generateApiKey();
+  const insertPayload = {
+    org_id: auth.orgId,
+    created_by_user_id: auth.userId,
+    label: input.label,
+    prefix,
+    token_hash: hash,
+    expires_at: input.expires_at ?? null,
+  };
   const { data, error } = await auth.supabase
     .from("api_keys")
-    .insert({ 
-      org_id: auth.orgId,
-      created_by_user_id: auth.userId,
-      label: input.label,
-      prefix,
-      token_hash: hash,
-      scopes: input.scopes ?? [],
-      expires_at: input.expires_at ?? null,
-    })
+    .insert(insertPayload as never)
     .select("*")
     .single();
   if (error) throw new SpecError("internal", error.message);
