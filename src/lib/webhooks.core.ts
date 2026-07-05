@@ -102,7 +102,7 @@ async function ensureWH(auth: ApiAuth, id: string): Promise<WHRow> {
     .maybeSingle();
   if (error) throw new SpecError("internal", error.message);
   if (!data) throw new SpecError("not_found", `Webhook ${id} not found`);
-  return data as WHRow;
+  return data as unknown as WHRow;
 }
 
 export async function listWebhooks(
@@ -161,7 +161,7 @@ export async function createWebhook(
     .select("*")
     .single();
   if (error) throw new SpecError("internal", error.message);
-  return { ...toWH(data as WHRow), secret };
+  return { ...toWH(data as unknown as WHRow), secret };
 }
 
 export async function updateWebhook(
@@ -184,7 +184,7 @@ export async function updateWebhook(
     .select("*")
     .single();
   if (error) throw new SpecError("internal", error.message);
-  return toWH(data as WHRow);
+  return toWH(data as unknown as WHRow);
 }
 
 export async function deleteWebhook(auth: ApiAuth, id: string): Promise<void> {
@@ -211,7 +211,7 @@ export async function rotateSecret(
     .select("*")
     .single();
   if (error) throw new SpecError("internal", error.message);
-  return { ...toWH(data as WHRow), secret };
+  return { ...toWH(data as unknown as WHRow), secret };
 }
 
 export async function listDeliveries(
@@ -276,5 +276,5 @@ export async function replayDelivery(
     .select("*")
     .single();
   if (error) throw new SpecError("internal", error.message);
-  return toD(data as DRow);
+  return toD(data as unknown as DRow);
 }

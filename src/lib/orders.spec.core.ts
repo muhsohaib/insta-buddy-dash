@@ -111,7 +111,7 @@ export async function getOrderSpec(auth: ApiAuth, id: string): Promise<OrderView
     .maybeSingle();
   if (error) throw new SpecError("internal", error.message);
   if (!data) throw new SpecError("not_found", `Order ${id} not found`);
-  return toOrderView(data as OrderRow);
+  return toOrderView(data as unknown as OrderRow);
 }
 
 export async function createReplacementOrder(
@@ -136,5 +136,5 @@ export async function createReplacementOrder(
     .select("*")
     .single();
   if (error) throw new SpecError("internal", error.message);
-  return toOrderView(data as OrderRow);
+  return toOrderView(data as unknown as OrderRow);
 }

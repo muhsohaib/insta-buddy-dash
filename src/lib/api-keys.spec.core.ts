@@ -92,7 +92,7 @@ export async function getApiKey(auth: ApiAuth, id: string): Promise<ApiKeyView> 
     .maybeSingle();
   if (error) throw new SpecError("internal", error.message);
   if (!data) throw new SpecError("not_found", `API key ${id} not found`);
-  return toView(data as Row);
+  return toView(data as unknown as Row);
 }
 
 export async function createApiKey(
@@ -115,7 +115,7 @@ export async function createApiKey(
     .select("*")
     .single();
   if (error) throw new SpecError("internal", error.message);
-  return { ...toView(data as Row), token: raw };
+  return { ...toView(data as unknown as Row), token: raw };
 }
 
 export async function deleteApiKey(auth: ApiAuth, id: string): Promise<void> {

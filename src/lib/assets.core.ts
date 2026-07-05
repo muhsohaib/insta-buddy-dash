@@ -99,7 +99,7 @@ export async function getAsset(auth: ApiAuth, id: string): Promise<AssetView> {
     .maybeSingle();
   if (error) throw new SpecError("internal", error.message);
   if (!data || data.status === "deleted") throw new SpecError("not_found", `Asset ${id} not found`);
-  return toView(data as Row);
+  return toView(data as unknown as Row);
 }
 
 export async function createAsset(
@@ -141,7 +141,7 @@ export async function createAsset(
     .select("*")
     .single();
   if (error) throw new SpecError("internal", error.message);
-  return toView(data as Row);
+  return toView(data as unknown as Row);
 }
 
 export async function completeAsset(
@@ -161,7 +161,7 @@ export async function completeAsset(
     .select("*")
     .single();
   if (error) throw new SpecError("internal", error.message);
-  return toView(data as Row);
+  return toView(data as unknown as Row);
 }
 
 export async function updateAsset(
@@ -183,7 +183,7 @@ export async function updateAsset(
     .select("*")
     .single();
   if (error) throw new SpecError("internal", error.message);
-  return toView(data as Row);
+  return toView(data as unknown as Row);
 }
 
 export async function deleteAsset(auth: ApiAuth, id: string): Promise<void> {

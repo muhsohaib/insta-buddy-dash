@@ -83,5 +83,5 @@ export async function getProduct(auth: ApiAuth, id: string): Promise<ProductView
     .maybeSingle();
   if (error) throw new SpecError("internal", error.message);
   if (!data) throw new SpecError("not_found", `Product ${id} not found`);
-  return toView(data as ProductRow);
+  return toView(data as unknown as ProductRow);
 }

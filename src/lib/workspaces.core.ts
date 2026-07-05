@@ -43,14 +43,14 @@ async function ensureRow(auth: ApiAuth): Promise<WorkspaceRow> {
     .eq("id", auth.orgId)
     .maybeSingle();
   if (error) throw new SpecError("internal", error.message);
-  if (data) return data as WorkspaceRow;
+  if (data) return data as unknown as WorkspaceRow;
   const { data: created, error: insErr } = await auth.supabase
     .from("workspaces")
     .insert({  id: auth.orgId, name: auth.orgId })
     .select("*")
     .single();
   if (insErr) throw new SpecError("internal", insErr.message);
-  return created as WorkspaceRow;
+  return created as unknown as WorkspaceRow;
 }
 
 export async function getWorkspace(auth: ApiAuth): Promise<WorkspaceView> {
@@ -75,5 +75,5 @@ export async function updateWorkspace(
     .select("*")
     .single();
   if (error) throw new SpecError("internal", error.message);
-  return toView(data as WorkspaceRow);
+  return toView(data as unknown as WorkspaceRow);
 }
