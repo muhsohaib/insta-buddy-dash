@@ -721,6 +721,7 @@ export type Database = {
       }
       publication_media: {
         Row: {
+          asset_id: string | null
           bunny_library_id: string | null
           bunny_video_id: string | null
           created_at: string
@@ -732,6 +733,7 @@ export type Database = {
           thumbnail_url: string | null
         }
         Insert: {
+          asset_id?: string | null
           bunny_library_id?: string | null
           bunny_video_id?: string | null
           created_at?: string
@@ -743,6 +745,7 @@ export type Database = {
           thumbnail_url?: string | null
         }
         Update: {
+          asset_id?: string | null
           bunny_library_id?: string | null
           bunny_video_id?: string | null
           created_at?: string
@@ -754,6 +757,13 @@ export type Database = {
           thumbnail_url?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "publication_media_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "publication_media_publication_id_fkey"
             columns: ["publication_id"]
