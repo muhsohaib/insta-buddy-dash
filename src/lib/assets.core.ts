@@ -123,21 +123,22 @@ export async function createAsset(
   } catch {
     uploadUrl = null;
   }
+  const insertPayload = {
+    id,
+    workspace_id: auth.orgId,
+    kind: input.kind,
+    mime: input.mime,
+    bytes: input.bytes ?? 0,
+    filename: input.filename,
+    storage_path: storagePath,
+    upload_url: uploadUrl,
+    status: "pending",
+    tags: input.tags ?? [],
+    metadata: (input.metadata ?? {}) as unknown,
+  };
   const { data, error } = await auth.supabase
     .from("assets")
-    .insert({ 
-      id,
-      workspace_id: auth.orgId,
-      kind: input.kind,
-      mime: input.mime,
-      bytes: input.bytes ?? 0,
-      filename: input.filename,
-      storage_path: storagePath,
-      upload_url: uploadUrl,
-      status: "pending",
-      tags: input.tags ?? [],
-      metadata: input.metadata ?? {},
-    })
+    .insert(insertPayload as never)
     .select("*")
     .single();
   if (error) throw new SpecError("internal", error.message);

@@ -263,16 +263,18 @@ export async function replayDelivery(
     .maybeSingle();
   if (gErr) throw new SpecError("internal", gErr.message);
   if (!original) throw new SpecError("not_found", `Delivery ${deliveryId} not found`);
+  const orig = original as unknown as DRow;
+  const insertPayload = {
+    webhook_id: webhookId,
+    workspace_id: auth.orgId,
+    event: orig.event,
+    payload: (orig.payload ?? {}) as unknown,
+    status: "pending",
+    attempts: 0,
+  };
   const { data, error } = await auth.supabase
     .from("webhook_deliveries")
-    .insert({ 
-      webhook_id: webhookId,
-      workspace_id: auth.orgId,
-      event: (original as DRow).event,
-      payload: (original as DRow).payload,
-      status: "pending",
-      attempts: 0,
-    })
+    .insert(insertPayload as never)
     .select("*")
     .single();
   if (error) throw new SpecError("internal", error.message);
