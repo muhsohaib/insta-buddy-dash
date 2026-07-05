@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 // POST /api/public/v1/workspace/notifications:read-all
 // spec operationId: notifications.read_all — bulk colon operation per REST arch §6.
-export const Route = createFileRoute("/api/public/v1/workspace/notifications:read-all")({
+export const Route = createFileRoute("/api/public/v1/workspace/notifications:read-all" as never)({
   server: {
     handlers: {
       POST: async ({ request }) => {
