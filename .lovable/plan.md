@@ -42,3 +42,20 @@ Split by resource, all under `/workspace/*`.
 - **7g** — remote MCP generated from the live `/openapi.json`.
 
 Say **"go"** and I ship 7b.4 → 7b.6 in one pass (one migration + ~35 route files + 8 core modules), or **"one sub-part at a time"** to keep the previous cadence.
+
+## Phase 7g — ✅ Remote MCP from live openapi
+
+Shipped a Streamable-HTTP MCP server at `/mcp` (`@lovable.dev/mcp-js` + `mcpPlugin()`), fully driven by `docs/openapi.json`. Three meta-tools cover the whole 66-op surface — new API endpoints show up automatically with no MCP code change:
+
+- `list_endpoints` — enumerate the spec (method, path, operationId, tags, summary), keyword filter.
+- `get_endpoint_schema` — return the resolved OpenAPI schema (parameters + requestBody + success response) for one op, with local `$ref`s inlined.
+- `invoke_endpoint` — fan out to the same-origin `/api/public/v1/*` handler with `method`, `path`, `path_params`, `query`, `body`, forwarding a workspace API key (`sk_live_...` / `sk_test_...`) as `Authorization: Bearer`, plus optional `Idempotency-Key`. Returns `{status, requestId, body}`.
+
+Auth model: caller-supplied `api_key` (or server `MCP_API_KEY` fallback). No OAuth in 7g — API keys already exist via `POST /workspace/api-keys` (7b.5). Manifest regenerated (`.lovable/mcp/manifest.json`).
+
+Files:
+- created `src/lib/mcp/index.ts`
+- created `src/lib/mcp/tools/list-endpoints.ts`
+- created `src/lib/mcp/tools/get-endpoint-schema.ts`
+- created `src/lib/mcp/tools/invoke-endpoint.ts`
+- edited `vite.config.ts` (added `mcpPlugin()`)

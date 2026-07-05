@@ -1,0 +1,174 @@
+{
+  "version": 1,
+  "sdk_version": "0.20.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "insta-buddy-api",
+      "version": "0.1.0",
+      "title": "InstaBuddy API"
+    },
+    "tools": [
+      {
+        "name": "list_endpoints",
+        "title": "List API endpoints",
+        "description": "List every endpoint in this workspace's public REST API (generated live from /openapi.json). Optionally filter by keyword against path, operationId, summary, or tag.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "description": "Optional case-insensitive substring filter.",
+              "type": "string"
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_endpoint_schema",
+        "title": "Get endpoint schema",
+        "description": "Return the OpenAPI schema for one endpoint (parameters, request body, and success response) with local $refs resolved. Use this before calling `invoke_endpoint`.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "method": {
+              "type": "string",
+              "enum": [
+                "GET",
+                "POST",
+                "PATCH",
+                "PUT",
+                "DELETE"
+              ],
+              "description": "HTTP method."
+            },
+            "path": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Path from `list_endpoints`, e.g. `/posts` or `/posts/{post_id}`."
+            }
+          },
+          "required": [
+            "method",
+            "path"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "invoke_endpoint",
+        "title": "Invoke API endpoint",
+        "description": "Call any endpoint in this workspace's public REST API. Discover endpoints with `list_endpoints` and their parameter/body shapes with `get_endpoint_schema` first, then invoke here. Requires a workspace API key (sk_live_... or sk_test_...) as `api_key` unless the server has MCP_API_KEY configured.",
+        "annotations": {
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "method": {
+              "type": "string",
+              "enum": [
+                "GET",
+                "POST",
+                "PATCH",
+                "PUT",
+                "DELETE"
+              ],
+              "description": "HTTP method."
+            },
+            "path": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Path template from `list_endpoints`, e.g. `/posts` or `/posts/{post_id}`."
+            },
+            "path_params": {
+              "description": "Values for `{placeholders}` in the path.",
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ]
+              }
+            },
+            "query": {
+              "description": "Query parameters.",
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            "body": {
+              "description": "Request body (sent as JSON)."
+            },
+            "api_key": {
+              "description": "Workspace API key. Omit to use the server-configured MCP_API_KEY.",
+              "type": "string",
+              "minLength": 10
+            },
+            "idempotency_key": {
+              "description": "Optional Idempotency-Key for safe retries on mutating calls.",
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 255
+            }
+          },
+          "required": [
+            "method",
+            "path"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
