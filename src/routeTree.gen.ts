@@ -38,7 +38,7 @@ import { Route as ApiPublicV1PostsChar58bulkRescheduleRouteImport } from './rout
 import { Route as ApiPublicV1PostsChar58bulkCancelRouteImport } from './routes/api/public/v1/posts:bulk-cancel'
 import { Route as ApiPublicV1PostsRouteImport } from './routes/api/public/v1/posts'
 import { Route as ApiPublicV1OrdersRouteImport } from './routes/api/public/v1/orders'
-import { Route as ApiPublicV1OpenapiRouteImport } from './routes/api/public/v1/openapi'
+import { Route as ApiPublicV1OpenapiDotjsonRouteImport } from './routes/api/public/v1/openapi[.]json'
 import { Route as ApiPublicV1MediaRouteImport } from './routes/api/public/v1/media'
 import { Route as ApiPublicV1MeRouteImport } from './routes/api/public/v1/me'
 import { Route as ApiPublicV1HealthRouteImport } from './routes/api/public/v1/health'
@@ -252,11 +252,12 @@ const ApiPublicV1OrdersRoute = ApiPublicV1OrdersRouteImport.update({
   path: '/api/public/v1/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicV1OpenapiRoute = ApiPublicV1OpenapiRouteImport.update({
-  id: '/api/public/v1/openapi',
-  path: '/api/public/v1/openapi',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const ApiPublicV1OpenapiDotjsonRoute =
+  ApiPublicV1OpenapiDotjsonRouteImport.update({
+    id: '/api/public/v1/openapi.json',
+    path: '/api/public/v1/openapi.json',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicV1MediaRoute = ApiPublicV1MediaRouteImport.update({
   id: '/api/public/v1/media',
   path: '/api/public/v1/media',
@@ -608,7 +609,7 @@ export interface FileRoutesByFullPath {
   '/api/public/v1/health': typeof ApiPublicV1HealthRoute
   '/api/public/v1/me': typeof ApiPublicV1MeRoute
   '/api/public/v1/media': typeof ApiPublicV1MediaRouteWithChildren
-  '/api/public/v1/openapi': typeof ApiPublicV1OpenapiRoute
+  '/api/public/v1/openapi.json': typeof ApiPublicV1OpenapiDotjsonRoute
   '/api/public/v1/orders': typeof ApiPublicV1OrdersRouteWithChildren
   '/api/public/v1/posts': typeof ApiPublicV1PostsRouteWithChildren
   '/api/public/v1/posts:bulk-cancel': typeof ApiPublicV1PostsChar58bulkCancelRoute
@@ -694,7 +695,7 @@ export interface FileRoutesByTo {
   '/api/public/v1/health': typeof ApiPublicV1HealthRoute
   '/api/public/v1/me': typeof ApiPublicV1MeRoute
   '/api/public/v1/media': typeof ApiPublicV1MediaRouteWithChildren
-  '/api/public/v1/openapi': typeof ApiPublicV1OpenapiRoute
+  '/api/public/v1/openapi.json': typeof ApiPublicV1OpenapiDotjsonRoute
   '/api/public/v1/orders': typeof ApiPublicV1OrdersRouteWithChildren
   '/api/public/v1/posts': typeof ApiPublicV1PostsRouteWithChildren
   '/api/public/v1/posts:bulk-cancel': typeof ApiPublicV1PostsChar58bulkCancelRoute
@@ -782,7 +783,7 @@ export interface FileRoutesById {
   '/api/public/v1/health': typeof ApiPublicV1HealthRoute
   '/api/public/v1/me': typeof ApiPublicV1MeRoute
   '/api/public/v1/media': typeof ApiPublicV1MediaRouteWithChildren
-  '/api/public/v1/openapi': typeof ApiPublicV1OpenapiRoute
+  '/api/public/v1/openapi.json': typeof ApiPublicV1OpenapiDotjsonRoute
   '/api/public/v1/orders': typeof ApiPublicV1OrdersRouteWithChildren
   '/api/public/v1/posts': typeof ApiPublicV1PostsRouteWithChildren
   '/api/public/v1/posts:bulk-cancel': typeof ApiPublicV1PostsChar58bulkCancelRoute
@@ -870,7 +871,7 @@ export interface FileRouteTypes {
     | '/api/public/v1/health'
     | '/api/public/v1/me'
     | '/api/public/v1/media'
-    | '/api/public/v1/openapi'
+    | '/api/public/v1/openapi.json'
     | '/api/public/v1/orders'
     | '/api/public/v1/posts'
     | '/api/public/v1/posts:bulk-cancel'
@@ -956,7 +957,7 @@ export interface FileRouteTypes {
     | '/api/public/v1/health'
     | '/api/public/v1/me'
     | '/api/public/v1/media'
-    | '/api/public/v1/openapi'
+    | '/api/public/v1/openapi.json'
     | '/api/public/v1/orders'
     | '/api/public/v1/posts'
     | '/api/public/v1/posts:bulk-cancel'
@@ -1043,7 +1044,7 @@ export interface FileRouteTypes {
     | '/api/public/v1/health'
     | '/api/public/v1/me'
     | '/api/public/v1/media'
-    | '/api/public/v1/openapi'
+    | '/api/public/v1/openapi.json'
     | '/api/public/v1/orders'
     | '/api/public/v1/posts'
     | '/api/public/v1/posts:bulk-cancel'
@@ -1116,7 +1117,7 @@ export interface RootRouteChildren {
   ApiPublicV1HealthRoute: typeof ApiPublicV1HealthRoute
   ApiPublicV1MeRoute: typeof ApiPublicV1MeRoute
   ApiPublicV1MediaRoute: typeof ApiPublicV1MediaRouteWithChildren
-  ApiPublicV1OpenapiRoute: typeof ApiPublicV1OpenapiRoute
+  ApiPublicV1OpenapiDotjsonRoute: typeof ApiPublicV1OpenapiDotjsonRoute
   ApiPublicV1OrdersRoute: typeof ApiPublicV1OrdersRouteWithChildren
   ApiPublicV1PostsRoute: typeof ApiPublicV1PostsRouteWithChildren
   ApiPublicV1PostsChar58bulkCancelRoute: typeof ApiPublicV1PostsChar58bulkCancelRoute
@@ -1333,11 +1334,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicV1OrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/v1/openapi': {
-      id: '/api/public/v1/openapi'
-      path: '/api/public/v1/openapi'
-      fullPath: '/api/public/v1/openapi'
-      preLoaderRoute: typeof ApiPublicV1OpenapiRouteImport
+    '/api/public/v1/openapi.json': {
+      id: '/api/public/v1/openapi.json'
+      path: '/api/public/v1/openapi.json'
+      fullPath: '/api/public/v1/openapi.json'
+      preLoaderRoute: typeof ApiPublicV1OpenapiDotjsonRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/v1/media': {
@@ -2143,7 +2144,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicV1HealthRoute: ApiPublicV1HealthRoute,
   ApiPublicV1MeRoute: ApiPublicV1MeRoute,
   ApiPublicV1MediaRoute: ApiPublicV1MediaRouteWithChildren,
-  ApiPublicV1OpenapiRoute: ApiPublicV1OpenapiRoute,
+  ApiPublicV1OpenapiDotjsonRoute: ApiPublicV1OpenapiDotjsonRoute,
   ApiPublicV1OrdersRoute: ApiPublicV1OrdersRouteWithChildren,
   ApiPublicV1PostsRoute: ApiPublicV1PostsRouteWithChildren,
   ApiPublicV1PostsChar58bulkCancelRoute: ApiPublicV1PostsChar58bulkCancelRoute,
@@ -2158,13 +2159,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

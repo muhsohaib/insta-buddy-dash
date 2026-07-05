@@ -3,7 +3,7 @@ import specJson from "../../../../../docs/openapi.json" with { type: "json" };
 
 // meta.openapi — serves the frozen spec from Phase 6 with servers[0].url
 // rewritten to the request origin. This is the only spec source of truth.
-export const Route = createFileRoute("/api/public/v1/openapi")({
+export const Route = createFileRoute("/api/public/v1/openapi.json")({
   server: {
     handlers: {
       GET: async ({ request }) => {
