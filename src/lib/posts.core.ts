@@ -10,10 +10,10 @@
 //   failed               → failed
 //   cancelled            → cancelled
 //
-// NOTE on assets: the Asset domain lands in phase 7d. For now, `asset_ids`
-// on create/update are persisted into `publication_media` rows using
-// `image_url = "asset://<asset_id>"` as an opaque placeholder. Phase 7d
-// will replace this with a proper `publication_media.asset_id` FK.
+// Assets (Phase 7d): `asset_ids` on create/update are validated against the
+// `assets` table (workspace-scoped, status='ready') and persisted as real
+// `publication_media.asset_id` foreign keys. The legacy `asset://<id>` text
+// placeholder in `image_url` is still read as a fallback for older rows.
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { SpecError } from "./api/envelope";
 import { encodeCursor, type ParsedCursor } from "./api/pagination";
