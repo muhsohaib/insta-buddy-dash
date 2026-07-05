@@ -76,6 +76,45 @@ export type Database = {
           },
         ]
       }
+      activities: {
+        Row: {
+          action: string
+          actor_id: string | null
+          actor_type: Database["public"]["Enums"]["actor_type"]
+          id: string
+          occurred_at: string
+          org_id: string
+          payload: Json
+          resource_id: string | null
+          resource_type: string
+          summary: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          actor_type: Database["public"]["Enums"]["actor_type"]
+          id?: string
+          occurred_at?: string
+          org_id: string
+          payload?: Json
+          resource_id?: string | null
+          resource_type: string
+          summary?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          actor_type?: Database["public"]["Enums"]["actor_type"]
+          id?: string
+          occurred_at?: string
+          org_id?: string
+          payload?: Json
+          resource_id?: string | null
+          resource_type?: string
+          summary?: string | null
+        }
+        Relationships: []
+      }
       api_keys: {
         Row: {
           created_at: string
@@ -191,6 +230,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      notifications: {
+        Row: {
+          action_url: string | null
+          body: string | null
+          created_at: string
+          id: string
+          kind: string
+          org_id: string
+          payload: Json
+          read_at: string | null
+          recipient_user_id: string
+          resource_id: string | null
+          resource_type: string | null
+          title: string
+        }
+        Insert: {
+          action_url?: string | null
+          body?: string | null
+          created_at?: string
+          id?: string
+          kind: string
+          org_id: string
+          payload?: Json
+          read_at?: string | null
+          recipient_user_id: string
+          resource_id?: string | null
+          resource_type?: string | null
+          title: string
+        }
+        Update: {
+          action_url?: string | null
+          body?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          org_id?: string
+          payload?: Json
+          read_at?: string | null
+          recipient_user_id?: string
+          resource_id?: string | null
+          resource_type?: string | null
+          title?: string
+        }
+        Relationships: []
       }
       order_events: {
         Row: {
@@ -840,6 +924,7 @@ export type Database = {
         | "warming_up"
         | "ready"
         | "cancelled"
+      actor_type: "human" | "ai" | "automation" | "system"
       app_role: "admin" | "client"
       order_item_status:
         | "waiting"
@@ -1004,6 +1089,7 @@ export const Constants = {
         "ready",
         "cancelled",
       ],
+      actor_type: ["human", "ai", "automation", "system"],
       app_role: ["admin", "client"],
       order_item_status: [
         "waiting",
