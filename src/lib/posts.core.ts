@@ -67,6 +67,7 @@ type PubRow = {
     bunny_video_id: string | null;
     image_url: string | null;
     thumbnail_url: string | null;
+    asset_id: string | null;
   }>;
   instagram_accounts: { id: string; label: string | null; account_details: { ig_username: string | null } | null } | null;
 };
