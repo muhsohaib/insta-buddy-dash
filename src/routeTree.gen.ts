@@ -33,6 +33,7 @@ import { Route as ApiPublicWebhooksWhopRouteImport } from './routes/api/public/w
 import { Route as ApiPublicV1WorkspaceRouteImport } from './routes/api/public/v1/workspace'
 import { Route as ApiPublicV1PublicationsRouteImport } from './routes/api/public/v1/publications'
 import { Route as ApiPublicV1ProductsRouteImport } from './routes/api/public/v1/products'
+import { Route as ApiPublicV1PostsRouteImport } from './routes/api/public/v1/posts'
 import { Route as ApiPublicV1OrdersRouteImport } from './routes/api/public/v1/orders'
 import { Route as ApiPublicV1OpenapiRouteImport } from './routes/api/public/v1/openapi'
 import { Route as ApiPublicV1MediaRouteImport } from './routes/api/public/v1/media'
@@ -189,6 +190,11 @@ const ApiPublicV1PublicationsRoute = ApiPublicV1PublicationsRouteImport.update({
 const ApiPublicV1ProductsRoute = ApiPublicV1ProductsRouteImport.update({
   id: '/api/public/v1/products',
   path: '/api/public/v1/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicV1PostsRoute = ApiPublicV1PostsRouteImport.update({
+  id: '/api/public/v1/posts',
+  path: '/api/public/v1/posts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicV1OrdersRoute = ApiPublicV1OrdersRouteImport.update({
@@ -372,6 +378,7 @@ export interface FileRoutesByFullPath {
   '/api/public/v1/media': typeof ApiPublicV1MediaRouteWithChildren
   '/api/public/v1/openapi': typeof ApiPublicV1OpenapiRoute
   '/api/public/v1/orders': typeof ApiPublicV1OrdersRouteWithChildren
+  '/api/public/v1/posts': typeof ApiPublicV1PostsRoute
   '/api/public/v1/products': typeof ApiPublicV1ProductsRoute
   '/api/public/v1/publications': typeof ApiPublicV1PublicationsRouteWithChildren
   '/api/public/v1/workspace': typeof ApiPublicV1WorkspaceRouteWithChildren
@@ -424,6 +431,7 @@ export interface FileRoutesByTo {
   '/api/public/v1/media': typeof ApiPublicV1MediaRouteWithChildren
   '/api/public/v1/openapi': typeof ApiPublicV1OpenapiRoute
   '/api/public/v1/orders': typeof ApiPublicV1OrdersRouteWithChildren
+  '/api/public/v1/posts': typeof ApiPublicV1PostsRoute
   '/api/public/v1/products': typeof ApiPublicV1ProductsRoute
   '/api/public/v1/publications': typeof ApiPublicV1PublicationsRouteWithChildren
   '/api/public/v1/workspace': typeof ApiPublicV1WorkspaceRouteWithChildren
@@ -478,6 +486,7 @@ export interface FileRoutesById {
   '/api/public/v1/media': typeof ApiPublicV1MediaRouteWithChildren
   '/api/public/v1/openapi': typeof ApiPublicV1OpenapiRoute
   '/api/public/v1/orders': typeof ApiPublicV1OrdersRouteWithChildren
+  '/api/public/v1/posts': typeof ApiPublicV1PostsRoute
   '/api/public/v1/products': typeof ApiPublicV1ProductsRoute
   '/api/public/v1/publications': typeof ApiPublicV1PublicationsRouteWithChildren
   '/api/public/v1/workspace': typeof ApiPublicV1WorkspaceRouteWithChildren
@@ -532,6 +541,7 @@ export interface FileRouteTypes {
     | '/api/public/v1/media'
     | '/api/public/v1/openapi'
     | '/api/public/v1/orders'
+    | '/api/public/v1/posts'
     | '/api/public/v1/products'
     | '/api/public/v1/publications'
     | '/api/public/v1/workspace'
@@ -584,6 +594,7 @@ export interface FileRouteTypes {
     | '/api/public/v1/media'
     | '/api/public/v1/openapi'
     | '/api/public/v1/orders'
+    | '/api/public/v1/posts'
     | '/api/public/v1/products'
     | '/api/public/v1/publications'
     | '/api/public/v1/workspace'
@@ -637,6 +648,7 @@ export interface FileRouteTypes {
     | '/api/public/v1/media'
     | '/api/public/v1/openapi'
     | '/api/public/v1/orders'
+    | '/api/public/v1/posts'
     | '/api/public/v1/products'
     | '/api/public/v1/publications'
     | '/api/public/v1/workspace'
@@ -676,6 +688,7 @@ export interface RootRouteChildren {
   ApiPublicV1MediaRoute: typeof ApiPublicV1MediaRouteWithChildren
   ApiPublicV1OpenapiRoute: typeof ApiPublicV1OpenapiRoute
   ApiPublicV1OrdersRoute: typeof ApiPublicV1OrdersRouteWithChildren
+  ApiPublicV1PostsRoute: typeof ApiPublicV1PostsRoute
   ApiPublicV1ProductsRoute: typeof ApiPublicV1ProductsRoute
   ApiPublicV1PublicationsRoute: typeof ApiPublicV1PublicationsRouteWithChildren
   ApiPublicV1WorkspaceRoute: typeof ApiPublicV1WorkspaceRouteWithChildren
@@ -850,6 +863,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/v1/products'
       fullPath: '/api/public/v1/products'
       preLoaderRoute: typeof ApiPublicV1ProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/v1/posts': {
+      id: '/api/public/v1/posts'
+      path: '/api/public/v1/posts'
+      fullPath: '/api/public/v1/posts'
+      preLoaderRoute: typeof ApiPublicV1PostsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/v1/orders': {
@@ -1230,6 +1250,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicV1MediaRoute: ApiPublicV1MediaRouteWithChildren,
   ApiPublicV1OpenapiRoute: ApiPublicV1OpenapiRoute,
   ApiPublicV1OrdersRoute: ApiPublicV1OrdersRouteWithChildren,
+  ApiPublicV1PostsRoute: ApiPublicV1PostsRoute,
   ApiPublicV1ProductsRoute: ApiPublicV1ProductsRoute,
   ApiPublicV1PublicationsRoute: ApiPublicV1PublicationsRouteWithChildren,
   ApiPublicV1WorkspaceRoute: ApiPublicV1WorkspaceRouteWithChildren,
