@@ -24,7 +24,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Trash2, Film } from "lucide-react";
-import { deletePublication, updatePublication } from "@/lib/publications.functions";
+import { useApiClient } from "@/lib/api/client";
 
 export type EditablePost = {
   id: string;
