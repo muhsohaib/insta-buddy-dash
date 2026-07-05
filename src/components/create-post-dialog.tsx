@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
 import { createBunnyUpload } from "@/lib/bunny.functions";
-import { createPublication } from "@/lib/publications.functions";
+import { useApiClient } from "@/lib/api/client";
 
 import {
   UploadCloud,
