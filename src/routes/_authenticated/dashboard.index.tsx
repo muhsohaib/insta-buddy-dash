@@ -54,7 +54,7 @@ function DashboardPage() {
       queryKey: ["posts", "all", readyIds],
       queryFn: async () => {
         const [pubs, legacyResults] = await Promise.all([
-          listPubsFn(),
+          api.get<PubRow[]>("/publications"),
           readyIds.length === 0
             ? Promise.resolve([])
             : Promise.all(readyIds.map((id) => listPostsFn({ data: { account_id: id } }))),
