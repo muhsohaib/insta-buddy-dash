@@ -38,7 +38,7 @@ Split by resource, all under `/workspace/*`.
 - **7c** — replace the app's data layer to consume `/api/public/v1/*` exclusively (retire `*.functions.ts` server fns that duplicate spec endpoints).
 - **7d** — real Asset pipeline (Bunny/Storage), swap `asset://` opaque strings in posts for real asset IDs.
 - **7e** — ✅ webhooks delivery worker + retry/backoff + signature. `src/lib/webhooks-dispatch.server.ts` (HMAC-SHA256 signature `t=..,v1=..` + `enqueueWebhookEvent` fan-out). `src/routes/api/public/hooks/webhook-worker.ts` cron worker: batches 25, exponential backoff 30s→1h, 8 attempts, 10s timeout, anon-key gated. Wired into `api-keys` (created/revoked), `assets` (ready), `deliveries` (accepted/issue_reported). pg_net enabled, cron scheduled every minute.
-- **7f** — rate limiting, idempotency keys, request-id tracing.
+- **7f** — ✅ request-id tracing (already flowed via envelope), idempotency keys (`api_idempotency_keys` table + `withIdempotency` helper: 24h TTL, sha256 body hash, replay via `Idempotency-Replayed` header, `conflict` on body-mismatch, race-safe), rate limiting (`api_rate_limits` + `api_rate_limit_hit` RPC + `checkRateLimit`/`applyRateLimitHeaders` helpers — fail-open on DB errors, IETF `RateLimit-*` headers; opt-in per handler, not globally wired). Idempotency wired into 4 create routes (api-keys, webhooks, assets, orders); other mutations pending a bulk sweep.
 - **7g** — remote MCP generated from the live `/openapi.json`.
 
 Say **"go"** and I ship 7b.4 → 7b.6 in one pass (one migration + ~35 route files + 8 core modules), or **"one sub-part at a time"** to keep the previous cadence.
