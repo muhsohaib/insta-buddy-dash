@@ -68,7 +68,9 @@ export function CreatePostDialog({
   onCreated: () => void;
 }) {
   const createBunnyFn = useServerFn(createBunnyUpload);
-  const createPostFn = useServerFn(createPublication);
+  const api = useApiClient();
+
+
 
 
   const [step, setStep] = useState<Step>(1);
