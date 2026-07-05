@@ -23,7 +23,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/")({
 function DashboardPage() {
   const listFn = useServerFn(listMyAccounts);
   const listPostsFn = useServerFn(listMyPostsForAccount);
-  const listPubsFn = useServerFn(listPublicationsInRange);
+  const api = useApiClient();
   const createAccountFn = useServerFn(createAdditionalAccount);
 
   const queryClient = useQueryClient();
