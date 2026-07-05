@@ -120,19 +120,26 @@ export async function createReplacementOrder(
   reason: string,
 ): Promise<OrderView> {
   const original = await getOrderSpec(auth, originalId);
+  if (!original.product_id) {
+    throw new SpecError("conflict", "Original order has no product_id");
+  }
+  const insertPayload = {
+    org_id: auth.orgId,
+    created_by_user_id: auth.userId ?? "system",
+    product_id: original.product_id,
+    quantity: original.quantity,
+    currency: original.currency,
+    unit_price_cents: 0,
+    subtotal_cents: 0,
+    total_cents: 0,
+    status: "awaiting_details" as const,
+    payment_status: "paid" as const,
+    payment_provider: "internal",
+    payment_ref: `replacement_of:${originalId}:${reason}`.slice(0, 240),
+  };
   const { data, error } = await auth.supabase
     .from("orders")
-    .insert({ 
-      org_id: auth.orgId,
-      user_id: auth.userId,
-      product_id: original.product_id,
-      quantity: original.quantity,
-      currency: original.currency,
-      amount_cents: 0,
-      status: "awaiting_details",
-      payment_status: "paid",
-      metadata: { replacement_of: originalId, replacement_reason: reason },
-    })
+    .insert(insertPayload as never)
     .select("*")
     .single();
   if (error) throw new SpecError("internal", error.message);
