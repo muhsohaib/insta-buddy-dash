@@ -41,7 +41,7 @@ const DB_TO_SPEC_STATUS: Record<string, SpecPostStatus> = {
 const ASSET_PREFIX = "asset://";
 
 const PUB_SELECT =
-  "id, org_id, account_id, campaign_id, caption, hashtags, notes, scheduled_at, published_at, status, source, failure_reason, instagram_post_url, created_by, created_at, updated_at, publication_media(id, position, kind, bunny_video_id, image_url, thumbnail_url), instagram_accounts(id, label, account_details(ig_username))";
+  "id, org_id, account_id, campaign_id, caption, hashtags, notes, scheduled_at, published_at, status, source, failure_reason, instagram_post_url, created_by, created_at, updated_at, publication_media(id, position, kind, bunny_video_id, image_url, thumbnail_url, asset_id), instagram_accounts(id, label, account_details(ig_username))";
 
 type PubRow = {
   id: string;
