@@ -154,6 +154,57 @@ export type Database = {
         }
         Relationships: []
       }
+      assets: {
+        Row: {
+          bytes: number
+          created_at: string
+          filename: string
+          id: string
+          kind: string
+          metadata: Json
+          mime: string
+          sha256: string | null
+          status: string
+          storage_path: string
+          tags: string[]
+          updated_at: string
+          upload_url: string | null
+          workspace_id: string
+        }
+        Insert: {
+          bytes?: number
+          created_at?: string
+          filename?: string
+          id?: string
+          kind: string
+          metadata?: Json
+          mime: string
+          sha256?: string | null
+          status?: string
+          storage_path?: string
+          tags?: string[]
+          updated_at?: string
+          upload_url?: string | null
+          workspace_id: string
+        }
+        Update: {
+          bytes?: number
+          created_at?: string
+          filename?: string
+          id?: string
+          kind?: string
+          metadata?: Json
+          mime?: string
+          sha256?: string | null
+          status?: string
+          storage_path?: string
+          tags?: string[]
+          updated_at?: string
+          upload_url?: string | null
+          workspace_id?: string
+        }
+        Relationships: []
+      }
       campaigns: {
         Row: {
           created_at: string
@@ -323,29 +374,38 @@ export type Database = {
       }
       order_item_deliverables: {
         Row: {
+          accepted_at: string | null
           created_at: string
           data: Json
           delivered_at: string | null
           delivered_by: string | null
           id: string
+          issue_reason: string | null
+          issue_reported_at: string | null
           order_item_id: string
           updated_at: string
         }
         Insert: {
+          accepted_at?: string | null
           created_at?: string
           data?: Json
           delivered_at?: string | null
           delivered_by?: string | null
           id?: string
+          issue_reason?: string | null
+          issue_reported_at?: string | null
           order_item_id: string
           updated_at?: string
         }
         Update: {
+          accepted_at?: string | null
           created_at?: string
           data?: Json
           delivered_at?: string | null
           delivered_by?: string | null
           id?: string
+          issue_reason?: string | null
+          issue_reported_at?: string | null
           order_item_id?: string
           updated_at?: string
         }
@@ -897,6 +957,128 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      webhook_deliveries: {
+        Row: {
+          attempts: number
+          created_at: string
+          delivered_at: string | null
+          event: string
+          http_status: number | null
+          id: string
+          next_attempt_at: string | null
+          payload: Json
+          response_body: string | null
+          status: string
+          updated_at: string
+          webhook_id: string
+          workspace_id: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          delivered_at?: string | null
+          event: string
+          http_status?: number | null
+          id?: string
+          next_attempt_at?: string | null
+          payload?: Json
+          response_body?: string | null
+          status?: string
+          updated_at?: string
+          webhook_id: string
+          workspace_id: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          delivered_at?: string | null
+          event?: string
+          http_status?: number | null
+          id?: string
+          next_attempt_at?: string | null
+          payload?: Json
+          response_body?: string | null
+          status?: string
+          updated_at?: string
+          webhook_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "webhook_deliveries_webhook_id_fkey"
+            columns: ["webhook_id"]
+            isOneToOne: false
+            referencedRelation: "webhooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      webhooks: {
+        Row: {
+          created_at: string
+          description: string
+          events: string[]
+          id: string
+          secret: string
+          status: string
+          updated_at: string
+          url: string
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          events?: string[]
+          id?: string
+          secret: string
+          status?: string
+          updated_at?: string
+          url: string
+          workspace_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          events?: string[]
+          id?: string
+          secret?: string
+          status?: string
+          updated_at?: string
+          url?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
+      workspaces: {
+        Row: {
+          branding: Json
+          created_at: string
+          default_locale: string
+          id: string
+          name: string
+          timezone: string
+          updated_at: string
+        }
+        Insert: {
+          branding?: Json
+          created_at?: string
+          default_locale?: string
+          id: string
+          name?: string
+          timezone?: string
+          updated_at?: string
+        }
+        Update: {
+          branding?: Json
+          created_at?: string
+          default_locale?: string
+          id?: string
+          name?: string
+          timezone?: string
+          updated_at?: string
         }
         Relationships: []
       }
