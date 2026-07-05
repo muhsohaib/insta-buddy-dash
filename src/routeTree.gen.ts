@@ -33,6 +33,9 @@ import { Route as ApiPublicWebhooksWhopRouteImport } from './routes/api/public/w
 import { Route as ApiPublicV1WorkspaceRouteImport } from './routes/api/public/v1/workspace'
 import { Route as ApiPublicV1PublicationsRouteImport } from './routes/api/public/v1/publications'
 import { Route as ApiPublicV1ProductsRouteImport } from './routes/api/public/v1/products'
+import { Route as ApiPublicV1PostsChar58bulkRescheduleRouteImport } from './routes/api/public/v1/posts:bulk-reschedule'
+import { Route as ApiPublicV1PostsChar58bulkCancelRouteImport } from './routes/api/public/v1/posts:bulk-cancel'
+import { Route as ApiPublicV1PostsRouteImport } from './routes/api/public/v1/posts'
 import { Route as ApiPublicV1OrdersRouteImport } from './routes/api/public/v1/orders'
 import { Route as ApiPublicV1OpenapiRouteImport } from './routes/api/public/v1/openapi'
 import { Route as ApiPublicV1MediaRouteImport } from './routes/api/public/v1/media'
@@ -49,6 +52,7 @@ import { Route as AuthenticatedAdminOrdersIdRouteImport } from './routes/_authen
 import { Route as ApiPublicV1WorkspaceNotificationsChar58readAllRouteImport } from './routes/api/public/v1/workspace/notifications:read-all'
 import { Route as ApiPublicV1WorkspaceNotificationsRouteImport } from './routes/api/public/v1/workspace/notifications'
 import { Route as ApiPublicV1PublicationsIdRouteImport } from './routes/api/public/v1/publications/$id'
+import { Route as ApiPublicV1PostsPost_idRouteImport } from './routes/api/public/v1/posts/$post_id'
 import { Route as ApiPublicV1OrdersIdRouteImport } from './routes/api/public/v1/orders/$id'
 import { Route as ApiPublicV1MediaIdRouteImport } from './routes/api/public/v1/media/$id'
 import { Route as ApiPublicV1ActivityIdRouteImport } from './routes/api/public/v1/activity/$id'
@@ -56,9 +60,17 @@ import { Route as ApiPublicV1AccountsIdRouteImport } from './routes/api/public/v
 import { Route as ApiPublicV1PublicationsIdStatusRouteImport } from './routes/api/public/v1/publications/$id/status'
 import { Route as ApiPublicV1PublicationsIdPublishRouteImport } from './routes/api/public/v1/publications/$id/publish'
 import { Route as ApiPublicV1PublicationsIdCancelRouteImport } from './routes/api/public/v1/publications/$id/cancel'
+import { Route as ApiPublicV1PostsPost_idStatusRouteImport } from './routes/api/public/v1/posts/$post_id/status'
+import { Route as ApiPublicV1PostsPost_idScheduleRouteImport } from './routes/api/public/v1/posts/$post_id/schedule'
+import { Route as ApiPublicV1PostsPost_idRetryRouteImport } from './routes/api/public/v1/posts/$post_id/retry'
+import { Route as ApiPublicV1PostsPost_idPublishRouteImport } from './routes/api/public/v1/posts/$post_id/publish'
+import { Route as ApiPublicV1PostsPost_idDuplicateRouteImport } from './routes/api/public/v1/posts/$post_id/duplicate'
+import { Route as ApiPublicV1PostsPost_idCancelRouteImport } from './routes/api/public/v1/posts/$post_id/cancel'
 import { Route as ApiPublicV1OrdersIdStatusRouteImport } from './routes/api/public/v1/orders/$id/status'
 import { Route as ApiPublicV1OrdersIdDetailsRouteImport } from './routes/api/public/v1/orders/$id/details'
 import { Route as ApiPublicV1OrdersIdDeliverablesRouteImport } from './routes/api/public/v1/orders/$id/deliverables'
+import { Route as ApiPublicV1AssetsAsset_idPostsRouteImport } from './routes/api/public/v1/assets/$asset_id/posts'
+import { Route as ApiPublicV1AccountsIdPostsRouteImport } from './routes/api/public/v1/accounts/$id/posts'
 import { Route as ApiPublicV1WorkspaceNotificationsIdReadRouteImport } from './routes/api/public/v1/workspace/notifications/$id/read'
 
 const SignUpRoute = SignUpRouteImport.update({
@@ -191,6 +203,23 @@ const ApiPublicV1ProductsRoute = ApiPublicV1ProductsRouteImport.update({
   path: '/api/public/v1/products',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicV1PostsChar58bulkRescheduleRoute =
+  ApiPublicV1PostsChar58bulkRescheduleRouteImport.update({
+    id: '/api/public/v1/posts:bulk-reschedule',
+    path: '/api/public/v1/posts:bulk-reschedule',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicV1PostsChar58bulkCancelRoute =
+  ApiPublicV1PostsChar58bulkCancelRouteImport.update({
+    id: '/api/public/v1/posts:bulk-cancel',
+    path: '/api/public/v1/posts:bulk-cancel',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicV1PostsRoute = ApiPublicV1PostsRouteImport.update({
+  id: '/api/public/v1/posts',
+  path: '/api/public/v1/posts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicV1OrdersRoute = ApiPublicV1OrdersRouteImport.update({
   id: '/api/public/v1/orders',
   path: '/api/public/v1/orders',
@@ -279,6 +308,11 @@ const ApiPublicV1PublicationsIdRoute =
     path: '/$id',
     getParentRoute: () => ApiPublicV1PublicationsRoute,
   } as any)
+const ApiPublicV1PostsPost_idRoute = ApiPublicV1PostsPost_idRouteImport.update({
+  id: '/$post_id',
+  path: '/$post_id',
+  getParentRoute: () => ApiPublicV1PostsRoute,
+} as any)
 const ApiPublicV1OrdersIdRoute = ApiPublicV1OrdersIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -317,6 +351,42 @@ const ApiPublicV1PublicationsIdCancelRoute =
     path: '/cancel',
     getParentRoute: () => ApiPublicV1PublicationsIdRoute,
   } as any)
+const ApiPublicV1PostsPost_idStatusRoute =
+  ApiPublicV1PostsPost_idStatusRouteImport.update({
+    id: '/status',
+    path: '/status',
+    getParentRoute: () => ApiPublicV1PostsPost_idRoute,
+  } as any)
+const ApiPublicV1PostsPost_idScheduleRoute =
+  ApiPublicV1PostsPost_idScheduleRouteImport.update({
+    id: '/schedule',
+    path: '/schedule',
+    getParentRoute: () => ApiPublicV1PostsPost_idRoute,
+  } as any)
+const ApiPublicV1PostsPost_idRetryRoute =
+  ApiPublicV1PostsPost_idRetryRouteImport.update({
+    id: '/retry',
+    path: '/retry',
+    getParentRoute: () => ApiPublicV1PostsPost_idRoute,
+  } as any)
+const ApiPublicV1PostsPost_idPublishRoute =
+  ApiPublicV1PostsPost_idPublishRouteImport.update({
+    id: '/publish',
+    path: '/publish',
+    getParentRoute: () => ApiPublicV1PostsPost_idRoute,
+  } as any)
+const ApiPublicV1PostsPost_idDuplicateRoute =
+  ApiPublicV1PostsPost_idDuplicateRouteImport.update({
+    id: '/duplicate',
+    path: '/duplicate',
+    getParentRoute: () => ApiPublicV1PostsPost_idRoute,
+  } as any)
+const ApiPublicV1PostsPost_idCancelRoute =
+  ApiPublicV1PostsPost_idCancelRouteImport.update({
+    id: '/cancel',
+    path: '/cancel',
+    getParentRoute: () => ApiPublicV1PostsPost_idRoute,
+  } as any)
 const ApiPublicV1OrdersIdStatusRoute =
   ApiPublicV1OrdersIdStatusRouteImport.update({
     id: '/status',
@@ -334,6 +404,18 @@ const ApiPublicV1OrdersIdDeliverablesRoute =
     id: '/deliverables',
     path: '/deliverables',
     getParentRoute: () => ApiPublicV1OrdersIdRoute,
+  } as any)
+const ApiPublicV1AssetsAsset_idPostsRoute =
+  ApiPublicV1AssetsAsset_idPostsRouteImport.update({
+    id: '/api/public/v1/assets/$asset_id/posts',
+    path: '/api/public/v1/assets/$asset_id/posts',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicV1AccountsIdPostsRoute =
+  ApiPublicV1AccountsIdPostsRouteImport.update({
+    id: '/posts',
+    path: '/posts',
+    getParentRoute: () => ApiPublicV1AccountsIdRoute,
   } as any)
 const ApiPublicV1WorkspaceNotificationsIdReadRoute =
   ApiPublicV1WorkspaceNotificationsIdReadRouteImport.update({
@@ -372,6 +454,9 @@ export interface FileRoutesByFullPath {
   '/api/public/v1/media': typeof ApiPublicV1MediaRouteWithChildren
   '/api/public/v1/openapi': typeof ApiPublicV1OpenapiRoute
   '/api/public/v1/orders': typeof ApiPublicV1OrdersRouteWithChildren
+  '/api/public/v1/posts': typeof ApiPublicV1PostsRouteWithChildren
+  '/api/public/v1/posts:bulk-cancel': typeof ApiPublicV1PostsChar58bulkCancelRoute
+  '/api/public/v1/posts:bulk-reschedule': typeof ApiPublicV1PostsChar58bulkRescheduleRoute
   '/api/public/v1/products': typeof ApiPublicV1ProductsRoute
   '/api/public/v1/publications': typeof ApiPublicV1PublicationsRouteWithChildren
   '/api/public/v1/workspace': typeof ApiPublicV1WorkspaceRouteWithChildren
@@ -379,16 +464,25 @@ export interface FileRoutesByFullPath {
   '/admin/orders/': typeof AuthenticatedAdminOrdersIndexRoute
   '/dashboard/accounts/': typeof AuthenticatedDashboardAccountsIndexRoute
   '/dashboard/orders/': typeof AuthenticatedDashboardOrdersIndexRoute
-  '/api/public/v1/accounts/$id': typeof ApiPublicV1AccountsIdRoute
+  '/api/public/v1/accounts/$id': typeof ApiPublicV1AccountsIdRouteWithChildren
   '/api/public/v1/activity/$id': typeof ApiPublicV1ActivityIdRoute
   '/api/public/v1/media/$id': typeof ApiPublicV1MediaIdRoute
   '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRouteWithChildren
+  '/api/public/v1/posts/$post_id': typeof ApiPublicV1PostsPost_idRouteWithChildren
   '/api/public/v1/publications/$id': typeof ApiPublicV1PublicationsIdRouteWithChildren
   '/api/public/v1/workspace/notifications': typeof ApiPublicV1WorkspaceNotificationsRouteWithChildren
   '/api/public/v1/workspace/notifications:read-all': typeof ApiPublicV1WorkspaceNotificationsChar58readAllRoute
+  '/api/public/v1/accounts/$id/posts': typeof ApiPublicV1AccountsIdPostsRoute
+  '/api/public/v1/assets/$asset_id/posts': typeof ApiPublicV1AssetsAsset_idPostsRoute
   '/api/public/v1/orders/$id/deliverables': typeof ApiPublicV1OrdersIdDeliverablesRoute
   '/api/public/v1/orders/$id/details': typeof ApiPublicV1OrdersIdDetailsRoute
   '/api/public/v1/orders/$id/status': typeof ApiPublicV1OrdersIdStatusRoute
+  '/api/public/v1/posts/$post_id/cancel': typeof ApiPublicV1PostsPost_idCancelRoute
+  '/api/public/v1/posts/$post_id/duplicate': typeof ApiPublicV1PostsPost_idDuplicateRoute
+  '/api/public/v1/posts/$post_id/publish': typeof ApiPublicV1PostsPost_idPublishRoute
+  '/api/public/v1/posts/$post_id/retry': typeof ApiPublicV1PostsPost_idRetryRoute
+  '/api/public/v1/posts/$post_id/schedule': typeof ApiPublicV1PostsPost_idScheduleRoute
+  '/api/public/v1/posts/$post_id/status': typeof ApiPublicV1PostsPost_idStatusRoute
   '/api/public/v1/publications/$id/cancel': typeof ApiPublicV1PublicationsIdCancelRoute
   '/api/public/v1/publications/$id/publish': typeof ApiPublicV1PublicationsIdPublishRoute
   '/api/public/v1/publications/$id/status': typeof ApiPublicV1PublicationsIdStatusRoute
@@ -424,6 +518,9 @@ export interface FileRoutesByTo {
   '/api/public/v1/media': typeof ApiPublicV1MediaRouteWithChildren
   '/api/public/v1/openapi': typeof ApiPublicV1OpenapiRoute
   '/api/public/v1/orders': typeof ApiPublicV1OrdersRouteWithChildren
+  '/api/public/v1/posts': typeof ApiPublicV1PostsRouteWithChildren
+  '/api/public/v1/posts:bulk-cancel': typeof ApiPublicV1PostsChar58bulkCancelRoute
+  '/api/public/v1/posts:bulk-reschedule': typeof ApiPublicV1PostsChar58bulkRescheduleRoute
   '/api/public/v1/products': typeof ApiPublicV1ProductsRoute
   '/api/public/v1/publications': typeof ApiPublicV1PublicationsRouteWithChildren
   '/api/public/v1/workspace': typeof ApiPublicV1WorkspaceRouteWithChildren
@@ -431,16 +528,25 @@ export interface FileRoutesByTo {
   '/admin/orders': typeof AuthenticatedAdminOrdersIndexRoute
   '/dashboard/accounts': typeof AuthenticatedDashboardAccountsIndexRoute
   '/dashboard/orders': typeof AuthenticatedDashboardOrdersIndexRoute
-  '/api/public/v1/accounts/$id': typeof ApiPublicV1AccountsIdRoute
+  '/api/public/v1/accounts/$id': typeof ApiPublicV1AccountsIdRouteWithChildren
   '/api/public/v1/activity/$id': typeof ApiPublicV1ActivityIdRoute
   '/api/public/v1/media/$id': typeof ApiPublicV1MediaIdRoute
   '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRouteWithChildren
+  '/api/public/v1/posts/$post_id': typeof ApiPublicV1PostsPost_idRouteWithChildren
   '/api/public/v1/publications/$id': typeof ApiPublicV1PublicationsIdRouteWithChildren
   '/api/public/v1/workspace/notifications': typeof ApiPublicV1WorkspaceNotificationsRouteWithChildren
   '/api/public/v1/workspace/notifications:read-all': typeof ApiPublicV1WorkspaceNotificationsChar58readAllRoute
+  '/api/public/v1/accounts/$id/posts': typeof ApiPublicV1AccountsIdPostsRoute
+  '/api/public/v1/assets/$asset_id/posts': typeof ApiPublicV1AssetsAsset_idPostsRoute
   '/api/public/v1/orders/$id/deliverables': typeof ApiPublicV1OrdersIdDeliverablesRoute
   '/api/public/v1/orders/$id/details': typeof ApiPublicV1OrdersIdDetailsRoute
   '/api/public/v1/orders/$id/status': typeof ApiPublicV1OrdersIdStatusRoute
+  '/api/public/v1/posts/$post_id/cancel': typeof ApiPublicV1PostsPost_idCancelRoute
+  '/api/public/v1/posts/$post_id/duplicate': typeof ApiPublicV1PostsPost_idDuplicateRoute
+  '/api/public/v1/posts/$post_id/publish': typeof ApiPublicV1PostsPost_idPublishRoute
+  '/api/public/v1/posts/$post_id/retry': typeof ApiPublicV1PostsPost_idRetryRoute
+  '/api/public/v1/posts/$post_id/schedule': typeof ApiPublicV1PostsPost_idScheduleRoute
+  '/api/public/v1/posts/$post_id/status': typeof ApiPublicV1PostsPost_idStatusRoute
   '/api/public/v1/publications/$id/cancel': typeof ApiPublicV1PublicationsIdCancelRoute
   '/api/public/v1/publications/$id/publish': typeof ApiPublicV1PublicationsIdPublishRoute
   '/api/public/v1/publications/$id/status': typeof ApiPublicV1PublicationsIdStatusRoute
@@ -478,6 +584,9 @@ export interface FileRoutesById {
   '/api/public/v1/media': typeof ApiPublicV1MediaRouteWithChildren
   '/api/public/v1/openapi': typeof ApiPublicV1OpenapiRoute
   '/api/public/v1/orders': typeof ApiPublicV1OrdersRouteWithChildren
+  '/api/public/v1/posts': typeof ApiPublicV1PostsRouteWithChildren
+  '/api/public/v1/posts:bulk-cancel': typeof ApiPublicV1PostsChar58bulkCancelRoute
+  '/api/public/v1/posts:bulk-reschedule': typeof ApiPublicV1PostsChar58bulkRescheduleRoute
   '/api/public/v1/products': typeof ApiPublicV1ProductsRoute
   '/api/public/v1/publications': typeof ApiPublicV1PublicationsRouteWithChildren
   '/api/public/v1/workspace': typeof ApiPublicV1WorkspaceRouteWithChildren
@@ -485,16 +594,25 @@ export interface FileRoutesById {
   '/_authenticated/admin/orders/': typeof AuthenticatedAdminOrdersIndexRoute
   '/_authenticated/dashboard/accounts/': typeof AuthenticatedDashboardAccountsIndexRoute
   '/_authenticated/dashboard/orders/': typeof AuthenticatedDashboardOrdersIndexRoute
-  '/api/public/v1/accounts/$id': typeof ApiPublicV1AccountsIdRoute
+  '/api/public/v1/accounts/$id': typeof ApiPublicV1AccountsIdRouteWithChildren
   '/api/public/v1/activity/$id': typeof ApiPublicV1ActivityIdRoute
   '/api/public/v1/media/$id': typeof ApiPublicV1MediaIdRoute
   '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRouteWithChildren
+  '/api/public/v1/posts/$post_id': typeof ApiPublicV1PostsPost_idRouteWithChildren
   '/api/public/v1/publications/$id': typeof ApiPublicV1PublicationsIdRouteWithChildren
   '/api/public/v1/workspace/notifications': typeof ApiPublicV1WorkspaceNotificationsRouteWithChildren
   '/api/public/v1/workspace/notifications:read-all': typeof ApiPublicV1WorkspaceNotificationsChar58readAllRoute
+  '/api/public/v1/accounts/$id/posts': typeof ApiPublicV1AccountsIdPostsRoute
+  '/api/public/v1/assets/$asset_id/posts': typeof ApiPublicV1AssetsAsset_idPostsRoute
   '/api/public/v1/orders/$id/deliverables': typeof ApiPublicV1OrdersIdDeliverablesRoute
   '/api/public/v1/orders/$id/details': typeof ApiPublicV1OrdersIdDetailsRoute
   '/api/public/v1/orders/$id/status': typeof ApiPublicV1OrdersIdStatusRoute
+  '/api/public/v1/posts/$post_id/cancel': typeof ApiPublicV1PostsPost_idCancelRoute
+  '/api/public/v1/posts/$post_id/duplicate': typeof ApiPublicV1PostsPost_idDuplicateRoute
+  '/api/public/v1/posts/$post_id/publish': typeof ApiPublicV1PostsPost_idPublishRoute
+  '/api/public/v1/posts/$post_id/retry': typeof ApiPublicV1PostsPost_idRetryRoute
+  '/api/public/v1/posts/$post_id/schedule': typeof ApiPublicV1PostsPost_idScheduleRoute
+  '/api/public/v1/posts/$post_id/status': typeof ApiPublicV1PostsPost_idStatusRoute
   '/api/public/v1/publications/$id/cancel': typeof ApiPublicV1PublicationsIdCancelRoute
   '/api/public/v1/publications/$id/publish': typeof ApiPublicV1PublicationsIdPublishRoute
   '/api/public/v1/publications/$id/status': typeof ApiPublicV1PublicationsIdStatusRoute
@@ -532,6 +650,9 @@ export interface FileRouteTypes {
     | '/api/public/v1/media'
     | '/api/public/v1/openapi'
     | '/api/public/v1/orders'
+    | '/api/public/v1/posts'
+    | '/api/public/v1/posts:bulk-cancel'
+    | '/api/public/v1/posts:bulk-reschedule'
     | '/api/public/v1/products'
     | '/api/public/v1/publications'
     | '/api/public/v1/workspace'
@@ -543,12 +664,21 @@ export interface FileRouteTypes {
     | '/api/public/v1/activity/$id'
     | '/api/public/v1/media/$id'
     | '/api/public/v1/orders/$id'
+    | '/api/public/v1/posts/$post_id'
     | '/api/public/v1/publications/$id'
     | '/api/public/v1/workspace/notifications'
     | '/api/public/v1/workspace/notifications:read-all'
+    | '/api/public/v1/accounts/$id/posts'
+    | '/api/public/v1/assets/$asset_id/posts'
     | '/api/public/v1/orders/$id/deliverables'
     | '/api/public/v1/orders/$id/details'
     | '/api/public/v1/orders/$id/status'
+    | '/api/public/v1/posts/$post_id/cancel'
+    | '/api/public/v1/posts/$post_id/duplicate'
+    | '/api/public/v1/posts/$post_id/publish'
+    | '/api/public/v1/posts/$post_id/retry'
+    | '/api/public/v1/posts/$post_id/schedule'
+    | '/api/public/v1/posts/$post_id/status'
     | '/api/public/v1/publications/$id/cancel'
     | '/api/public/v1/publications/$id/publish'
     | '/api/public/v1/publications/$id/status'
@@ -584,6 +714,9 @@ export interface FileRouteTypes {
     | '/api/public/v1/media'
     | '/api/public/v1/openapi'
     | '/api/public/v1/orders'
+    | '/api/public/v1/posts'
+    | '/api/public/v1/posts:bulk-cancel'
+    | '/api/public/v1/posts:bulk-reschedule'
     | '/api/public/v1/products'
     | '/api/public/v1/publications'
     | '/api/public/v1/workspace'
@@ -595,12 +728,21 @@ export interface FileRouteTypes {
     | '/api/public/v1/activity/$id'
     | '/api/public/v1/media/$id'
     | '/api/public/v1/orders/$id'
+    | '/api/public/v1/posts/$post_id'
     | '/api/public/v1/publications/$id'
     | '/api/public/v1/workspace/notifications'
     | '/api/public/v1/workspace/notifications:read-all'
+    | '/api/public/v1/accounts/$id/posts'
+    | '/api/public/v1/assets/$asset_id/posts'
     | '/api/public/v1/orders/$id/deliverables'
     | '/api/public/v1/orders/$id/details'
     | '/api/public/v1/orders/$id/status'
+    | '/api/public/v1/posts/$post_id/cancel'
+    | '/api/public/v1/posts/$post_id/duplicate'
+    | '/api/public/v1/posts/$post_id/publish'
+    | '/api/public/v1/posts/$post_id/retry'
+    | '/api/public/v1/posts/$post_id/schedule'
+    | '/api/public/v1/posts/$post_id/status'
     | '/api/public/v1/publications/$id/cancel'
     | '/api/public/v1/publications/$id/publish'
     | '/api/public/v1/publications/$id/status'
@@ -637,6 +779,9 @@ export interface FileRouteTypes {
     | '/api/public/v1/media'
     | '/api/public/v1/openapi'
     | '/api/public/v1/orders'
+    | '/api/public/v1/posts'
+    | '/api/public/v1/posts:bulk-cancel'
+    | '/api/public/v1/posts:bulk-reschedule'
     | '/api/public/v1/products'
     | '/api/public/v1/publications'
     | '/api/public/v1/workspace'
@@ -648,12 +793,21 @@ export interface FileRouteTypes {
     | '/api/public/v1/activity/$id'
     | '/api/public/v1/media/$id'
     | '/api/public/v1/orders/$id'
+    | '/api/public/v1/posts/$post_id'
     | '/api/public/v1/publications/$id'
     | '/api/public/v1/workspace/notifications'
     | '/api/public/v1/workspace/notifications:read-all'
+    | '/api/public/v1/accounts/$id/posts'
+    | '/api/public/v1/assets/$asset_id/posts'
     | '/api/public/v1/orders/$id/deliverables'
     | '/api/public/v1/orders/$id/details'
     | '/api/public/v1/orders/$id/status'
+    | '/api/public/v1/posts/$post_id/cancel'
+    | '/api/public/v1/posts/$post_id/duplicate'
+    | '/api/public/v1/posts/$post_id/publish'
+    | '/api/public/v1/posts/$post_id/retry'
+    | '/api/public/v1/posts/$post_id/schedule'
+    | '/api/public/v1/posts/$post_id/status'
     | '/api/public/v1/publications/$id/cancel'
     | '/api/public/v1/publications/$id/publish'
     | '/api/public/v1/publications/$id/status'
@@ -676,10 +830,14 @@ export interface RootRouteChildren {
   ApiPublicV1MediaRoute: typeof ApiPublicV1MediaRouteWithChildren
   ApiPublicV1OpenapiRoute: typeof ApiPublicV1OpenapiRoute
   ApiPublicV1OrdersRoute: typeof ApiPublicV1OrdersRouteWithChildren
+  ApiPublicV1PostsRoute: typeof ApiPublicV1PostsRouteWithChildren
+  ApiPublicV1PostsChar58bulkCancelRoute: typeof ApiPublicV1PostsChar58bulkCancelRoute
+  ApiPublicV1PostsChar58bulkRescheduleRoute: typeof ApiPublicV1PostsChar58bulkRescheduleRoute
   ApiPublicV1ProductsRoute: typeof ApiPublicV1ProductsRoute
   ApiPublicV1PublicationsRoute: typeof ApiPublicV1PublicationsRouteWithChildren
   ApiPublicV1WorkspaceRoute: typeof ApiPublicV1WorkspaceRouteWithChildren
   ApiPublicWebhooksWhopRoute: typeof ApiPublicWebhooksWhopRoute
+  ApiPublicV1AssetsAsset_idPostsRoute: typeof ApiPublicV1AssetsAsset_idPostsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -852,6 +1010,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicV1ProductsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/v1/posts:bulk-reschedule': {
+      id: '/api/public/v1/posts:bulk-reschedule'
+      path: '/api/public/v1/posts:bulk-reschedule'
+      fullPath: '/api/public/v1/posts:bulk-reschedule'
+      preLoaderRoute: typeof ApiPublicV1PostsChar58bulkRescheduleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/v1/posts:bulk-cancel': {
+      id: '/api/public/v1/posts:bulk-cancel'
+      path: '/api/public/v1/posts:bulk-cancel'
+      fullPath: '/api/public/v1/posts:bulk-cancel'
+      preLoaderRoute: typeof ApiPublicV1PostsChar58bulkCancelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/v1/posts': {
+      id: '/api/public/v1/posts'
+      path: '/api/public/v1/posts'
+      fullPath: '/api/public/v1/posts'
+      preLoaderRoute: typeof ApiPublicV1PostsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/v1/orders': {
       id: '/api/public/v1/orders'
       path: '/api/public/v1/orders'
@@ -964,6 +1143,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicV1PublicationsIdRouteImport
       parentRoute: typeof ApiPublicV1PublicationsRoute
     }
+    '/api/public/v1/posts/$post_id': {
+      id: '/api/public/v1/posts/$post_id'
+      path: '/$post_id'
+      fullPath: '/api/public/v1/posts/$post_id'
+      preLoaderRoute: typeof ApiPublicV1PostsPost_idRouteImport
+      parentRoute: typeof ApiPublicV1PostsRoute
+    }
     '/api/public/v1/orders/$id': {
       id: '/api/public/v1/orders/$id'
       path: '/$id'
@@ -1013,6 +1199,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicV1PublicationsIdCancelRouteImport
       parentRoute: typeof ApiPublicV1PublicationsIdRoute
     }
+    '/api/public/v1/posts/$post_id/status': {
+      id: '/api/public/v1/posts/$post_id/status'
+      path: '/status'
+      fullPath: '/api/public/v1/posts/$post_id/status'
+      preLoaderRoute: typeof ApiPublicV1PostsPost_idStatusRouteImport
+      parentRoute: typeof ApiPublicV1PostsPost_idRoute
+    }
+    '/api/public/v1/posts/$post_id/schedule': {
+      id: '/api/public/v1/posts/$post_id/schedule'
+      path: '/schedule'
+      fullPath: '/api/public/v1/posts/$post_id/schedule'
+      preLoaderRoute: typeof ApiPublicV1PostsPost_idScheduleRouteImport
+      parentRoute: typeof ApiPublicV1PostsPost_idRoute
+    }
+    '/api/public/v1/posts/$post_id/retry': {
+      id: '/api/public/v1/posts/$post_id/retry'
+      path: '/retry'
+      fullPath: '/api/public/v1/posts/$post_id/retry'
+      preLoaderRoute: typeof ApiPublicV1PostsPost_idRetryRouteImport
+      parentRoute: typeof ApiPublicV1PostsPost_idRoute
+    }
+    '/api/public/v1/posts/$post_id/publish': {
+      id: '/api/public/v1/posts/$post_id/publish'
+      path: '/publish'
+      fullPath: '/api/public/v1/posts/$post_id/publish'
+      preLoaderRoute: typeof ApiPublicV1PostsPost_idPublishRouteImport
+      parentRoute: typeof ApiPublicV1PostsPost_idRoute
+    }
+    '/api/public/v1/posts/$post_id/duplicate': {
+      id: '/api/public/v1/posts/$post_id/duplicate'
+      path: '/duplicate'
+      fullPath: '/api/public/v1/posts/$post_id/duplicate'
+      preLoaderRoute: typeof ApiPublicV1PostsPost_idDuplicateRouteImport
+      parentRoute: typeof ApiPublicV1PostsPost_idRoute
+    }
+    '/api/public/v1/posts/$post_id/cancel': {
+      id: '/api/public/v1/posts/$post_id/cancel'
+      path: '/cancel'
+      fullPath: '/api/public/v1/posts/$post_id/cancel'
+      preLoaderRoute: typeof ApiPublicV1PostsPost_idCancelRouteImport
+      parentRoute: typeof ApiPublicV1PostsPost_idRoute
+    }
     '/api/public/v1/orders/$id/status': {
       id: '/api/public/v1/orders/$id/status'
       path: '/status'
@@ -1033,6 +1261,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/public/v1/orders/$id/deliverables'
       preLoaderRoute: typeof ApiPublicV1OrdersIdDeliverablesRouteImport
       parentRoute: typeof ApiPublicV1OrdersIdRoute
+    }
+    '/api/public/v1/assets/$asset_id/posts': {
+      id: '/api/public/v1/assets/$asset_id/posts'
+      path: '/api/public/v1/assets/$asset_id/posts'
+      fullPath: '/api/public/v1/assets/$asset_id/posts'
+      preLoaderRoute: typeof ApiPublicV1AssetsAsset_idPostsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/v1/accounts/$id/posts': {
+      id: '/api/public/v1/accounts/$id/posts'
+      path: '/posts'
+      fullPath: '/api/public/v1/accounts/$id/posts'
+      preLoaderRoute: typeof ApiPublicV1AccountsIdPostsRouteImport
+      parentRoute: typeof ApiPublicV1AccountsIdRoute
     }
     '/api/public/v1/workspace/notifications/$id/read': {
       id: '/api/public/v1/workspace/notifications/$id/read'
@@ -1092,12 +1334,25 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface ApiPublicV1AccountsIdRouteChildren {
+  ApiPublicV1AccountsIdPostsRoute: typeof ApiPublicV1AccountsIdPostsRoute
+}
+
+const ApiPublicV1AccountsIdRouteChildren: ApiPublicV1AccountsIdRouteChildren = {
+  ApiPublicV1AccountsIdPostsRoute: ApiPublicV1AccountsIdPostsRoute,
+}
+
+const ApiPublicV1AccountsIdRouteWithChildren =
+  ApiPublicV1AccountsIdRoute._addFileChildren(
+    ApiPublicV1AccountsIdRouteChildren,
+  )
+
 interface ApiPublicV1AccountsRouteChildren {
-  ApiPublicV1AccountsIdRoute: typeof ApiPublicV1AccountsIdRoute
+  ApiPublicV1AccountsIdRoute: typeof ApiPublicV1AccountsIdRouteWithChildren
 }
 
 const ApiPublicV1AccountsRouteChildren: ApiPublicV1AccountsRouteChildren = {
-  ApiPublicV1AccountsIdRoute: ApiPublicV1AccountsIdRoute,
+  ApiPublicV1AccountsIdRoute: ApiPublicV1AccountsIdRouteWithChildren,
 }
 
 const ApiPublicV1AccountsRouteWithChildren =
@@ -1150,6 +1405,42 @@ const ApiPublicV1OrdersRouteChildren: ApiPublicV1OrdersRouteChildren = {
 
 const ApiPublicV1OrdersRouteWithChildren =
   ApiPublicV1OrdersRoute._addFileChildren(ApiPublicV1OrdersRouteChildren)
+
+interface ApiPublicV1PostsPost_idRouteChildren {
+  ApiPublicV1PostsPost_idCancelRoute: typeof ApiPublicV1PostsPost_idCancelRoute
+  ApiPublicV1PostsPost_idDuplicateRoute: typeof ApiPublicV1PostsPost_idDuplicateRoute
+  ApiPublicV1PostsPost_idPublishRoute: typeof ApiPublicV1PostsPost_idPublishRoute
+  ApiPublicV1PostsPost_idRetryRoute: typeof ApiPublicV1PostsPost_idRetryRoute
+  ApiPublicV1PostsPost_idScheduleRoute: typeof ApiPublicV1PostsPost_idScheduleRoute
+  ApiPublicV1PostsPost_idStatusRoute: typeof ApiPublicV1PostsPost_idStatusRoute
+}
+
+const ApiPublicV1PostsPost_idRouteChildren: ApiPublicV1PostsPost_idRouteChildren =
+  {
+    ApiPublicV1PostsPost_idCancelRoute: ApiPublicV1PostsPost_idCancelRoute,
+    ApiPublicV1PostsPost_idDuplicateRoute:
+      ApiPublicV1PostsPost_idDuplicateRoute,
+    ApiPublicV1PostsPost_idPublishRoute: ApiPublicV1PostsPost_idPublishRoute,
+    ApiPublicV1PostsPost_idRetryRoute: ApiPublicV1PostsPost_idRetryRoute,
+    ApiPublicV1PostsPost_idScheduleRoute: ApiPublicV1PostsPost_idScheduleRoute,
+    ApiPublicV1PostsPost_idStatusRoute: ApiPublicV1PostsPost_idStatusRoute,
+  }
+
+const ApiPublicV1PostsPost_idRouteWithChildren =
+  ApiPublicV1PostsPost_idRoute._addFileChildren(
+    ApiPublicV1PostsPost_idRouteChildren,
+  )
+
+interface ApiPublicV1PostsRouteChildren {
+  ApiPublicV1PostsPost_idRoute: typeof ApiPublicV1PostsPost_idRouteWithChildren
+}
+
+const ApiPublicV1PostsRouteChildren: ApiPublicV1PostsRouteChildren = {
+  ApiPublicV1PostsPost_idRoute: ApiPublicV1PostsPost_idRouteWithChildren,
+}
+
+const ApiPublicV1PostsRouteWithChildren =
+  ApiPublicV1PostsRoute._addFileChildren(ApiPublicV1PostsRouteChildren)
 
 interface ApiPublicV1PublicationsIdRouteChildren {
   ApiPublicV1PublicationsIdCancelRoute: typeof ApiPublicV1PublicationsIdCancelRoute
@@ -1230,10 +1521,15 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicV1MediaRoute: ApiPublicV1MediaRouteWithChildren,
   ApiPublicV1OpenapiRoute: ApiPublicV1OpenapiRoute,
   ApiPublicV1OrdersRoute: ApiPublicV1OrdersRouteWithChildren,
+  ApiPublicV1PostsRoute: ApiPublicV1PostsRouteWithChildren,
+  ApiPublicV1PostsChar58bulkCancelRoute: ApiPublicV1PostsChar58bulkCancelRoute,
+  ApiPublicV1PostsChar58bulkRescheduleRoute:
+    ApiPublicV1PostsChar58bulkRescheduleRoute,
   ApiPublicV1ProductsRoute: ApiPublicV1ProductsRoute,
   ApiPublicV1PublicationsRoute: ApiPublicV1PublicationsRouteWithChildren,
   ApiPublicV1WorkspaceRoute: ApiPublicV1WorkspaceRouteWithChildren,
   ApiPublicWebhooksWhopRoute: ApiPublicWebhooksWhopRoute,
+  ApiPublicV1AssetsAsset_idPostsRoute: ApiPublicV1AssetsAsset_idPostsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
