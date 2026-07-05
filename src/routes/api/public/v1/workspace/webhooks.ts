@@ -28,20 +28,30 @@ export const Route = createFileRoute("/api/public/v1/workspace/webhooks")({
         const { ok, getOrMintRequestId, toErrorResponse, SpecError } = await import(
           "@/lib/api/envelope"
         );
+        const { withIdempotency } = await import("@/lib/api/idempotency.server");
         const { createWebhook } = await import("@/lib/webhooks.core");
         const rid = getOrMintRequestId(request);
         try {
           const auth = await authenticateApiRequest(request);
-          const body = (await request.json().catch(() => ({}))) as unknown;
-          const parsed = z
-            .object({
-              url: z.string().url().startsWith("https://"),
-              description: z.string().max(500).optional(),
-              events: z.array(z.string()).min(1),
-            })
-            .safeParse(body);
-          if (!parsed.success) throw new SpecError("invalid_input", parsed.error.message);
-          return ok(rid, await createWebhook(auth, parsed.data), { status: 201 });
+          return await withIdempotency(
+            { request, workspaceId: auth.orgId, requestId: rid, method: "POST", path: "/workspace/webhooks" },
+            async () => {
+              try {
+                const body = (await request.json().catch(() => ({}))) as unknown;
+                const parsed = z
+                  .object({
+                    url: z.string().url().startsWith("https://"),
+                    description: z.string().max(500).optional(),
+                    events: z.array(z.string()).min(1),
+                  })
+                  .safeParse(body);
+                if (!parsed.success) throw new SpecError("invalid_input", parsed.error.message);
+                return ok(rid, await createWebhook(auth, parsed.data), { status: 201 });
+              } catch (e) {
+                return toErrorResponse(rid, e);
+              }
+            },
+          );
         } catch (e) {
           return toErrorResponse(rid, e);
         }
