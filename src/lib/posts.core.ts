@@ -10,10 +10,10 @@
 //   failed               → failed
 //   cancelled            → cancelled
 //
-// NOTE on assets: the Asset domain lands in phase 7d. For now, `asset_ids`
-// on create/update are persisted into `publication_media` rows using
-// `image_url = "asset://<asset_id>"` as an opaque placeholder. Phase 7d
-// will replace this with a proper `publication_media.asset_id` FK.
+// Assets (Phase 7d): `asset_ids` on create/update are validated against the
+// `assets` table (workspace-scoped, status='ready') and persisted as real
+// `publication_media.asset_id` foreign keys. The legacy `asset://<id>` text
+// placeholder in `image_url` is still read as a fallback for older rows.
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { SpecError } from "./api/envelope";
 import { encodeCursor, type ParsedCursor } from "./api/pagination";
@@ -41,7 +41,7 @@ const DB_TO_SPEC_STATUS: Record<string, SpecPostStatus> = {
 const ASSET_PREFIX = "asset://";
 
 const PUB_SELECT =
-  "id, org_id, account_id, campaign_id, caption, hashtags, notes, scheduled_at, published_at, status, source, failure_reason, instagram_post_url, created_by, created_at, updated_at, publication_media(id, position, kind, bunny_video_id, image_url, thumbnail_url), instagram_accounts(id, label, account_details(ig_username))";
+  "id, org_id, account_id, campaign_id, caption, hashtags, notes, scheduled_at, published_at, status, source, failure_reason, instagram_post_url, created_by, created_at, updated_at, publication_media(id, position, kind, bunny_video_id, image_url, thumbnail_url, asset_id), instagram_accounts(id, label, account_details(ig_username))";
 
 type PubRow = {
   id: string;
@@ -67,6 +67,7 @@ type PubRow = {
     bunny_video_id: string | null;
     image_url: string | null;
     thumbnail_url: string | null;
+    asset_id: string | null;
   }>;
   instagram_accounts: { id: string; label: string | null; account_details: { ig_username: string | null } | null } | null;
 };
@@ -101,6 +102,9 @@ function mapSource(source: string): SpecVia {
 }
 
 function assetIdFromMedia(m: PubRow["publication_media"][number]): string {
+  // Prefer real FK (Phase 7d+). Fall back to legacy asset:// placeholder or
+  // bunny-derived pseudo-id for rows created before 7d.
+  if (m.asset_id) return m.asset_id;
   if (m.image_url && m.image_url.startsWith(ASSET_PREFIX)) {
     return m.image_url.slice(ASSET_PREFIX.length);
   }
@@ -288,6 +292,38 @@ async function assertAccount(ctx: WriteCtx, account_id: string): Promise<void> {
     throw new SpecError("conflict", "Social account is not ready to publish");
   }
 }
+// Validates every asset_id exists, belongs to the workspace, and is `ready`.
+// Returns the ids preserving input order + de-duped to prevent double-inserts.
+async function assertAssets(ctx: WriteCtx, assetIds: string[]): Promise<string[]> {
+  const unique = Array.from(new Set(assetIds));
+  if (unique.length === 0) return unique;
+  const { data, error } = await ctx.supabase
+    .from("assets")
+    .select("id, workspace_id, status")
+    .in("id", unique);
+  if (error) throw error;
+  const rows = (data ?? []) as Array<{ id: string; workspace_id: string; status: string }>;
+  const byId = new Map(rows.map((r) => [r.id, r]));
+  for (const id of unique) {
+    const row = byId.get(id);
+    if (!row || row.workspace_id !== ctx.orgId) {
+      throw new SpecError("not_found", `Asset ${id} not found`, { asset_ids: `unknown asset ${id}` });
+    }
+    if (row.status !== "ready") {
+      throw new SpecError("conflict", `Asset ${id} is not ready`, {
+        asset_ids: `asset ${id} status is ${row.status}, must be ready`,
+      });
+    }
+  }
+  // Preserve original order (may include duplicates -> reject to keep positions well-defined)
+  if (assetIds.length !== unique.length) {
+    throw new SpecError("invalid_input", "asset_ids must not contain duplicates", {
+      asset_ids: "duplicate ids",
+    });
+  }
+  return assetIds;
+}
+
 
 export async function createPostCore(
   ctx: WriteCtx,
@@ -299,6 +335,7 @@ export async function createPostCore(
     });
   }
   await assertAccount(ctx, input.account_id);
+  const assetIds = await assertAssets(ctx, input.asset_ids);
   const status = input.scheduled_at ? "scheduled" : "draft";
   const scheduledAt = input.scheduled_at ?? new Date(0).toISOString();
   const { data: pub, error } = await ctx.supabase
@@ -319,11 +356,11 @@ export async function createPostCore(
     .select("id")
     .single();
   if (error) throw error;
-  const media = input.asset_ids.map((aid, i) => ({
+  const media = assetIds.map((aid, i) => ({
     publication_id: pub.id,
     position: i,
     kind: "image" as const,
-    image_url: `${ASSET_PREFIX}${aid}`,
+    asset_id: aid,
   }));
   const { error: mErr } = await ctx.supabase.from("publication_media").insert(media);
   if (mErr) throw mErr;
@@ -366,12 +403,13 @@ export async function updatePostCore(
     if (patch.asset_ids.length === 0) {
       throw new SpecError("invalid_input", "asset_ids must contain at least one asset");
     }
+    const assetIds = await assertAssets(ctx, patch.asset_ids);
     await ctx.supabase.from("publication_media").delete().eq("publication_id", id);
-    const rows = patch.asset_ids.map((aid, i) => ({
+    const rows = assetIds.map((aid, i) => ({
       publication_id: id,
       position: i,
       kind: "image" as const,
-      image_url: `${ASSET_PREFIX}${aid}`,
+      asset_id: aid,
     }));
     const { error: mErr } = await ctx.supabase.from("publication_media").insert(rows);
     if (mErr) throw mErr;

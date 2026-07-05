@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 // GET /api/public/v1/assets/{asset_id}/posts   assets.list_posts
-// Note: the Asset domain fully lands in phase 7d. For now, asset_id is the
-// opaque token stored on publication_media (see posts.core.ts assetIdFromMedia).
+// Filters publications by real `publication_media.asset_id` FK (Phase 7d+),
+// with legacy `asset://` placeholder fallback for pre-7d rows.
 export const Route = createFileRoute("/api/public/v1/assets/$asset_id/posts")({
   server: {
     handlers: {
