@@ -52,8 +52,11 @@ import { Route as AuthenticatedDashboardOrdersNewRouteImport } from './routes/_a
 import { Route as AuthenticatedDashboardOrdersIdRouteImport } from './routes/_authenticated/dashboard.orders.$id'
 import { Route as AuthenticatedDashboardAccountsIdRouteImport } from './routes/_authenticated/dashboard.accounts.$id'
 import { Route as AuthenticatedAdminOrdersIdRouteImport } from './routes/_authenticated/admin.orders.$id'
+import { Route as ApiPublicV1WorkspaceWebhooksRouteImport } from './routes/api/public/v1/workspace/webhooks'
 import { Route as ApiPublicV1WorkspaceNotificationsChar58readAllRouteImport } from './routes/api/public/v1/workspace/notifications:read-all'
 import { Route as ApiPublicV1WorkspaceNotificationsRouteImport } from './routes/api/public/v1/workspace/notifications'
+import { Route as ApiPublicV1WorkspaceMembersRouteImport } from './routes/api/public/v1/workspace/members'
+import { Route as ApiPublicV1WorkspaceApiKeysRouteImport } from './routes/api/public/v1/workspace/api-keys'
 import { Route as ApiPublicV1PublicationsIdRouteImport } from './routes/api/public/v1/publications/$id'
 import { Route as ApiPublicV1ProductsProduct_idRouteImport } from './routes/api/public/v1/products/$product_id'
 import { Route as ApiPublicV1PostsPost_idRouteImport } from './routes/api/public/v1/posts/$post_id'
@@ -64,6 +67,9 @@ import { Route as ApiPublicV1DeliveriesDelivery_idRouteImport } from './routes/a
 import { Route as ApiPublicV1AssetsAsset_idRouteImport } from './routes/api/public/v1/assets/$asset_id'
 import { Route as ApiPublicV1ActivityIdRouteImport } from './routes/api/public/v1/activity/$id'
 import { Route as ApiPublicV1AccountsIdRouteImport } from './routes/api/public/v1/accounts/$id'
+import { Route as ApiPublicV1WorkspaceWebhooksWebhook_idRouteImport } from './routes/api/public/v1/workspace/webhooks/$webhook_id'
+import { Route as ApiPublicV1WorkspaceMembersMember_idRouteImport } from './routes/api/public/v1/workspace/members/$member_id'
+import { Route as ApiPublicV1WorkspaceApiKeysApi_key_idRouteImport } from './routes/api/public/v1/workspace/api-keys/$api_key_id'
 import { Route as ApiPublicV1PublicationsIdStatusRouteImport } from './routes/api/public/v1/publications/$id/status'
 import { Route as ApiPublicV1PublicationsIdPublishRouteImport } from './routes/api/public/v1/publications/$id/publish'
 import { Route as ApiPublicV1PublicationsIdCancelRouteImport } from './routes/api/public/v1/publications/$id/cancel'
@@ -84,7 +90,10 @@ import { Route as ApiPublicV1AssetsAsset_idPostsRouteImport } from './routes/api
 import { Route as ApiPublicV1AssetsAsset_idCompleteRouteImport } from './routes/api/public/v1/assets/$asset_id/complete'
 import { Route as ApiPublicV1AccountsIdRotateRouteImport } from './routes/api/public/v1/accounts/$id/rotate'
 import { Route as ApiPublicV1AccountsIdPostsRouteImport } from './routes/api/public/v1/accounts/$id/posts'
+import { Route as ApiPublicV1WorkspaceWebhooksWebhook_idRotateSecretRouteImport } from './routes/api/public/v1/workspace/webhooks/$webhook_id/rotate-secret'
+import { Route as ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteImport } from './routes/api/public/v1/workspace/webhooks/$webhook_id/deliveries'
 import { Route as ApiPublicV1WorkspaceNotificationsIdReadRouteImport } from './routes/api/public/v1/workspace/notifications/$id/read'
+import { Route as ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesWebhook_delivery_idReplayRouteImport } from './routes/api/public/v1/workspace/webhooks/$webhook_id/deliveries/$webhook_delivery_id/replay'
 
 const SignUpRoute = SignUpRouteImport.update({
   id: '/sign-up',
@@ -318,6 +327,12 @@ const AuthenticatedAdminOrdersIdRoute =
     path: '/admin/orders/$id',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiPublicV1WorkspaceWebhooksRoute =
+  ApiPublicV1WorkspaceWebhooksRouteImport.update({
+    id: '/webhooks',
+    path: '/webhooks',
+    getParentRoute: () => ApiPublicV1WorkspaceRoute,
+  } as any)
 const ApiPublicV1WorkspaceNotificationsChar58readAllRoute =
   ApiPublicV1WorkspaceNotificationsChar58readAllRouteImport.update({
     id: '/notifications:read-all',
@@ -328,6 +343,18 @@ const ApiPublicV1WorkspaceNotificationsRoute =
   ApiPublicV1WorkspaceNotificationsRouteImport.update({
     id: '/notifications',
     path: '/notifications',
+    getParentRoute: () => ApiPublicV1WorkspaceRoute,
+  } as any)
+const ApiPublicV1WorkspaceMembersRoute =
+  ApiPublicV1WorkspaceMembersRouteImport.update({
+    id: '/members',
+    path: '/members',
+    getParentRoute: () => ApiPublicV1WorkspaceRoute,
+  } as any)
+const ApiPublicV1WorkspaceApiKeysRoute =
+  ApiPublicV1WorkspaceApiKeysRouteImport.update({
+    id: '/api-keys',
+    path: '/api-keys',
     getParentRoute: () => ApiPublicV1WorkspaceRoute,
   } as any)
 const ApiPublicV1PublicationsIdRoute =
@@ -385,6 +412,24 @@ const ApiPublicV1AccountsIdRoute = ApiPublicV1AccountsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => ApiPublicV1AccountsRoute,
 } as any)
+const ApiPublicV1WorkspaceWebhooksWebhook_idRoute =
+  ApiPublicV1WorkspaceWebhooksWebhook_idRouteImport.update({
+    id: '/$webhook_id',
+    path: '/$webhook_id',
+    getParentRoute: () => ApiPublicV1WorkspaceWebhooksRoute,
+  } as any)
+const ApiPublicV1WorkspaceMembersMember_idRoute =
+  ApiPublicV1WorkspaceMembersMember_idRouteImport.update({
+    id: '/$member_id',
+    path: '/$member_id',
+    getParentRoute: () => ApiPublicV1WorkspaceMembersRoute,
+  } as any)
+const ApiPublicV1WorkspaceApiKeysApi_key_idRoute =
+  ApiPublicV1WorkspaceApiKeysApi_key_idRouteImport.update({
+    id: '/$api_key_id',
+    path: '/$api_key_id',
+    getParentRoute: () => ApiPublicV1WorkspaceApiKeysRoute,
+  } as any)
 const ApiPublicV1PublicationsIdStatusRoute =
   ApiPublicV1PublicationsIdStatusRouteImport.update({
     id: '/status',
@@ -505,12 +550,33 @@ const ApiPublicV1AccountsIdPostsRoute =
     path: '/posts',
     getParentRoute: () => ApiPublicV1AccountsIdRoute,
   } as any)
+const ApiPublicV1WorkspaceWebhooksWebhook_idRotateSecretRoute =
+  ApiPublicV1WorkspaceWebhooksWebhook_idRotateSecretRouteImport.update({
+    id: '/rotate-secret',
+    path: '/rotate-secret',
+    getParentRoute: () => ApiPublicV1WorkspaceWebhooksWebhook_idRoute,
+  } as any)
+const ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRoute =
+  ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteImport.update({
+    id: '/deliveries',
+    path: '/deliveries',
+    getParentRoute: () => ApiPublicV1WorkspaceWebhooksWebhook_idRoute,
+  } as any)
 const ApiPublicV1WorkspaceNotificationsIdReadRoute =
   ApiPublicV1WorkspaceNotificationsIdReadRouteImport.update({
     id: '/$id/read',
     path: '/$id/read',
     getParentRoute: () => ApiPublicV1WorkspaceNotificationsRoute,
   } as any)
+const ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesWebhook_delivery_idReplayRoute =
+  ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesWebhook_delivery_idReplayRouteImport.update(
+    {
+      id: '/$webhook_delivery_id/replay',
+      path: '/$webhook_delivery_id/replay',
+      getParentRoute: () =>
+        ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRoute,
+    } as any,
+  )
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -565,8 +631,11 @@ export interface FileRoutesByFullPath {
   '/api/public/v1/posts/$post_id': typeof ApiPublicV1PostsPost_idRouteWithChildren
   '/api/public/v1/products/$product_id': typeof ApiPublicV1ProductsProduct_idRoute
   '/api/public/v1/publications/$id': typeof ApiPublicV1PublicationsIdRouteWithChildren
+  '/api/public/v1/workspace/api-keys': typeof ApiPublicV1WorkspaceApiKeysRouteWithChildren
+  '/api/public/v1/workspace/members': typeof ApiPublicV1WorkspaceMembersRouteWithChildren
   '/api/public/v1/workspace/notifications': typeof ApiPublicV1WorkspaceNotificationsRouteWithChildren
   '/api/public/v1/workspace/notifications:read-all': typeof ApiPublicV1WorkspaceNotificationsChar58readAllRoute
+  '/api/public/v1/workspace/webhooks': typeof ApiPublicV1WorkspaceWebhooksRouteWithChildren
   '/api/public/v1/accounts/$id/posts': typeof ApiPublicV1AccountsIdPostsRoute
   '/api/public/v1/accounts/$id/rotate': typeof ApiPublicV1AccountsIdRotateRoute
   '/api/public/v1/assets/$asset_id/complete': typeof ApiPublicV1AssetsAsset_idCompleteRoute
@@ -587,7 +656,13 @@ export interface FileRoutesByFullPath {
   '/api/public/v1/publications/$id/cancel': typeof ApiPublicV1PublicationsIdCancelRoute
   '/api/public/v1/publications/$id/publish': typeof ApiPublicV1PublicationsIdPublishRoute
   '/api/public/v1/publications/$id/status': typeof ApiPublicV1PublicationsIdStatusRoute
+  '/api/public/v1/workspace/api-keys/$api_key_id': typeof ApiPublicV1WorkspaceApiKeysApi_key_idRoute
+  '/api/public/v1/workspace/members/$member_id': typeof ApiPublicV1WorkspaceMembersMember_idRoute
+  '/api/public/v1/workspace/webhooks/$webhook_id': typeof ApiPublicV1WorkspaceWebhooksWebhook_idRouteWithChildren
   '/api/public/v1/workspace/notifications/$id/read': typeof ApiPublicV1WorkspaceNotificationsIdReadRoute
+  '/api/public/v1/workspace/webhooks/$webhook_id/deliveries': typeof ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteWithChildren
+  '/api/public/v1/workspace/webhooks/$webhook_id/rotate-secret': typeof ApiPublicV1WorkspaceWebhooksWebhook_idRotateSecretRoute
+  '/api/public/v1/workspace/webhooks/$webhook_id/deliveries/$webhook_delivery_id/replay': typeof ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesWebhook_delivery_idReplayRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -642,8 +717,11 @@ export interface FileRoutesByTo {
   '/api/public/v1/posts/$post_id': typeof ApiPublicV1PostsPost_idRouteWithChildren
   '/api/public/v1/products/$product_id': typeof ApiPublicV1ProductsProduct_idRoute
   '/api/public/v1/publications/$id': typeof ApiPublicV1PublicationsIdRouteWithChildren
+  '/api/public/v1/workspace/api-keys': typeof ApiPublicV1WorkspaceApiKeysRouteWithChildren
+  '/api/public/v1/workspace/members': typeof ApiPublicV1WorkspaceMembersRouteWithChildren
   '/api/public/v1/workspace/notifications': typeof ApiPublicV1WorkspaceNotificationsRouteWithChildren
   '/api/public/v1/workspace/notifications:read-all': typeof ApiPublicV1WorkspaceNotificationsChar58readAllRoute
+  '/api/public/v1/workspace/webhooks': typeof ApiPublicV1WorkspaceWebhooksRouteWithChildren
   '/api/public/v1/accounts/$id/posts': typeof ApiPublicV1AccountsIdPostsRoute
   '/api/public/v1/accounts/$id/rotate': typeof ApiPublicV1AccountsIdRotateRoute
   '/api/public/v1/assets/$asset_id/complete': typeof ApiPublicV1AssetsAsset_idCompleteRoute
@@ -664,7 +742,13 @@ export interface FileRoutesByTo {
   '/api/public/v1/publications/$id/cancel': typeof ApiPublicV1PublicationsIdCancelRoute
   '/api/public/v1/publications/$id/publish': typeof ApiPublicV1PublicationsIdPublishRoute
   '/api/public/v1/publications/$id/status': typeof ApiPublicV1PublicationsIdStatusRoute
+  '/api/public/v1/workspace/api-keys/$api_key_id': typeof ApiPublicV1WorkspaceApiKeysApi_key_idRoute
+  '/api/public/v1/workspace/members/$member_id': typeof ApiPublicV1WorkspaceMembersMember_idRoute
+  '/api/public/v1/workspace/webhooks/$webhook_id': typeof ApiPublicV1WorkspaceWebhooksWebhook_idRouteWithChildren
   '/api/public/v1/workspace/notifications/$id/read': typeof ApiPublicV1WorkspaceNotificationsIdReadRoute
+  '/api/public/v1/workspace/webhooks/$webhook_id/deliveries': typeof ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteWithChildren
+  '/api/public/v1/workspace/webhooks/$webhook_id/rotate-secret': typeof ApiPublicV1WorkspaceWebhooksWebhook_idRotateSecretRoute
+  '/api/public/v1/workspace/webhooks/$webhook_id/deliveries/$webhook_delivery_id/replay': typeof ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesWebhook_delivery_idReplayRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -721,8 +805,11 @@ export interface FileRoutesById {
   '/api/public/v1/posts/$post_id': typeof ApiPublicV1PostsPost_idRouteWithChildren
   '/api/public/v1/products/$product_id': typeof ApiPublicV1ProductsProduct_idRoute
   '/api/public/v1/publications/$id': typeof ApiPublicV1PublicationsIdRouteWithChildren
+  '/api/public/v1/workspace/api-keys': typeof ApiPublicV1WorkspaceApiKeysRouteWithChildren
+  '/api/public/v1/workspace/members': typeof ApiPublicV1WorkspaceMembersRouteWithChildren
   '/api/public/v1/workspace/notifications': typeof ApiPublicV1WorkspaceNotificationsRouteWithChildren
   '/api/public/v1/workspace/notifications:read-all': typeof ApiPublicV1WorkspaceNotificationsChar58readAllRoute
+  '/api/public/v1/workspace/webhooks': typeof ApiPublicV1WorkspaceWebhooksRouteWithChildren
   '/api/public/v1/accounts/$id/posts': typeof ApiPublicV1AccountsIdPostsRoute
   '/api/public/v1/accounts/$id/rotate': typeof ApiPublicV1AccountsIdRotateRoute
   '/api/public/v1/assets/$asset_id/complete': typeof ApiPublicV1AssetsAsset_idCompleteRoute
@@ -743,7 +830,13 @@ export interface FileRoutesById {
   '/api/public/v1/publications/$id/cancel': typeof ApiPublicV1PublicationsIdCancelRoute
   '/api/public/v1/publications/$id/publish': typeof ApiPublicV1PublicationsIdPublishRoute
   '/api/public/v1/publications/$id/status': typeof ApiPublicV1PublicationsIdStatusRoute
+  '/api/public/v1/workspace/api-keys/$api_key_id': typeof ApiPublicV1WorkspaceApiKeysApi_key_idRoute
+  '/api/public/v1/workspace/members/$member_id': typeof ApiPublicV1WorkspaceMembersMember_idRoute
+  '/api/public/v1/workspace/webhooks/$webhook_id': typeof ApiPublicV1WorkspaceWebhooksWebhook_idRouteWithChildren
   '/api/public/v1/workspace/notifications/$id/read': typeof ApiPublicV1WorkspaceNotificationsIdReadRoute
+  '/api/public/v1/workspace/webhooks/$webhook_id/deliveries': typeof ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteWithChildren
+  '/api/public/v1/workspace/webhooks/$webhook_id/rotate-secret': typeof ApiPublicV1WorkspaceWebhooksWebhook_idRotateSecretRoute
+  '/api/public/v1/workspace/webhooks/$webhook_id/deliveries/$webhook_delivery_id/replay': typeof ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesWebhook_delivery_idReplayRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -800,8 +893,11 @@ export interface FileRouteTypes {
     | '/api/public/v1/posts/$post_id'
     | '/api/public/v1/products/$product_id'
     | '/api/public/v1/publications/$id'
+    | '/api/public/v1/workspace/api-keys'
+    | '/api/public/v1/workspace/members'
     | '/api/public/v1/workspace/notifications'
     | '/api/public/v1/workspace/notifications:read-all'
+    | '/api/public/v1/workspace/webhooks'
     | '/api/public/v1/accounts/$id/posts'
     | '/api/public/v1/accounts/$id/rotate'
     | '/api/public/v1/assets/$asset_id/complete'
@@ -822,7 +918,13 @@ export interface FileRouteTypes {
     | '/api/public/v1/publications/$id/cancel'
     | '/api/public/v1/publications/$id/publish'
     | '/api/public/v1/publications/$id/status'
+    | '/api/public/v1/workspace/api-keys/$api_key_id'
+    | '/api/public/v1/workspace/members/$member_id'
+    | '/api/public/v1/workspace/webhooks/$webhook_id'
     | '/api/public/v1/workspace/notifications/$id/read'
+    | '/api/public/v1/workspace/webhooks/$webhook_id/deliveries'
+    | '/api/public/v1/workspace/webhooks/$webhook_id/rotate-secret'
+    | '/api/public/v1/workspace/webhooks/$webhook_id/deliveries/$webhook_delivery_id/replay'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -877,8 +979,11 @@ export interface FileRouteTypes {
     | '/api/public/v1/posts/$post_id'
     | '/api/public/v1/products/$product_id'
     | '/api/public/v1/publications/$id'
+    | '/api/public/v1/workspace/api-keys'
+    | '/api/public/v1/workspace/members'
     | '/api/public/v1/workspace/notifications'
     | '/api/public/v1/workspace/notifications:read-all'
+    | '/api/public/v1/workspace/webhooks'
     | '/api/public/v1/accounts/$id/posts'
     | '/api/public/v1/accounts/$id/rotate'
     | '/api/public/v1/assets/$asset_id/complete'
@@ -899,7 +1004,13 @@ export interface FileRouteTypes {
     | '/api/public/v1/publications/$id/cancel'
     | '/api/public/v1/publications/$id/publish'
     | '/api/public/v1/publications/$id/status'
+    | '/api/public/v1/workspace/api-keys/$api_key_id'
+    | '/api/public/v1/workspace/members/$member_id'
+    | '/api/public/v1/workspace/webhooks/$webhook_id'
     | '/api/public/v1/workspace/notifications/$id/read'
+    | '/api/public/v1/workspace/webhooks/$webhook_id/deliveries'
+    | '/api/public/v1/workspace/webhooks/$webhook_id/rotate-secret'
+    | '/api/public/v1/workspace/webhooks/$webhook_id/deliveries/$webhook_delivery_id/replay'
   id:
     | '__root__'
     | '/'
@@ -955,8 +1066,11 @@ export interface FileRouteTypes {
     | '/api/public/v1/posts/$post_id'
     | '/api/public/v1/products/$product_id'
     | '/api/public/v1/publications/$id'
+    | '/api/public/v1/workspace/api-keys'
+    | '/api/public/v1/workspace/members'
     | '/api/public/v1/workspace/notifications'
     | '/api/public/v1/workspace/notifications:read-all'
+    | '/api/public/v1/workspace/webhooks'
     | '/api/public/v1/accounts/$id/posts'
     | '/api/public/v1/accounts/$id/rotate'
     | '/api/public/v1/assets/$asset_id/complete'
@@ -977,7 +1091,13 @@ export interface FileRouteTypes {
     | '/api/public/v1/publications/$id/cancel'
     | '/api/public/v1/publications/$id/publish'
     | '/api/public/v1/publications/$id/status'
+    | '/api/public/v1/workspace/api-keys/$api_key_id'
+    | '/api/public/v1/workspace/members/$member_id'
+    | '/api/public/v1/workspace/webhooks/$webhook_id'
     | '/api/public/v1/workspace/notifications/$id/read'
+    | '/api/public/v1/workspace/webhooks/$webhook_id/deliveries'
+    | '/api/public/v1/workspace/webhooks/$webhook_id/rotate-secret'
+    | '/api/public/v1/workspace/webhooks/$webhook_id/deliveries/$webhook_delivery_id/replay'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1311,6 +1431,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminOrdersIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/v1/workspace/webhooks': {
+      id: '/api/public/v1/workspace/webhooks'
+      path: '/webhooks'
+      fullPath: '/api/public/v1/workspace/webhooks'
+      preLoaderRoute: typeof ApiPublicV1WorkspaceWebhooksRouteImport
+      parentRoute: typeof ApiPublicV1WorkspaceRoute
+    }
     '/api/public/v1/workspace/notifications:read-all': {
       id: '/api/public/v1/workspace/notifications:read-all'
       path: '/notifications:read-all'
@@ -1323,6 +1450,20 @@ declare module '@tanstack/react-router' {
       path: '/notifications'
       fullPath: '/api/public/v1/workspace/notifications'
       preLoaderRoute: typeof ApiPublicV1WorkspaceNotificationsRouteImport
+      parentRoute: typeof ApiPublicV1WorkspaceRoute
+    }
+    '/api/public/v1/workspace/members': {
+      id: '/api/public/v1/workspace/members'
+      path: '/members'
+      fullPath: '/api/public/v1/workspace/members'
+      preLoaderRoute: typeof ApiPublicV1WorkspaceMembersRouteImport
+      parentRoute: typeof ApiPublicV1WorkspaceRoute
+    }
+    '/api/public/v1/workspace/api-keys': {
+      id: '/api/public/v1/workspace/api-keys'
+      path: '/api-keys'
+      fullPath: '/api/public/v1/workspace/api-keys'
+      preLoaderRoute: typeof ApiPublicV1WorkspaceApiKeysRouteImport
       parentRoute: typeof ApiPublicV1WorkspaceRoute
     }
     '/api/public/v1/publications/$id': {
@@ -1394,6 +1535,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/public/v1/accounts/$id'
       preLoaderRoute: typeof ApiPublicV1AccountsIdRouteImport
       parentRoute: typeof ApiPublicV1AccountsRoute
+    }
+    '/api/public/v1/workspace/webhooks/$webhook_id': {
+      id: '/api/public/v1/workspace/webhooks/$webhook_id'
+      path: '/$webhook_id'
+      fullPath: '/api/public/v1/workspace/webhooks/$webhook_id'
+      preLoaderRoute: typeof ApiPublicV1WorkspaceWebhooksWebhook_idRouteImport
+      parentRoute: typeof ApiPublicV1WorkspaceWebhooksRoute
+    }
+    '/api/public/v1/workspace/members/$member_id': {
+      id: '/api/public/v1/workspace/members/$member_id'
+      path: '/$member_id'
+      fullPath: '/api/public/v1/workspace/members/$member_id'
+      preLoaderRoute: typeof ApiPublicV1WorkspaceMembersMember_idRouteImport
+      parentRoute: typeof ApiPublicV1WorkspaceMembersRoute
+    }
+    '/api/public/v1/workspace/api-keys/$api_key_id': {
+      id: '/api/public/v1/workspace/api-keys/$api_key_id'
+      path: '/$api_key_id'
+      fullPath: '/api/public/v1/workspace/api-keys/$api_key_id'
+      preLoaderRoute: typeof ApiPublicV1WorkspaceApiKeysApi_key_idRouteImport
+      parentRoute: typeof ApiPublicV1WorkspaceApiKeysRoute
     }
     '/api/public/v1/publications/$id/status': {
       id: '/api/public/v1/publications/$id/status'
@@ -1535,12 +1697,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicV1AccountsIdPostsRouteImport
       parentRoute: typeof ApiPublicV1AccountsIdRoute
     }
+    '/api/public/v1/workspace/webhooks/$webhook_id/rotate-secret': {
+      id: '/api/public/v1/workspace/webhooks/$webhook_id/rotate-secret'
+      path: '/rotate-secret'
+      fullPath: '/api/public/v1/workspace/webhooks/$webhook_id/rotate-secret'
+      preLoaderRoute: typeof ApiPublicV1WorkspaceWebhooksWebhook_idRotateSecretRouteImport
+      parentRoute: typeof ApiPublicV1WorkspaceWebhooksWebhook_idRoute
+    }
+    '/api/public/v1/workspace/webhooks/$webhook_id/deliveries': {
+      id: '/api/public/v1/workspace/webhooks/$webhook_id/deliveries'
+      path: '/deliveries'
+      fullPath: '/api/public/v1/workspace/webhooks/$webhook_id/deliveries'
+      preLoaderRoute: typeof ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteImport
+      parentRoute: typeof ApiPublicV1WorkspaceWebhooksWebhook_idRoute
+    }
     '/api/public/v1/workspace/notifications/$id/read': {
       id: '/api/public/v1/workspace/notifications/$id/read'
       path: '/$id/read'
       fullPath: '/api/public/v1/workspace/notifications/$id/read'
       preLoaderRoute: typeof ApiPublicV1WorkspaceNotificationsIdReadRouteImport
       parentRoute: typeof ApiPublicV1WorkspaceNotificationsRoute
+    }
+    '/api/public/v1/workspace/webhooks/$webhook_id/deliveries/$webhook_delivery_id/replay': {
+      id: '/api/public/v1/workspace/webhooks/$webhook_id/deliveries/$webhook_delivery_id/replay'
+      path: '/$webhook_delivery_id/replay'
+      fullPath: '/api/public/v1/workspace/webhooks/$webhook_id/deliveries/$webhook_delivery_id/replay'
+      preLoaderRoute: typeof ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesWebhook_delivery_idReplayRouteImport
+      parentRoute: typeof ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRoute
     }
   }
 }
@@ -1827,6 +2010,36 @@ const ApiPublicV1PublicationsRouteWithChildren =
     ApiPublicV1PublicationsRouteChildren,
   )
 
+interface ApiPublicV1WorkspaceApiKeysRouteChildren {
+  ApiPublicV1WorkspaceApiKeysApi_key_idRoute: typeof ApiPublicV1WorkspaceApiKeysApi_key_idRoute
+}
+
+const ApiPublicV1WorkspaceApiKeysRouteChildren: ApiPublicV1WorkspaceApiKeysRouteChildren =
+  {
+    ApiPublicV1WorkspaceApiKeysApi_key_idRoute:
+      ApiPublicV1WorkspaceApiKeysApi_key_idRoute,
+  }
+
+const ApiPublicV1WorkspaceApiKeysRouteWithChildren =
+  ApiPublicV1WorkspaceApiKeysRoute._addFileChildren(
+    ApiPublicV1WorkspaceApiKeysRouteChildren,
+  )
+
+interface ApiPublicV1WorkspaceMembersRouteChildren {
+  ApiPublicV1WorkspaceMembersMember_idRoute: typeof ApiPublicV1WorkspaceMembersMember_idRoute
+}
+
+const ApiPublicV1WorkspaceMembersRouteChildren: ApiPublicV1WorkspaceMembersRouteChildren =
+  {
+    ApiPublicV1WorkspaceMembersMember_idRoute:
+      ApiPublicV1WorkspaceMembersMember_idRoute,
+  }
+
+const ApiPublicV1WorkspaceMembersRouteWithChildren =
+  ApiPublicV1WorkspaceMembersRoute._addFileChildren(
+    ApiPublicV1WorkspaceMembersRouteChildren,
+  )
+
 interface ApiPublicV1WorkspaceNotificationsRouteChildren {
   ApiPublicV1WorkspaceNotificationsIdReadRoute: typeof ApiPublicV1WorkspaceNotificationsIdReadRoute
 }
@@ -1842,16 +2055,73 @@ const ApiPublicV1WorkspaceNotificationsRouteWithChildren =
     ApiPublicV1WorkspaceNotificationsRouteChildren,
   )
 
+interface ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteChildren {
+  ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesWebhook_delivery_idReplayRoute: typeof ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesWebhook_delivery_idReplayRoute
+}
+
+const ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteChildren: ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteChildren =
+  {
+    ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesWebhook_delivery_idReplayRoute:
+      ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesWebhook_delivery_idReplayRoute,
+  }
+
+const ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteWithChildren =
+  ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRoute._addFileChildren(
+    ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteChildren,
+  )
+
+interface ApiPublicV1WorkspaceWebhooksWebhook_idRouteChildren {
+  ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRoute: typeof ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteWithChildren
+  ApiPublicV1WorkspaceWebhooksWebhook_idRotateSecretRoute: typeof ApiPublicV1WorkspaceWebhooksWebhook_idRotateSecretRoute
+}
+
+const ApiPublicV1WorkspaceWebhooksWebhook_idRouteChildren: ApiPublicV1WorkspaceWebhooksWebhook_idRouteChildren =
+  {
+    ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRoute:
+      ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteWithChildren,
+    ApiPublicV1WorkspaceWebhooksWebhook_idRotateSecretRoute:
+      ApiPublicV1WorkspaceWebhooksWebhook_idRotateSecretRoute,
+  }
+
+const ApiPublicV1WorkspaceWebhooksWebhook_idRouteWithChildren =
+  ApiPublicV1WorkspaceWebhooksWebhook_idRoute._addFileChildren(
+    ApiPublicV1WorkspaceWebhooksWebhook_idRouteChildren,
+  )
+
+interface ApiPublicV1WorkspaceWebhooksRouteChildren {
+  ApiPublicV1WorkspaceWebhooksWebhook_idRoute: typeof ApiPublicV1WorkspaceWebhooksWebhook_idRouteWithChildren
+}
+
+const ApiPublicV1WorkspaceWebhooksRouteChildren: ApiPublicV1WorkspaceWebhooksRouteChildren =
+  {
+    ApiPublicV1WorkspaceWebhooksWebhook_idRoute:
+      ApiPublicV1WorkspaceWebhooksWebhook_idRouteWithChildren,
+  }
+
+const ApiPublicV1WorkspaceWebhooksRouteWithChildren =
+  ApiPublicV1WorkspaceWebhooksRoute._addFileChildren(
+    ApiPublicV1WorkspaceWebhooksRouteChildren,
+  )
+
 interface ApiPublicV1WorkspaceRouteChildren {
+  ApiPublicV1WorkspaceApiKeysRoute: typeof ApiPublicV1WorkspaceApiKeysRouteWithChildren
+  ApiPublicV1WorkspaceMembersRoute: typeof ApiPublicV1WorkspaceMembersRouteWithChildren
   ApiPublicV1WorkspaceNotificationsRoute: typeof ApiPublicV1WorkspaceNotificationsRouteWithChildren
   ApiPublicV1WorkspaceNotificationsChar58readAllRoute: typeof ApiPublicV1WorkspaceNotificationsChar58readAllRoute
+  ApiPublicV1WorkspaceWebhooksRoute: typeof ApiPublicV1WorkspaceWebhooksRouteWithChildren
 }
 
 const ApiPublicV1WorkspaceRouteChildren: ApiPublicV1WorkspaceRouteChildren = {
+  ApiPublicV1WorkspaceApiKeysRoute:
+    ApiPublicV1WorkspaceApiKeysRouteWithChildren,
+  ApiPublicV1WorkspaceMembersRoute:
+    ApiPublicV1WorkspaceMembersRouteWithChildren,
   ApiPublicV1WorkspaceNotificationsRoute:
     ApiPublicV1WorkspaceNotificationsRouteWithChildren,
   ApiPublicV1WorkspaceNotificationsChar58readAllRoute:
     ApiPublicV1WorkspaceNotificationsChar58readAllRoute,
+  ApiPublicV1WorkspaceWebhooksRoute:
+    ApiPublicV1WorkspaceWebhooksRouteWithChildren,
 }
 
 const ApiPublicV1WorkspaceRouteWithChildren =
