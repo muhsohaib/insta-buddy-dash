@@ -1,42 +1,47 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 
-// workspace.get + workspace.update
-export const Route = createFileRoute("/api/public/v1/workspace")({
+// api_keys.list + api_keys.create
+export const Route = createFileRoute("/api/public/v1/workspace/api-keys")({
   server: {
     handlers: {
       GET: async ({ request }) => {
         const { authenticateApiRequest } = await import("@/lib/api-auth.server");
-        const { ok, getOrMintRequestId, toErrorResponse } = await import("@/lib/api/envelope");
-        const { getWorkspace } = await import("@/lib/workspaces.core");
+        const { okList, getOrMintRequestId, toErrorResponse } = await import("@/lib/api/envelope");
+        const { parseLimit, parseCursor } = await import("@/lib/api/pagination");
+        const { listApiKeys } = await import("@/lib/api-keys.spec.core");
         const rid = getOrMintRequestId(request);
         try {
           const auth = await authenticateApiRequest(request);
-          return ok(rid, await getWorkspace(auth));
+          const url = new URL(request.url);
+          const { data, page } = await listApiKeys(auth, {
+            limit: parseLimit(url.searchParams.get("limit")),
+            cursor: parseCursor(url.searchParams.get("cursor")),
+          });
+          return okList(rid, data, page);
         } catch (e) {
           return toErrorResponse(rid, e);
         }
       },
-      PATCH: async ({ request }) => {
+      POST: async ({ request }) => {
         const { authenticateApiRequest } = await import("@/lib/api-auth.server");
         const { ok, getOrMintRequestId, toErrorResponse, SpecError } = await import(
           "@/lib/api/envelope"
         );
-        const { updateWorkspace } = await import("@/lib/workspaces.core");
+        const { createApiKey } = await import("@/lib/api-keys.spec.core");
         const rid = getOrMintRequestId(request);
         try {
           const auth = await authenticateApiRequest(request);
           const body = (await request.json().catch(() => ({}))) as unknown;
           const parsed = z
             .object({
-              name: z.string().min(1).max(200).optional(),
-              timezone: z.string().min(1).max(64).optional(),
-              default_locale: z.string().min(2).max(16).optional(),
-              branding: z.record(z.string(), z.unknown()).optional(),
+              label: z.string().min(1).max(120),
+              scopes: z.array(z.string()).optional(),
+              expires_at: z.string().datetime().nullable().optional(),
             })
             .safeParse(body);
           if (!parsed.success) throw new SpecError("invalid_input", parsed.error.message);
-          return ok(rid, await updateWorkspace(auth, parsed.data));
+          return ok(rid, await createApiKey(auth, parsed.data), { status: 201 });
         } catch (e) {
           return toErrorResponse(rid, e);
         }
