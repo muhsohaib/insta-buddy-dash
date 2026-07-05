@@ -335,6 +335,7 @@ export async function createPostCore(
     });
   }
   await assertAccount(ctx, input.account_id);
+  const assetIds = await assertAssets(ctx, input.asset_ids);
   const status = input.scheduled_at ? "scheduled" : "draft";
   const scheduledAt = input.scheduled_at ?? new Date(0).toISOString();
   const { data: pub, error } = await ctx.supabase
@@ -355,11 +356,11 @@ export async function createPostCore(
     .select("id")
     .single();
   if (error) throw error;
-  const media = input.asset_ids.map((aid, i) => ({
+  const media = assetIds.map((aid, i) => ({
     publication_id: pub.id,
     position: i,
     kind: "image" as const,
-    image_url: `${ASSET_PREFIX}${aid}`,
+    asset_id: aid,
   }));
   const { error: mErr } = await ctx.supabase.from("publication_media").insert(media);
   if (mErr) throw mErr;
