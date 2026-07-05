@@ -70,6 +70,7 @@ import { Route as ApiPublicV1OrdersIdStatusRouteImport } from './routes/api/publ
 import { Route as ApiPublicV1OrdersIdDetailsRouteImport } from './routes/api/public/v1/orders/$id/details'
 import { Route as ApiPublicV1OrdersIdDeliverablesRouteImport } from './routes/api/public/v1/orders/$id/deliverables'
 import { Route as ApiPublicV1AssetsAsset_idPostsRouteImport } from './routes/api/public/v1/assets/$asset_id/posts'
+import { Route as ApiPublicV1AccountsIdRotateRouteImport } from './routes/api/public/v1/accounts/$id/rotate'
 import { Route as ApiPublicV1AccountsIdPostsRouteImport } from './routes/api/public/v1/accounts/$id/posts'
 import { Route as ApiPublicV1WorkspaceNotificationsIdReadRouteImport } from './routes/api/public/v1/workspace/notifications/$id/read'
 
@@ -411,6 +412,12 @@ const ApiPublicV1AssetsAsset_idPostsRoute =
     path: '/api/public/v1/assets/$asset_id/posts',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicV1AccountsIdRotateRoute =
+  ApiPublicV1AccountsIdRotateRouteImport.update({
+    id: '/rotate',
+    path: '/rotate',
+    getParentRoute: () => ApiPublicV1AccountsIdRoute,
+  } as any)
 const ApiPublicV1AccountsIdPostsRoute =
   ApiPublicV1AccountsIdPostsRouteImport.update({
     id: '/posts',
@@ -473,6 +480,7 @@ export interface FileRoutesByFullPath {
   '/api/public/v1/workspace/notifications': typeof ApiPublicV1WorkspaceNotificationsRouteWithChildren
   '/api/public/v1/workspace/notifications:read-all': typeof ApiPublicV1WorkspaceNotificationsChar58readAllRoute
   '/api/public/v1/accounts/$id/posts': typeof ApiPublicV1AccountsIdPostsRoute
+  '/api/public/v1/accounts/$id/rotate': typeof ApiPublicV1AccountsIdRotateRoute
   '/api/public/v1/assets/$asset_id/posts': typeof ApiPublicV1AssetsAsset_idPostsRoute
   '/api/public/v1/orders/$id/deliverables': typeof ApiPublicV1OrdersIdDeliverablesRoute
   '/api/public/v1/orders/$id/details': typeof ApiPublicV1OrdersIdDetailsRoute
@@ -537,6 +545,7 @@ export interface FileRoutesByTo {
   '/api/public/v1/workspace/notifications': typeof ApiPublicV1WorkspaceNotificationsRouteWithChildren
   '/api/public/v1/workspace/notifications:read-all': typeof ApiPublicV1WorkspaceNotificationsChar58readAllRoute
   '/api/public/v1/accounts/$id/posts': typeof ApiPublicV1AccountsIdPostsRoute
+  '/api/public/v1/accounts/$id/rotate': typeof ApiPublicV1AccountsIdRotateRoute
   '/api/public/v1/assets/$asset_id/posts': typeof ApiPublicV1AssetsAsset_idPostsRoute
   '/api/public/v1/orders/$id/deliverables': typeof ApiPublicV1OrdersIdDeliverablesRoute
   '/api/public/v1/orders/$id/details': typeof ApiPublicV1OrdersIdDetailsRoute
@@ -603,6 +612,7 @@ export interface FileRoutesById {
   '/api/public/v1/workspace/notifications': typeof ApiPublicV1WorkspaceNotificationsRouteWithChildren
   '/api/public/v1/workspace/notifications:read-all': typeof ApiPublicV1WorkspaceNotificationsChar58readAllRoute
   '/api/public/v1/accounts/$id/posts': typeof ApiPublicV1AccountsIdPostsRoute
+  '/api/public/v1/accounts/$id/rotate': typeof ApiPublicV1AccountsIdRotateRoute
   '/api/public/v1/assets/$asset_id/posts': typeof ApiPublicV1AssetsAsset_idPostsRoute
   '/api/public/v1/orders/$id/deliverables': typeof ApiPublicV1OrdersIdDeliverablesRoute
   '/api/public/v1/orders/$id/details': typeof ApiPublicV1OrdersIdDetailsRoute
@@ -669,6 +679,7 @@ export interface FileRouteTypes {
     | '/api/public/v1/workspace/notifications'
     | '/api/public/v1/workspace/notifications:read-all'
     | '/api/public/v1/accounts/$id/posts'
+    | '/api/public/v1/accounts/$id/rotate'
     | '/api/public/v1/assets/$asset_id/posts'
     | '/api/public/v1/orders/$id/deliverables'
     | '/api/public/v1/orders/$id/details'
@@ -733,6 +744,7 @@ export interface FileRouteTypes {
     | '/api/public/v1/workspace/notifications'
     | '/api/public/v1/workspace/notifications:read-all'
     | '/api/public/v1/accounts/$id/posts'
+    | '/api/public/v1/accounts/$id/rotate'
     | '/api/public/v1/assets/$asset_id/posts'
     | '/api/public/v1/orders/$id/deliverables'
     | '/api/public/v1/orders/$id/details'
@@ -798,6 +810,7 @@ export interface FileRouteTypes {
     | '/api/public/v1/workspace/notifications'
     | '/api/public/v1/workspace/notifications:read-all'
     | '/api/public/v1/accounts/$id/posts'
+    | '/api/public/v1/accounts/$id/rotate'
     | '/api/public/v1/assets/$asset_id/posts'
     | '/api/public/v1/orders/$id/deliverables'
     | '/api/public/v1/orders/$id/details'
@@ -1269,6 +1282,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicV1AssetsAsset_idPostsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/v1/accounts/$id/rotate': {
+      id: '/api/public/v1/accounts/$id/rotate'
+      path: '/rotate'
+      fullPath: '/api/public/v1/accounts/$id/rotate'
+      preLoaderRoute: typeof ApiPublicV1AccountsIdRotateRouteImport
+      parentRoute: typeof ApiPublicV1AccountsIdRoute
+    }
     '/api/public/v1/accounts/$id/posts': {
       id: '/api/public/v1/accounts/$id/posts'
       path: '/posts'
@@ -1336,10 +1356,12 @@ const AuthenticatedRouteRouteWithChildren =
 
 interface ApiPublicV1AccountsIdRouteChildren {
   ApiPublicV1AccountsIdPostsRoute: typeof ApiPublicV1AccountsIdPostsRoute
+  ApiPublicV1AccountsIdRotateRoute: typeof ApiPublicV1AccountsIdRotateRoute
 }
 
 const ApiPublicV1AccountsIdRouteChildren: ApiPublicV1AccountsIdRouteChildren = {
   ApiPublicV1AccountsIdPostsRoute: ApiPublicV1AccountsIdPostsRoute,
+  ApiPublicV1AccountsIdRotateRoute: ApiPublicV1AccountsIdRotateRoute,
 }
 
 const ApiPublicV1AccountsIdRouteWithChildren =
