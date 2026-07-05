@@ -1,11 +1,9 @@
 // Deliveries core — bridges `order_item_deliverables` → spec Delivery.
 // See docs/openapi.json → schemas.Delivery.
-// Deliveries spec core.
 import type { ApiAuth } from "./api-auth.server";
 import { SpecError } from "./api/envelope";
 import { encodeCursor, type ParsedCursor } from "./api/pagination";
 import { enqueueWebhookEvent } from "./webhooks-dispatch.server";
-import { encodeCursor, type ParsedCursor } from "./api/pagination";
 
 const SELECT =
   "id, order_item_id, ig_username, ig_password, delivered_at, accepted_at, issue_reported_at, issue_reason, created_at, updated_at, order_items!inner(id, order_id, orders!inner(id, org_id))";
