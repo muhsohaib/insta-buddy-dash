@@ -885,9 +885,7 @@ function BillingTab() {
 
 function ApiKeysTab() {
   const { organization, membership, isLoaded } = useOrganization();
-  const listFn = useServerFn(listApiKeys);
-  const createFn = useServerFn(createApiKey);
-  const revokeFn = useServerFn(revokeApiKey);
+  const api = useApiClient();
 
   const isAdmin = !organization || membership?.role === "org:admin";
   const [keys, setKeys] = useState<
@@ -909,8 +907,8 @@ function ApiKeysTab() {
   async function refresh() {
     setLoading(true);
     try {
-      const rows = await listFn();
-      setKeys(rows as typeof keys);
+      const rows = await api.get<typeof keys>("/workspace/api-keys");
+      setKeys(rows);
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Failed to load keys");
     } finally {
@@ -931,7 +929,9 @@ function ApiKeysTab() {
     if (!label.trim()) return;
     setCreating(true);
     try {
-      const created = await createFn({ data: { label: label.trim() } });
+      const created = await api.post<{ key: string }>("/workspace/api-keys", {
+        label: label.trim(),
+      });
       setNewKey(created.key);
       setLabel("");
       await refresh();
@@ -944,13 +944,14 @@ function ApiKeysTab() {
 
   async function revoke(id: string) {
     try {
-      await revokeFn({ data: { id } });
+      await api.del(`/workspace/api-keys/${id}`);
       toast.success("Key revoked");
       await refresh();
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Failed to revoke");
     }
   }
+
 
   async function copy() {
     if (!newKey) return;
