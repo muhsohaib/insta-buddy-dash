@@ -28,20 +28,30 @@ export const Route = createFileRoute("/api/public/v1/workspace/api-keys")({
         const { ok, getOrMintRequestId, toErrorResponse, SpecError } = await import(
           "@/lib/api/envelope"
         );
+        const { withIdempotency } = await import("@/lib/api/idempotency.server");
         const { createApiKey } = await import("@/lib/api-keys.spec.core");
         const rid = getOrMintRequestId(request);
         try {
           const auth = await authenticateApiRequest(request);
-          const body = (await request.json().catch(() => ({}))) as unknown;
-          const parsed = z
-            .object({
-              label: z.string().min(1).max(120),
-              scopes: z.array(z.string()).optional(),
-              expires_at: z.string().datetime().nullable().optional(),
-            })
-            .safeParse(body);
-          if (!parsed.success) throw new SpecError("invalid_input", parsed.error.message);
-          return ok(rid, await createApiKey(auth, parsed.data), { status: 201 });
+          return await withIdempotency(
+            { request, workspaceId: auth.orgId, requestId: rid, method: "POST", path: "/workspace/api-keys" },
+            async () => {
+              try {
+                const body = (await request.json().catch(() => ({}))) as unknown;
+                const parsed = z
+                  .object({
+                    label: z.string().min(1).max(120),
+                    scopes: z.array(z.string()).optional(),
+                    expires_at: z.string().datetime().nullable().optional(),
+                  })
+                  .safeParse(body);
+                if (!parsed.success) throw new SpecError("invalid_input", parsed.error.message);
+                return ok(rid, await createApiKey(auth, parsed.data), { status: 201 });
+              } catch (e) {
+                return toErrorResponse(rid, e);
+              }
+            },
+          );
         } catch (e) {
           return toErrorResponse(rid, e);
         }
