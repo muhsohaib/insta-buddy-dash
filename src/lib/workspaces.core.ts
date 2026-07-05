@@ -46,7 +46,7 @@ async function ensureRow(auth: ApiAuth): Promise<WorkspaceRow> {
   if (data) return data as WorkspaceRow;
   const { data: created, error: insErr } = await auth.supabase
     .from("workspaces")
-    .insert({ id: auth.orgId, name: auth.orgId })
+    .insert({  id: auth.orgId, name: auth.orgId })
     .select("*")
     .single();
   if (insErr) throw new SpecError("internal", insErr.message);
@@ -70,7 +70,7 @@ export async function updateWorkspace(
   if (Object.keys(patch).length === 0) return toView(await ensureRow(auth));
   const { data, error } = await auth.supabase
     .from("workspaces")
-    .update(patch)
+    .update(patch as never)
     .eq("id", auth.orgId)
     .select("*")
     .single();

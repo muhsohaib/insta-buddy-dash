@@ -62,7 +62,7 @@ export async function listProducts(
   }
   const { data, error } = await q;
   if (error) throw new SpecError("internal", error.message);
-  const rows = (data ?? []) as ProductRow[];
+  const rows = (data ?? []) as unknown as ProductRow[];
   const overflow = rows.length > opts.limit;
   const trimmed = overflow ? rows.slice(0, opts.limit) : rows;
   const last = trimmed[trimmed.length - 1];

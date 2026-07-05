@@ -70,7 +70,7 @@ export async function listApiKeys(
   }
   const { data, error } = await q;
   if (error) throw new SpecError("internal", error.message);
-  const rows = (data ?? []) as Row[];
+  const rows = (data ?? []) as unknown as Row[];
   const overflow = rows.length > opts.limit;
   const trimmed = overflow ? rows.slice(0, opts.limit) : rows;
   const last = trimmed[trimmed.length - 1];
@@ -103,7 +103,7 @@ export async function createApiKey(
   const { raw, prefix, hash } = generateApiKey();
   const { data, error } = await auth.supabase
     .from("api_keys")
-    .insert({
+    .insert({ 
       org_id: auth.orgId,
       created_by_user_id: auth.userId,
       label: input.label,

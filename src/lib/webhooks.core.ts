@@ -123,7 +123,7 @@ export async function listWebhooks(
   }
   const { data, error } = await q;
   if (error) throw new SpecError("internal", error.message);
-  const rows = (data ?? []) as WHRow[];
+  const rows = (data ?? []) as unknown as WHRow[];
   const overflow = rows.length > opts.limit;
   const trimmed = overflow ? rows.slice(0, opts.limit) : rows;
   const last = trimmed[trimmed.length - 1];
@@ -151,7 +151,7 @@ export async function createWebhook(
   const secret = genSecret();
   const { data, error } = await auth.supabase
     .from("webhooks")
-    .insert({
+    .insert({ 
       workspace_id: auth.orgId,
       url: input.url,
       description: input.description ?? "",
@@ -178,7 +178,7 @@ export async function updateWebhook(
   if (Object.keys(patch).length === 0) return getWebhook(auth, id);
   const { data, error } = await auth.supabase
     .from("webhooks")
-    .update(patch)
+    .update(patch as never)
     .eq("id", id)
     .eq("workspace_id", auth.orgId)
     .select("*")
@@ -235,7 +235,7 @@ export async function listDeliveries(
   }
   const { data, error } = await q;
   if (error) throw new SpecError("internal", error.message);
-  const rows = (data ?? []) as DRow[];
+  const rows = (data ?? []) as unknown as DRow[];
   const overflow = rows.length > opts.limit;
   const trimmed = overflow ? rows.slice(0, opts.limit) : rows;
   const last = trimmed[trimmed.length - 1];
@@ -265,7 +265,7 @@ export async function replayDelivery(
   if (!original) throw new SpecError("not_found", `Delivery ${deliveryId} not found`);
   const { data, error } = await auth.supabase
     .from("webhook_deliveries")
-    .insert({
+    .insert({ 
       webhook_id: webhookId,
       workspace_id: auth.orgId,
       event: (original as DRow).event,

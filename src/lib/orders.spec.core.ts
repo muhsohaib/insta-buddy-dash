@@ -89,7 +89,7 @@ export async function listOrdersSpec(
   }
   const { data, error } = await q;
   if (error) throw new SpecError("internal", error.message);
-  let rows = (data ?? []) as OrderRow[];
+  let rows = (data ?? []) as unknown as OrderRow[];
   if (opts.status) rows = rows.filter((r) => specStatus(r) === opts.status);
   const overflow = rows.length > opts.limit;
   const trimmed = overflow ? rows.slice(0, opts.limit) : rows;
@@ -123,7 +123,7 @@ export async function createReplacementOrder(
   const original = await getOrderSpec(auth, originalId);
   const { data, error } = await auth.supabase
     .from("orders")
-    .insert({
+    .insert({ 
       org_id: auth.orgId,
       user_id: auth.userId,
       product_id: original.product_id,

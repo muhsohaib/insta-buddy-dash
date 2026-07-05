@@ -77,7 +77,7 @@ export async function listAssets(
   }
   const { data, error } = await q;
   if (error) throw new SpecError("internal", error.message);
-  const rows = (data ?? []) as Row[];
+  const rows = (data ?? []) as unknown as Row[];
   const overflow = rows.length > opts.limit;
   const trimmed = overflow ? rows.slice(0, opts.limit) : rows;
   const last = trimmed[trimmed.length - 1];
@@ -125,7 +125,7 @@ export async function createAsset(
   }
   const { data, error } = await auth.supabase
     .from("assets")
-    .insert({
+    .insert({ 
       id,
       workspace_id: auth.orgId,
       kind: input.kind,
@@ -155,7 +155,7 @@ export async function completeAsset(
   if (input.bytes !== undefined) patch.bytes = input.bytes;
   const { data, error } = await auth.supabase
     .from("assets")
-    .update(patch)
+    .update(patch as never)
     .eq("id", id)
     .eq("workspace_id", auth.orgId)
     .select("*")
@@ -177,7 +177,7 @@ export async function updateAsset(
   if (Object.keys(patch).length === 0) return getAsset(auth, id);
   const { data, error } = await auth.supabase
     .from("assets")
-    .update(patch)
+    .update(patch as never)
     .eq("id", id)
     .eq("workspace_id", auth.orgId)
     .select("*")
