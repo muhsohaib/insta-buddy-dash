@@ -53,6 +53,19 @@ function DashboardPage() {
     queryOptions({
       queryKey: ["posts", "all", readyIds],
       queryFn: async () => {
+        type PubMedia = {
+          bunny_video_id: string | null;
+          bunny_library_id: string | null;
+          thumbnail_url: string | null;
+          position: number;
+        };
+        type PubRow = {
+          id: string;
+          scheduled_at: string;
+          caption: string;
+          account_id: string;
+          publication_media?: PubMedia[];
+        };
         const [pubs, legacyResults] = await Promise.all([
           api.get<PubRow[]>("/publications"),
           readyIds.length === 0
@@ -76,20 +89,7 @@ function DashboardPage() {
           }
         });
         // Publications
-        type PubMedia = {
-          bunny_video_id: string | null;
-          bunny_library_id: string | null;
-          thumbnail_url: string | null;
-          position: number;
-        };
-        type PubRow = {
-          id: string;
-          scheduled_at: string;
-          caption: string;
-          account_id: string;
-          publication_media?: PubMedia[];
-        };
-        for (const p of pubs as unknown as PubRow[]) {
+        for (const p of pubs) {
           const media = (p.publication_media ?? []).slice().sort((a, b) => a.position - b.position);
           const first = media[0];
           const acct = readyAccounts.find((a) => a.id === p.account_id);
