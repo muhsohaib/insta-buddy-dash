@@ -52,8 +52,7 @@ export function EditPostDialog({
   const [deleting, setDeleting] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
-  const updateFn = useServerFn(updatePublication);
-  const deleteFn = useServerFn(deletePublication);
+  const api = useApiClient();
 
 
   useEffect(() => {
