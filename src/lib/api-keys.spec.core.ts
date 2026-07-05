@@ -4,6 +4,7 @@ import type { ApiAuth } from "./api-auth.server";
 import { generateApiKey } from "./api-auth.server";
 import { SpecError } from "./api/envelope";
 import { encodeCursor, type ParsedCursor } from "./api/pagination";
+import { enqueueWebhookEvent } from "./webhooks-dispatch.server";
 
 type Row = {
   id: string;
