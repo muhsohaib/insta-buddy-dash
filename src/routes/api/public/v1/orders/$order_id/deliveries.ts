@@ -1,22 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-// products.list
-export const Route = createFileRoute("/api/public/v1/products")({
+// orders.list_deliveries
+export const Route = createFileRoute("/api/public/v1/orders/$order_id/deliveries")({
   server: {
     handlers: {
-      GET: async ({ request }) => {
+      GET: async ({ request, params }) => {
         const { authenticateApiRequest } = await import("@/lib/api-auth.server");
         const { okList, getOrMintRequestId, toErrorResponse } = await import("@/lib/api/envelope");
         const { parseLimit, parseCursor } = await import("@/lib/api/pagination");
-        const { listProducts } = await import("@/lib/products.spec.core");
+        const { listDeliveries } = await import("@/lib/deliveries.core");
         const rid = getOrMintRequestId(request);
         try {
           const auth = await authenticateApiRequest(request);
           const url = new URL(request.url);
-          const { data, page } = await listProducts(auth, {
+          const { data, page } = await listDeliveries(auth, {
             limit: parseLimit(url.searchParams.get("limit")),
             cursor: parseCursor(url.searchParams.get("cursor")),
-            status: url.searchParams.get("status"),
+            orderId: params.order_id,
           });
           return okList(rid, data, page);
         } catch (e) {

@@ -31,17 +31,20 @@ import { Route as AuthenticatedDashboardAccountsIndexRouteImport } from './route
 import { Route as AuthenticatedAdminOrdersIndexRouteImport } from './routes/_authenticated/admin.orders.index'
 import { Route as ApiPublicWebhooksWhopRouteImport } from './routes/api/public/webhooks/whop'
 import { Route as ApiPublicV1WorkspaceRouteImport } from './routes/api/public/v1/workspace'
+import { Route as ApiPublicV1SearchRouteImport } from './routes/api/public/v1/search'
 import { Route as ApiPublicV1PublicationsRouteImport } from './routes/api/public/v1/publications'
 import { Route as ApiPublicV1ProductsRouteImport } from './routes/api/public/v1/products'
 import { Route as ApiPublicV1PostsChar58bulkRescheduleRouteImport } from './routes/api/public/v1/posts:bulk-reschedule'
 import { Route as ApiPublicV1PostsChar58bulkCancelRouteImport } from './routes/api/public/v1/posts:bulk-cancel'
 import { Route as ApiPublicV1PostsRouteImport } from './routes/api/public/v1/posts'
 import { Route as ApiPublicV1OrdersRouteImport } from './routes/api/public/v1/orders'
-import { Route as ApiPublicV1OpenapiRouteImport } from './routes/api/public/v1/openapi'
+import { Route as ApiPublicV1OpenapiDotjsonRouteImport } from './routes/api/public/v1/openapi[.]json'
 import { Route as ApiPublicV1MediaRouteImport } from './routes/api/public/v1/media'
 import { Route as ApiPublicV1MeRouteImport } from './routes/api/public/v1/me'
 import { Route as ApiPublicV1HealthRouteImport } from './routes/api/public/v1/health'
+import { Route as ApiPublicV1DeliveriesRouteImport } from './routes/api/public/v1/deliveries'
 import { Route as ApiPublicV1CalendarRouteImport } from './routes/api/public/v1/calendar'
+import { Route as ApiPublicV1AssetsRouteImport } from './routes/api/public/v1/assets'
 import { Route as ApiPublicV1ActivityRouteImport } from './routes/api/public/v1/activity'
 import { Route as ApiPublicV1AccountsRouteImport } from './routes/api/public/v1/accounts'
 import { Route as ApiPublicAdminBunnyDownloadRouteImport } from './routes/api/public/admin/bunny-download'
@@ -49,14 +52,24 @@ import { Route as AuthenticatedDashboardOrdersNewRouteImport } from './routes/_a
 import { Route as AuthenticatedDashboardOrdersIdRouteImport } from './routes/_authenticated/dashboard.orders.$id'
 import { Route as AuthenticatedDashboardAccountsIdRouteImport } from './routes/_authenticated/dashboard.accounts.$id'
 import { Route as AuthenticatedAdminOrdersIdRouteImport } from './routes/_authenticated/admin.orders.$id'
+import { Route as ApiPublicV1WorkspaceWebhooksRouteImport } from './routes/api/public/v1/workspace/webhooks'
 import { Route as ApiPublicV1WorkspaceNotificationsChar58readAllRouteImport } from './routes/api/public/v1/workspace/notifications:read-all'
 import { Route as ApiPublicV1WorkspaceNotificationsRouteImport } from './routes/api/public/v1/workspace/notifications'
+import { Route as ApiPublicV1WorkspaceMembersRouteImport } from './routes/api/public/v1/workspace/members'
+import { Route as ApiPublicV1WorkspaceApiKeysRouteImport } from './routes/api/public/v1/workspace/api-keys'
 import { Route as ApiPublicV1PublicationsIdRouteImport } from './routes/api/public/v1/publications/$id'
+import { Route as ApiPublicV1ProductsProduct_idRouteImport } from './routes/api/public/v1/products/$product_id'
 import { Route as ApiPublicV1PostsPost_idRouteImport } from './routes/api/public/v1/posts/$post_id'
+import { Route as ApiPublicV1OrdersOrder_idRouteImport } from './routes/api/public/v1/orders/$order_id'
 import { Route as ApiPublicV1OrdersIdRouteImport } from './routes/api/public/v1/orders/$id'
 import { Route as ApiPublicV1MediaIdRouteImport } from './routes/api/public/v1/media/$id'
+import { Route as ApiPublicV1DeliveriesDelivery_idRouteImport } from './routes/api/public/v1/deliveries/$delivery_id'
+import { Route as ApiPublicV1AssetsAsset_idRouteImport } from './routes/api/public/v1/assets/$asset_id'
 import { Route as ApiPublicV1ActivityIdRouteImport } from './routes/api/public/v1/activity/$id'
 import { Route as ApiPublicV1AccountsIdRouteImport } from './routes/api/public/v1/accounts/$id'
+import { Route as ApiPublicV1WorkspaceWebhooksWebhook_idRouteImport } from './routes/api/public/v1/workspace/webhooks/$webhook_id'
+import { Route as ApiPublicV1WorkspaceMembersMember_idRouteImport } from './routes/api/public/v1/workspace/members/$member_id'
+import { Route as ApiPublicV1WorkspaceApiKeysApi_key_idRouteImport } from './routes/api/public/v1/workspace/api-keys/$api_key_id'
 import { Route as ApiPublicV1PublicationsIdStatusRouteImport } from './routes/api/public/v1/publications/$id/status'
 import { Route as ApiPublicV1PublicationsIdPublishRouteImport } from './routes/api/public/v1/publications/$id/publish'
 import { Route as ApiPublicV1PublicationsIdCancelRouteImport } from './routes/api/public/v1/publications/$id/cancel'
@@ -66,13 +79,21 @@ import { Route as ApiPublicV1PostsPost_idRetryRouteImport } from './routes/api/p
 import { Route as ApiPublicV1PostsPost_idPublishRouteImport } from './routes/api/public/v1/posts/$post_id/publish'
 import { Route as ApiPublicV1PostsPost_idDuplicateRouteImport } from './routes/api/public/v1/posts/$post_id/duplicate'
 import { Route as ApiPublicV1PostsPost_idCancelRouteImport } from './routes/api/public/v1/posts/$post_id/cancel'
+import { Route as ApiPublicV1OrdersOrder_idReplacementRouteImport } from './routes/api/public/v1/orders/$order_id/replacement'
+import { Route as ApiPublicV1OrdersOrder_idDeliveriesRouteImport } from './routes/api/public/v1/orders/$order_id/deliveries'
 import { Route as ApiPublicV1OrdersIdStatusRouteImport } from './routes/api/public/v1/orders/$id/status'
 import { Route as ApiPublicV1OrdersIdDetailsRouteImport } from './routes/api/public/v1/orders/$id/details'
 import { Route as ApiPublicV1OrdersIdDeliverablesRouteImport } from './routes/api/public/v1/orders/$id/deliverables'
+import { Route as ApiPublicV1DeliveriesDelivery_idReportIssueRouteImport } from './routes/api/public/v1/deliveries/$delivery_id/report-issue'
+import { Route as ApiPublicV1DeliveriesDelivery_idAcceptRouteImport } from './routes/api/public/v1/deliveries/$delivery_id/accept'
 import { Route as ApiPublicV1AssetsAsset_idPostsRouteImport } from './routes/api/public/v1/assets/$asset_id/posts'
+import { Route as ApiPublicV1AssetsAsset_idCompleteRouteImport } from './routes/api/public/v1/assets/$asset_id/complete'
 import { Route as ApiPublicV1AccountsIdRotateRouteImport } from './routes/api/public/v1/accounts/$id/rotate'
 import { Route as ApiPublicV1AccountsIdPostsRouteImport } from './routes/api/public/v1/accounts/$id/posts'
+import { Route as ApiPublicV1WorkspaceWebhooksWebhook_idRotateSecretRouteImport } from './routes/api/public/v1/workspace/webhooks/$webhook_id/rotate-secret'
+import { Route as ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteImport } from './routes/api/public/v1/workspace/webhooks/$webhook_id/deliveries'
 import { Route as ApiPublicV1WorkspaceNotificationsIdReadRouteImport } from './routes/api/public/v1/workspace/notifications/$id/read'
+import { Route as ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesWebhook_delivery_idReplayRouteImport } from './routes/api/public/v1/workspace/webhooks/$webhook_id/deliveries/$webhook_delivery_id/replay'
 
 const SignUpRoute = SignUpRouteImport.update({
   id: '/sign-up',
@@ -194,6 +215,11 @@ const ApiPublicV1WorkspaceRoute = ApiPublicV1WorkspaceRouteImport.update({
   path: '/api/public/v1/workspace',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicV1SearchRoute = ApiPublicV1SearchRouteImport.update({
+  id: '/api/public/v1/search',
+  path: '/api/public/v1/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicV1PublicationsRoute = ApiPublicV1PublicationsRouteImport.update({
   id: '/api/public/v1/publications',
   path: '/api/public/v1/publications',
@@ -226,11 +252,12 @@ const ApiPublicV1OrdersRoute = ApiPublicV1OrdersRouteImport.update({
   path: '/api/public/v1/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicV1OpenapiRoute = ApiPublicV1OpenapiRouteImport.update({
-  id: '/api/public/v1/openapi',
-  path: '/api/public/v1/openapi',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const ApiPublicV1OpenapiDotjsonRoute =
+  ApiPublicV1OpenapiDotjsonRouteImport.update({
+    id: '/api/public/v1/openapi.json',
+    path: '/api/public/v1/openapi.json',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicV1MediaRoute = ApiPublicV1MediaRouteImport.update({
   id: '/api/public/v1/media',
   path: '/api/public/v1/media',
@@ -246,9 +273,19 @@ const ApiPublicV1HealthRoute = ApiPublicV1HealthRouteImport.update({
   path: '/api/public/v1/health',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicV1DeliveriesRoute = ApiPublicV1DeliveriesRouteImport.update({
+  id: '/api/public/v1/deliveries',
+  path: '/api/public/v1/deliveries',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicV1CalendarRoute = ApiPublicV1CalendarRouteImport.update({
   id: '/api/public/v1/calendar',
   path: '/api/public/v1/calendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicV1AssetsRoute = ApiPublicV1AssetsRouteImport.update({
+  id: '/api/public/v1/assets',
+  path: '/api/public/v1/assets',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicV1ActivityRoute = ApiPublicV1ActivityRouteImport.update({
@@ -291,6 +328,12 @@ const AuthenticatedAdminOrdersIdRoute =
     path: '/admin/orders/$id',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiPublicV1WorkspaceWebhooksRoute =
+  ApiPublicV1WorkspaceWebhooksRouteImport.update({
+    id: '/webhooks',
+    path: '/webhooks',
+    getParentRoute: () => ApiPublicV1WorkspaceRoute,
+  } as any)
 const ApiPublicV1WorkspaceNotificationsChar58readAllRoute =
   ApiPublicV1WorkspaceNotificationsChar58readAllRouteImport.update({
     id: '/notifications:read-all',
@@ -303,17 +346,41 @@ const ApiPublicV1WorkspaceNotificationsRoute =
     path: '/notifications',
     getParentRoute: () => ApiPublicV1WorkspaceRoute,
   } as any)
+const ApiPublicV1WorkspaceMembersRoute =
+  ApiPublicV1WorkspaceMembersRouteImport.update({
+    id: '/members',
+    path: '/members',
+    getParentRoute: () => ApiPublicV1WorkspaceRoute,
+  } as any)
+const ApiPublicV1WorkspaceApiKeysRoute =
+  ApiPublicV1WorkspaceApiKeysRouteImport.update({
+    id: '/api-keys',
+    path: '/api-keys',
+    getParentRoute: () => ApiPublicV1WorkspaceRoute,
+  } as any)
 const ApiPublicV1PublicationsIdRoute =
   ApiPublicV1PublicationsIdRouteImport.update({
     id: '/$id',
     path: '/$id',
     getParentRoute: () => ApiPublicV1PublicationsRoute,
   } as any)
+const ApiPublicV1ProductsProduct_idRoute =
+  ApiPublicV1ProductsProduct_idRouteImport.update({
+    id: '/$product_id',
+    path: '/$product_id',
+    getParentRoute: () => ApiPublicV1ProductsRoute,
+  } as any)
 const ApiPublicV1PostsPost_idRoute = ApiPublicV1PostsPost_idRouteImport.update({
   id: '/$post_id',
   path: '/$post_id',
   getParentRoute: () => ApiPublicV1PostsRoute,
 } as any)
+const ApiPublicV1OrdersOrder_idRoute =
+  ApiPublicV1OrdersOrder_idRouteImport.update({
+    id: '/$order_id',
+    path: '/$order_id',
+    getParentRoute: () => ApiPublicV1OrdersRoute,
+  } as any)
 const ApiPublicV1OrdersIdRoute = ApiPublicV1OrdersIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -324,6 +391,18 @@ const ApiPublicV1MediaIdRoute = ApiPublicV1MediaIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => ApiPublicV1MediaRoute,
 } as any)
+const ApiPublicV1DeliveriesDelivery_idRoute =
+  ApiPublicV1DeliveriesDelivery_idRouteImport.update({
+    id: '/$delivery_id',
+    path: '/$delivery_id',
+    getParentRoute: () => ApiPublicV1DeliveriesRoute,
+  } as any)
+const ApiPublicV1AssetsAsset_idRoute =
+  ApiPublicV1AssetsAsset_idRouteImport.update({
+    id: '/$asset_id',
+    path: '/$asset_id',
+    getParentRoute: () => ApiPublicV1AssetsRoute,
+  } as any)
 const ApiPublicV1ActivityIdRoute = ApiPublicV1ActivityIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -334,6 +413,24 @@ const ApiPublicV1AccountsIdRoute = ApiPublicV1AccountsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => ApiPublicV1AccountsRoute,
 } as any)
+const ApiPublicV1WorkspaceWebhooksWebhook_idRoute =
+  ApiPublicV1WorkspaceWebhooksWebhook_idRouteImport.update({
+    id: '/$webhook_id',
+    path: '/$webhook_id',
+    getParentRoute: () => ApiPublicV1WorkspaceWebhooksRoute,
+  } as any)
+const ApiPublicV1WorkspaceMembersMember_idRoute =
+  ApiPublicV1WorkspaceMembersMember_idRouteImport.update({
+    id: '/$member_id',
+    path: '/$member_id',
+    getParentRoute: () => ApiPublicV1WorkspaceMembersRoute,
+  } as any)
+const ApiPublicV1WorkspaceApiKeysApi_key_idRoute =
+  ApiPublicV1WorkspaceApiKeysApi_key_idRouteImport.update({
+    id: '/$api_key_id',
+    path: '/$api_key_id',
+    getParentRoute: () => ApiPublicV1WorkspaceApiKeysRoute,
+  } as any)
 const ApiPublicV1PublicationsIdStatusRoute =
   ApiPublicV1PublicationsIdStatusRouteImport.update({
     id: '/status',
@@ -388,6 +485,18 @@ const ApiPublicV1PostsPost_idCancelRoute =
     path: '/cancel',
     getParentRoute: () => ApiPublicV1PostsPost_idRoute,
   } as any)
+const ApiPublicV1OrdersOrder_idReplacementRoute =
+  ApiPublicV1OrdersOrder_idReplacementRouteImport.update({
+    id: '/replacement',
+    path: '/replacement',
+    getParentRoute: () => ApiPublicV1OrdersOrder_idRoute,
+  } as any)
+const ApiPublicV1OrdersOrder_idDeliveriesRoute =
+  ApiPublicV1OrdersOrder_idDeliveriesRouteImport.update({
+    id: '/deliveries',
+    path: '/deliveries',
+    getParentRoute: () => ApiPublicV1OrdersOrder_idRoute,
+  } as any)
 const ApiPublicV1OrdersIdStatusRoute =
   ApiPublicV1OrdersIdStatusRouteImport.update({
     id: '/status',
@@ -406,11 +515,29 @@ const ApiPublicV1OrdersIdDeliverablesRoute =
     path: '/deliverables',
     getParentRoute: () => ApiPublicV1OrdersIdRoute,
   } as any)
+const ApiPublicV1DeliveriesDelivery_idReportIssueRoute =
+  ApiPublicV1DeliveriesDelivery_idReportIssueRouteImport.update({
+    id: '/report-issue',
+    path: '/report-issue',
+    getParentRoute: () => ApiPublicV1DeliveriesDelivery_idRoute,
+  } as any)
+const ApiPublicV1DeliveriesDelivery_idAcceptRoute =
+  ApiPublicV1DeliveriesDelivery_idAcceptRouteImport.update({
+    id: '/accept',
+    path: '/accept',
+    getParentRoute: () => ApiPublicV1DeliveriesDelivery_idRoute,
+  } as any)
 const ApiPublicV1AssetsAsset_idPostsRoute =
   ApiPublicV1AssetsAsset_idPostsRouteImport.update({
-    id: '/api/public/v1/assets/$asset_id/posts',
-    path: '/api/public/v1/assets/$asset_id/posts',
-    getParentRoute: () => rootRouteImport,
+    id: '/posts',
+    path: '/posts',
+    getParentRoute: () => ApiPublicV1AssetsAsset_idRoute,
+  } as any)
+const ApiPublicV1AssetsAsset_idCompleteRoute =
+  ApiPublicV1AssetsAsset_idCompleteRouteImport.update({
+    id: '/complete',
+    path: '/complete',
+    getParentRoute: () => ApiPublicV1AssetsAsset_idRoute,
   } as any)
 const ApiPublicV1AccountsIdRotateRoute =
   ApiPublicV1AccountsIdRotateRouteImport.update({
@@ -424,12 +551,33 @@ const ApiPublicV1AccountsIdPostsRoute =
     path: '/posts',
     getParentRoute: () => ApiPublicV1AccountsIdRoute,
   } as any)
+const ApiPublicV1WorkspaceWebhooksWebhook_idRotateSecretRoute =
+  ApiPublicV1WorkspaceWebhooksWebhook_idRotateSecretRouteImport.update({
+    id: '/rotate-secret',
+    path: '/rotate-secret',
+    getParentRoute: () => ApiPublicV1WorkspaceWebhooksWebhook_idRoute,
+  } as any)
+const ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRoute =
+  ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteImport.update({
+    id: '/deliveries',
+    path: '/deliveries',
+    getParentRoute: () => ApiPublicV1WorkspaceWebhooksWebhook_idRoute,
+  } as any)
 const ApiPublicV1WorkspaceNotificationsIdReadRoute =
   ApiPublicV1WorkspaceNotificationsIdReadRouteImport.update({
     id: '/$id/read',
     path: '/$id/read',
     getParentRoute: () => ApiPublicV1WorkspaceNotificationsRoute,
   } as any)
+const ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesWebhook_delivery_idReplayRoute =
+  ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesWebhook_delivery_idReplayRouteImport.update(
+    {
+      id: '/$webhook_delivery_id/replay',
+      path: '/$webhook_delivery_id/replay',
+      getParentRoute: () =>
+        ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRoute,
+    } as any,
+  )
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -455,17 +603,20 @@ export interface FileRoutesByFullPath {
   '/api/public/admin/bunny-download': typeof ApiPublicAdminBunnyDownloadRoute
   '/api/public/v1/accounts': typeof ApiPublicV1AccountsRouteWithChildren
   '/api/public/v1/activity': typeof ApiPublicV1ActivityRouteWithChildren
+  '/api/public/v1/assets': typeof ApiPublicV1AssetsRouteWithChildren
   '/api/public/v1/calendar': typeof ApiPublicV1CalendarRoute
+  '/api/public/v1/deliveries': typeof ApiPublicV1DeliveriesRouteWithChildren
   '/api/public/v1/health': typeof ApiPublicV1HealthRoute
   '/api/public/v1/me': typeof ApiPublicV1MeRoute
   '/api/public/v1/media': typeof ApiPublicV1MediaRouteWithChildren
-  '/api/public/v1/openapi': typeof ApiPublicV1OpenapiRoute
+  '/api/public/v1/openapi.json': typeof ApiPublicV1OpenapiDotjsonRoute
   '/api/public/v1/orders': typeof ApiPublicV1OrdersRouteWithChildren
   '/api/public/v1/posts': typeof ApiPublicV1PostsRouteWithChildren
   '/api/public/v1/posts:bulk-cancel': typeof ApiPublicV1PostsChar58bulkCancelRoute
   '/api/public/v1/posts:bulk-reschedule': typeof ApiPublicV1PostsChar58bulkRescheduleRoute
-  '/api/public/v1/products': typeof ApiPublicV1ProductsRoute
+  '/api/public/v1/products': typeof ApiPublicV1ProductsRouteWithChildren
   '/api/public/v1/publications': typeof ApiPublicV1PublicationsRouteWithChildren
+  '/api/public/v1/search': typeof ApiPublicV1SearchRoute
   '/api/public/v1/workspace': typeof ApiPublicV1WorkspaceRouteWithChildren
   '/api/public/webhooks/whop': typeof ApiPublicWebhooksWhopRoute
   '/admin/orders/': typeof AuthenticatedAdminOrdersIndexRoute
@@ -473,18 +624,30 @@ export interface FileRoutesByFullPath {
   '/dashboard/orders/': typeof AuthenticatedDashboardOrdersIndexRoute
   '/api/public/v1/accounts/$id': typeof ApiPublicV1AccountsIdRouteWithChildren
   '/api/public/v1/activity/$id': typeof ApiPublicV1ActivityIdRoute
+  '/api/public/v1/assets/$asset_id': typeof ApiPublicV1AssetsAsset_idRouteWithChildren
+  '/api/public/v1/deliveries/$delivery_id': typeof ApiPublicV1DeliveriesDelivery_idRouteWithChildren
   '/api/public/v1/media/$id': typeof ApiPublicV1MediaIdRoute
   '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRouteWithChildren
+  '/api/public/v1/orders/$order_id': typeof ApiPublicV1OrdersOrder_idRouteWithChildren
   '/api/public/v1/posts/$post_id': typeof ApiPublicV1PostsPost_idRouteWithChildren
+  '/api/public/v1/products/$product_id': typeof ApiPublicV1ProductsProduct_idRoute
   '/api/public/v1/publications/$id': typeof ApiPublicV1PublicationsIdRouteWithChildren
+  '/api/public/v1/workspace/api-keys': typeof ApiPublicV1WorkspaceApiKeysRouteWithChildren
+  '/api/public/v1/workspace/members': typeof ApiPublicV1WorkspaceMembersRouteWithChildren
   '/api/public/v1/workspace/notifications': typeof ApiPublicV1WorkspaceNotificationsRouteWithChildren
   '/api/public/v1/workspace/notifications:read-all': typeof ApiPublicV1WorkspaceNotificationsChar58readAllRoute
+  '/api/public/v1/workspace/webhooks': typeof ApiPublicV1WorkspaceWebhooksRouteWithChildren
   '/api/public/v1/accounts/$id/posts': typeof ApiPublicV1AccountsIdPostsRoute
   '/api/public/v1/accounts/$id/rotate': typeof ApiPublicV1AccountsIdRotateRoute
+  '/api/public/v1/assets/$asset_id/complete': typeof ApiPublicV1AssetsAsset_idCompleteRoute
   '/api/public/v1/assets/$asset_id/posts': typeof ApiPublicV1AssetsAsset_idPostsRoute
+  '/api/public/v1/deliveries/$delivery_id/accept': typeof ApiPublicV1DeliveriesDelivery_idAcceptRoute
+  '/api/public/v1/deliveries/$delivery_id/report-issue': typeof ApiPublicV1DeliveriesDelivery_idReportIssueRoute
   '/api/public/v1/orders/$id/deliverables': typeof ApiPublicV1OrdersIdDeliverablesRoute
   '/api/public/v1/orders/$id/details': typeof ApiPublicV1OrdersIdDetailsRoute
   '/api/public/v1/orders/$id/status': typeof ApiPublicV1OrdersIdStatusRoute
+  '/api/public/v1/orders/$order_id/deliveries': typeof ApiPublicV1OrdersOrder_idDeliveriesRoute
+  '/api/public/v1/orders/$order_id/replacement': typeof ApiPublicV1OrdersOrder_idReplacementRoute
   '/api/public/v1/posts/$post_id/cancel': typeof ApiPublicV1PostsPost_idCancelRoute
   '/api/public/v1/posts/$post_id/duplicate': typeof ApiPublicV1PostsPost_idDuplicateRoute
   '/api/public/v1/posts/$post_id/publish': typeof ApiPublicV1PostsPost_idPublishRoute
@@ -494,7 +657,13 @@ export interface FileRoutesByFullPath {
   '/api/public/v1/publications/$id/cancel': typeof ApiPublicV1PublicationsIdCancelRoute
   '/api/public/v1/publications/$id/publish': typeof ApiPublicV1PublicationsIdPublishRoute
   '/api/public/v1/publications/$id/status': typeof ApiPublicV1PublicationsIdStatusRoute
+  '/api/public/v1/workspace/api-keys/$api_key_id': typeof ApiPublicV1WorkspaceApiKeysApi_key_idRoute
+  '/api/public/v1/workspace/members/$member_id': typeof ApiPublicV1WorkspaceMembersMember_idRoute
+  '/api/public/v1/workspace/webhooks/$webhook_id': typeof ApiPublicV1WorkspaceWebhooksWebhook_idRouteWithChildren
   '/api/public/v1/workspace/notifications/$id/read': typeof ApiPublicV1WorkspaceNotificationsIdReadRoute
+  '/api/public/v1/workspace/webhooks/$webhook_id/deliveries': typeof ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteWithChildren
+  '/api/public/v1/workspace/webhooks/$webhook_id/rotate-secret': typeof ApiPublicV1WorkspaceWebhooksWebhook_idRotateSecretRoute
+  '/api/public/v1/workspace/webhooks/$webhook_id/deliveries/$webhook_delivery_id/replay': typeof ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesWebhook_delivery_idReplayRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -520,17 +689,20 @@ export interface FileRoutesByTo {
   '/api/public/admin/bunny-download': typeof ApiPublicAdminBunnyDownloadRoute
   '/api/public/v1/accounts': typeof ApiPublicV1AccountsRouteWithChildren
   '/api/public/v1/activity': typeof ApiPublicV1ActivityRouteWithChildren
+  '/api/public/v1/assets': typeof ApiPublicV1AssetsRouteWithChildren
   '/api/public/v1/calendar': typeof ApiPublicV1CalendarRoute
+  '/api/public/v1/deliveries': typeof ApiPublicV1DeliveriesRouteWithChildren
   '/api/public/v1/health': typeof ApiPublicV1HealthRoute
   '/api/public/v1/me': typeof ApiPublicV1MeRoute
   '/api/public/v1/media': typeof ApiPublicV1MediaRouteWithChildren
-  '/api/public/v1/openapi': typeof ApiPublicV1OpenapiRoute
+  '/api/public/v1/openapi.json': typeof ApiPublicV1OpenapiDotjsonRoute
   '/api/public/v1/orders': typeof ApiPublicV1OrdersRouteWithChildren
   '/api/public/v1/posts': typeof ApiPublicV1PostsRouteWithChildren
   '/api/public/v1/posts:bulk-cancel': typeof ApiPublicV1PostsChar58bulkCancelRoute
   '/api/public/v1/posts:bulk-reschedule': typeof ApiPublicV1PostsChar58bulkRescheduleRoute
-  '/api/public/v1/products': typeof ApiPublicV1ProductsRoute
+  '/api/public/v1/products': typeof ApiPublicV1ProductsRouteWithChildren
   '/api/public/v1/publications': typeof ApiPublicV1PublicationsRouteWithChildren
+  '/api/public/v1/search': typeof ApiPublicV1SearchRoute
   '/api/public/v1/workspace': typeof ApiPublicV1WorkspaceRouteWithChildren
   '/api/public/webhooks/whop': typeof ApiPublicWebhooksWhopRoute
   '/admin/orders': typeof AuthenticatedAdminOrdersIndexRoute
@@ -538,18 +710,30 @@ export interface FileRoutesByTo {
   '/dashboard/orders': typeof AuthenticatedDashboardOrdersIndexRoute
   '/api/public/v1/accounts/$id': typeof ApiPublicV1AccountsIdRouteWithChildren
   '/api/public/v1/activity/$id': typeof ApiPublicV1ActivityIdRoute
+  '/api/public/v1/assets/$asset_id': typeof ApiPublicV1AssetsAsset_idRouteWithChildren
+  '/api/public/v1/deliveries/$delivery_id': typeof ApiPublicV1DeliveriesDelivery_idRouteWithChildren
   '/api/public/v1/media/$id': typeof ApiPublicV1MediaIdRoute
   '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRouteWithChildren
+  '/api/public/v1/orders/$order_id': typeof ApiPublicV1OrdersOrder_idRouteWithChildren
   '/api/public/v1/posts/$post_id': typeof ApiPublicV1PostsPost_idRouteWithChildren
+  '/api/public/v1/products/$product_id': typeof ApiPublicV1ProductsProduct_idRoute
   '/api/public/v1/publications/$id': typeof ApiPublicV1PublicationsIdRouteWithChildren
+  '/api/public/v1/workspace/api-keys': typeof ApiPublicV1WorkspaceApiKeysRouteWithChildren
+  '/api/public/v1/workspace/members': typeof ApiPublicV1WorkspaceMembersRouteWithChildren
   '/api/public/v1/workspace/notifications': typeof ApiPublicV1WorkspaceNotificationsRouteWithChildren
   '/api/public/v1/workspace/notifications:read-all': typeof ApiPublicV1WorkspaceNotificationsChar58readAllRoute
+  '/api/public/v1/workspace/webhooks': typeof ApiPublicV1WorkspaceWebhooksRouteWithChildren
   '/api/public/v1/accounts/$id/posts': typeof ApiPublicV1AccountsIdPostsRoute
   '/api/public/v1/accounts/$id/rotate': typeof ApiPublicV1AccountsIdRotateRoute
+  '/api/public/v1/assets/$asset_id/complete': typeof ApiPublicV1AssetsAsset_idCompleteRoute
   '/api/public/v1/assets/$asset_id/posts': typeof ApiPublicV1AssetsAsset_idPostsRoute
+  '/api/public/v1/deliveries/$delivery_id/accept': typeof ApiPublicV1DeliveriesDelivery_idAcceptRoute
+  '/api/public/v1/deliveries/$delivery_id/report-issue': typeof ApiPublicV1DeliveriesDelivery_idReportIssueRoute
   '/api/public/v1/orders/$id/deliverables': typeof ApiPublicV1OrdersIdDeliverablesRoute
   '/api/public/v1/orders/$id/details': typeof ApiPublicV1OrdersIdDetailsRoute
   '/api/public/v1/orders/$id/status': typeof ApiPublicV1OrdersIdStatusRoute
+  '/api/public/v1/orders/$order_id/deliveries': typeof ApiPublicV1OrdersOrder_idDeliveriesRoute
+  '/api/public/v1/orders/$order_id/replacement': typeof ApiPublicV1OrdersOrder_idReplacementRoute
   '/api/public/v1/posts/$post_id/cancel': typeof ApiPublicV1PostsPost_idCancelRoute
   '/api/public/v1/posts/$post_id/duplicate': typeof ApiPublicV1PostsPost_idDuplicateRoute
   '/api/public/v1/posts/$post_id/publish': typeof ApiPublicV1PostsPost_idPublishRoute
@@ -559,7 +743,13 @@ export interface FileRoutesByTo {
   '/api/public/v1/publications/$id/cancel': typeof ApiPublicV1PublicationsIdCancelRoute
   '/api/public/v1/publications/$id/publish': typeof ApiPublicV1PublicationsIdPublishRoute
   '/api/public/v1/publications/$id/status': typeof ApiPublicV1PublicationsIdStatusRoute
+  '/api/public/v1/workspace/api-keys/$api_key_id': typeof ApiPublicV1WorkspaceApiKeysApi_key_idRoute
+  '/api/public/v1/workspace/members/$member_id': typeof ApiPublicV1WorkspaceMembersMember_idRoute
+  '/api/public/v1/workspace/webhooks/$webhook_id': typeof ApiPublicV1WorkspaceWebhooksWebhook_idRouteWithChildren
   '/api/public/v1/workspace/notifications/$id/read': typeof ApiPublicV1WorkspaceNotificationsIdReadRoute
+  '/api/public/v1/workspace/webhooks/$webhook_id/deliveries': typeof ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteWithChildren
+  '/api/public/v1/workspace/webhooks/$webhook_id/rotate-secret': typeof ApiPublicV1WorkspaceWebhooksWebhook_idRotateSecretRoute
+  '/api/public/v1/workspace/webhooks/$webhook_id/deliveries/$webhook_delivery_id/replay': typeof ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesWebhook_delivery_idReplayRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -587,17 +777,20 @@ export interface FileRoutesById {
   '/api/public/admin/bunny-download': typeof ApiPublicAdminBunnyDownloadRoute
   '/api/public/v1/accounts': typeof ApiPublicV1AccountsRouteWithChildren
   '/api/public/v1/activity': typeof ApiPublicV1ActivityRouteWithChildren
+  '/api/public/v1/assets': typeof ApiPublicV1AssetsRouteWithChildren
   '/api/public/v1/calendar': typeof ApiPublicV1CalendarRoute
+  '/api/public/v1/deliveries': typeof ApiPublicV1DeliveriesRouteWithChildren
   '/api/public/v1/health': typeof ApiPublicV1HealthRoute
   '/api/public/v1/me': typeof ApiPublicV1MeRoute
   '/api/public/v1/media': typeof ApiPublicV1MediaRouteWithChildren
-  '/api/public/v1/openapi': typeof ApiPublicV1OpenapiRoute
+  '/api/public/v1/openapi.json': typeof ApiPublicV1OpenapiDotjsonRoute
   '/api/public/v1/orders': typeof ApiPublicV1OrdersRouteWithChildren
   '/api/public/v1/posts': typeof ApiPublicV1PostsRouteWithChildren
   '/api/public/v1/posts:bulk-cancel': typeof ApiPublicV1PostsChar58bulkCancelRoute
   '/api/public/v1/posts:bulk-reschedule': typeof ApiPublicV1PostsChar58bulkRescheduleRoute
-  '/api/public/v1/products': typeof ApiPublicV1ProductsRoute
+  '/api/public/v1/products': typeof ApiPublicV1ProductsRouteWithChildren
   '/api/public/v1/publications': typeof ApiPublicV1PublicationsRouteWithChildren
+  '/api/public/v1/search': typeof ApiPublicV1SearchRoute
   '/api/public/v1/workspace': typeof ApiPublicV1WorkspaceRouteWithChildren
   '/api/public/webhooks/whop': typeof ApiPublicWebhooksWhopRoute
   '/_authenticated/admin/orders/': typeof AuthenticatedAdminOrdersIndexRoute
@@ -605,18 +798,30 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/orders/': typeof AuthenticatedDashboardOrdersIndexRoute
   '/api/public/v1/accounts/$id': typeof ApiPublicV1AccountsIdRouteWithChildren
   '/api/public/v1/activity/$id': typeof ApiPublicV1ActivityIdRoute
+  '/api/public/v1/assets/$asset_id': typeof ApiPublicV1AssetsAsset_idRouteWithChildren
+  '/api/public/v1/deliveries/$delivery_id': typeof ApiPublicV1DeliveriesDelivery_idRouteWithChildren
   '/api/public/v1/media/$id': typeof ApiPublicV1MediaIdRoute
   '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRouteWithChildren
+  '/api/public/v1/orders/$order_id': typeof ApiPublicV1OrdersOrder_idRouteWithChildren
   '/api/public/v1/posts/$post_id': typeof ApiPublicV1PostsPost_idRouteWithChildren
+  '/api/public/v1/products/$product_id': typeof ApiPublicV1ProductsProduct_idRoute
   '/api/public/v1/publications/$id': typeof ApiPublicV1PublicationsIdRouteWithChildren
+  '/api/public/v1/workspace/api-keys': typeof ApiPublicV1WorkspaceApiKeysRouteWithChildren
+  '/api/public/v1/workspace/members': typeof ApiPublicV1WorkspaceMembersRouteWithChildren
   '/api/public/v1/workspace/notifications': typeof ApiPublicV1WorkspaceNotificationsRouteWithChildren
   '/api/public/v1/workspace/notifications:read-all': typeof ApiPublicV1WorkspaceNotificationsChar58readAllRoute
+  '/api/public/v1/workspace/webhooks': typeof ApiPublicV1WorkspaceWebhooksRouteWithChildren
   '/api/public/v1/accounts/$id/posts': typeof ApiPublicV1AccountsIdPostsRoute
   '/api/public/v1/accounts/$id/rotate': typeof ApiPublicV1AccountsIdRotateRoute
+  '/api/public/v1/assets/$asset_id/complete': typeof ApiPublicV1AssetsAsset_idCompleteRoute
   '/api/public/v1/assets/$asset_id/posts': typeof ApiPublicV1AssetsAsset_idPostsRoute
+  '/api/public/v1/deliveries/$delivery_id/accept': typeof ApiPublicV1DeliveriesDelivery_idAcceptRoute
+  '/api/public/v1/deliveries/$delivery_id/report-issue': typeof ApiPublicV1DeliveriesDelivery_idReportIssueRoute
   '/api/public/v1/orders/$id/deliverables': typeof ApiPublicV1OrdersIdDeliverablesRoute
   '/api/public/v1/orders/$id/details': typeof ApiPublicV1OrdersIdDetailsRoute
   '/api/public/v1/orders/$id/status': typeof ApiPublicV1OrdersIdStatusRoute
+  '/api/public/v1/orders/$order_id/deliveries': typeof ApiPublicV1OrdersOrder_idDeliveriesRoute
+  '/api/public/v1/orders/$order_id/replacement': typeof ApiPublicV1OrdersOrder_idReplacementRoute
   '/api/public/v1/posts/$post_id/cancel': typeof ApiPublicV1PostsPost_idCancelRoute
   '/api/public/v1/posts/$post_id/duplicate': typeof ApiPublicV1PostsPost_idDuplicateRoute
   '/api/public/v1/posts/$post_id/publish': typeof ApiPublicV1PostsPost_idPublishRoute
@@ -626,7 +831,13 @@ export interface FileRoutesById {
   '/api/public/v1/publications/$id/cancel': typeof ApiPublicV1PublicationsIdCancelRoute
   '/api/public/v1/publications/$id/publish': typeof ApiPublicV1PublicationsIdPublishRoute
   '/api/public/v1/publications/$id/status': typeof ApiPublicV1PublicationsIdStatusRoute
+  '/api/public/v1/workspace/api-keys/$api_key_id': typeof ApiPublicV1WorkspaceApiKeysApi_key_idRoute
+  '/api/public/v1/workspace/members/$member_id': typeof ApiPublicV1WorkspaceMembersMember_idRoute
+  '/api/public/v1/workspace/webhooks/$webhook_id': typeof ApiPublicV1WorkspaceWebhooksWebhook_idRouteWithChildren
   '/api/public/v1/workspace/notifications/$id/read': typeof ApiPublicV1WorkspaceNotificationsIdReadRoute
+  '/api/public/v1/workspace/webhooks/$webhook_id/deliveries': typeof ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteWithChildren
+  '/api/public/v1/workspace/webhooks/$webhook_id/rotate-secret': typeof ApiPublicV1WorkspaceWebhooksWebhook_idRotateSecretRoute
+  '/api/public/v1/workspace/webhooks/$webhook_id/deliveries/$webhook_delivery_id/replay': typeof ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesWebhook_delivery_idReplayRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -654,17 +865,20 @@ export interface FileRouteTypes {
     | '/api/public/admin/bunny-download'
     | '/api/public/v1/accounts'
     | '/api/public/v1/activity'
+    | '/api/public/v1/assets'
     | '/api/public/v1/calendar'
+    | '/api/public/v1/deliveries'
     | '/api/public/v1/health'
     | '/api/public/v1/me'
     | '/api/public/v1/media'
-    | '/api/public/v1/openapi'
+    | '/api/public/v1/openapi.json'
     | '/api/public/v1/orders'
     | '/api/public/v1/posts'
     | '/api/public/v1/posts:bulk-cancel'
     | '/api/public/v1/posts:bulk-reschedule'
     | '/api/public/v1/products'
     | '/api/public/v1/publications'
+    | '/api/public/v1/search'
     | '/api/public/v1/workspace'
     | '/api/public/webhooks/whop'
     | '/admin/orders/'
@@ -672,18 +886,30 @@ export interface FileRouteTypes {
     | '/dashboard/orders/'
     | '/api/public/v1/accounts/$id'
     | '/api/public/v1/activity/$id'
+    | '/api/public/v1/assets/$asset_id'
+    | '/api/public/v1/deliveries/$delivery_id'
     | '/api/public/v1/media/$id'
     | '/api/public/v1/orders/$id'
+    | '/api/public/v1/orders/$order_id'
     | '/api/public/v1/posts/$post_id'
+    | '/api/public/v1/products/$product_id'
     | '/api/public/v1/publications/$id'
+    | '/api/public/v1/workspace/api-keys'
+    | '/api/public/v1/workspace/members'
     | '/api/public/v1/workspace/notifications'
     | '/api/public/v1/workspace/notifications:read-all'
+    | '/api/public/v1/workspace/webhooks'
     | '/api/public/v1/accounts/$id/posts'
     | '/api/public/v1/accounts/$id/rotate'
+    | '/api/public/v1/assets/$asset_id/complete'
     | '/api/public/v1/assets/$asset_id/posts'
+    | '/api/public/v1/deliveries/$delivery_id/accept'
+    | '/api/public/v1/deliveries/$delivery_id/report-issue'
     | '/api/public/v1/orders/$id/deliverables'
     | '/api/public/v1/orders/$id/details'
     | '/api/public/v1/orders/$id/status'
+    | '/api/public/v1/orders/$order_id/deliveries'
+    | '/api/public/v1/orders/$order_id/replacement'
     | '/api/public/v1/posts/$post_id/cancel'
     | '/api/public/v1/posts/$post_id/duplicate'
     | '/api/public/v1/posts/$post_id/publish'
@@ -693,7 +919,13 @@ export interface FileRouteTypes {
     | '/api/public/v1/publications/$id/cancel'
     | '/api/public/v1/publications/$id/publish'
     | '/api/public/v1/publications/$id/status'
+    | '/api/public/v1/workspace/api-keys/$api_key_id'
+    | '/api/public/v1/workspace/members/$member_id'
+    | '/api/public/v1/workspace/webhooks/$webhook_id'
     | '/api/public/v1/workspace/notifications/$id/read'
+    | '/api/public/v1/workspace/webhooks/$webhook_id/deliveries'
+    | '/api/public/v1/workspace/webhooks/$webhook_id/rotate-secret'
+    | '/api/public/v1/workspace/webhooks/$webhook_id/deliveries/$webhook_delivery_id/replay'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -719,17 +951,20 @@ export interface FileRouteTypes {
     | '/api/public/admin/bunny-download'
     | '/api/public/v1/accounts'
     | '/api/public/v1/activity'
+    | '/api/public/v1/assets'
     | '/api/public/v1/calendar'
+    | '/api/public/v1/deliveries'
     | '/api/public/v1/health'
     | '/api/public/v1/me'
     | '/api/public/v1/media'
-    | '/api/public/v1/openapi'
+    | '/api/public/v1/openapi.json'
     | '/api/public/v1/orders'
     | '/api/public/v1/posts'
     | '/api/public/v1/posts:bulk-cancel'
     | '/api/public/v1/posts:bulk-reschedule'
     | '/api/public/v1/products'
     | '/api/public/v1/publications'
+    | '/api/public/v1/search'
     | '/api/public/v1/workspace'
     | '/api/public/webhooks/whop'
     | '/admin/orders'
@@ -737,18 +972,30 @@ export interface FileRouteTypes {
     | '/dashboard/orders'
     | '/api/public/v1/accounts/$id'
     | '/api/public/v1/activity/$id'
+    | '/api/public/v1/assets/$asset_id'
+    | '/api/public/v1/deliveries/$delivery_id'
     | '/api/public/v1/media/$id'
     | '/api/public/v1/orders/$id'
+    | '/api/public/v1/orders/$order_id'
     | '/api/public/v1/posts/$post_id'
+    | '/api/public/v1/products/$product_id'
     | '/api/public/v1/publications/$id'
+    | '/api/public/v1/workspace/api-keys'
+    | '/api/public/v1/workspace/members'
     | '/api/public/v1/workspace/notifications'
     | '/api/public/v1/workspace/notifications:read-all'
+    | '/api/public/v1/workspace/webhooks'
     | '/api/public/v1/accounts/$id/posts'
     | '/api/public/v1/accounts/$id/rotate'
+    | '/api/public/v1/assets/$asset_id/complete'
     | '/api/public/v1/assets/$asset_id/posts'
+    | '/api/public/v1/deliveries/$delivery_id/accept'
+    | '/api/public/v1/deliveries/$delivery_id/report-issue'
     | '/api/public/v1/orders/$id/deliverables'
     | '/api/public/v1/orders/$id/details'
     | '/api/public/v1/orders/$id/status'
+    | '/api/public/v1/orders/$order_id/deliveries'
+    | '/api/public/v1/orders/$order_id/replacement'
     | '/api/public/v1/posts/$post_id/cancel'
     | '/api/public/v1/posts/$post_id/duplicate'
     | '/api/public/v1/posts/$post_id/publish'
@@ -758,7 +1005,13 @@ export interface FileRouteTypes {
     | '/api/public/v1/publications/$id/cancel'
     | '/api/public/v1/publications/$id/publish'
     | '/api/public/v1/publications/$id/status'
+    | '/api/public/v1/workspace/api-keys/$api_key_id'
+    | '/api/public/v1/workspace/members/$member_id'
+    | '/api/public/v1/workspace/webhooks/$webhook_id'
     | '/api/public/v1/workspace/notifications/$id/read'
+    | '/api/public/v1/workspace/webhooks/$webhook_id/deliveries'
+    | '/api/public/v1/workspace/webhooks/$webhook_id/rotate-secret'
+    | '/api/public/v1/workspace/webhooks/$webhook_id/deliveries/$webhook_delivery_id/replay'
   id:
     | '__root__'
     | '/'
@@ -785,17 +1038,20 @@ export interface FileRouteTypes {
     | '/api/public/admin/bunny-download'
     | '/api/public/v1/accounts'
     | '/api/public/v1/activity'
+    | '/api/public/v1/assets'
     | '/api/public/v1/calendar'
+    | '/api/public/v1/deliveries'
     | '/api/public/v1/health'
     | '/api/public/v1/me'
     | '/api/public/v1/media'
-    | '/api/public/v1/openapi'
+    | '/api/public/v1/openapi.json'
     | '/api/public/v1/orders'
     | '/api/public/v1/posts'
     | '/api/public/v1/posts:bulk-cancel'
     | '/api/public/v1/posts:bulk-reschedule'
     | '/api/public/v1/products'
     | '/api/public/v1/publications'
+    | '/api/public/v1/search'
     | '/api/public/v1/workspace'
     | '/api/public/webhooks/whop'
     | '/_authenticated/admin/orders/'
@@ -803,18 +1059,30 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/orders/'
     | '/api/public/v1/accounts/$id'
     | '/api/public/v1/activity/$id'
+    | '/api/public/v1/assets/$asset_id'
+    | '/api/public/v1/deliveries/$delivery_id'
     | '/api/public/v1/media/$id'
     | '/api/public/v1/orders/$id'
+    | '/api/public/v1/orders/$order_id'
     | '/api/public/v1/posts/$post_id'
+    | '/api/public/v1/products/$product_id'
     | '/api/public/v1/publications/$id'
+    | '/api/public/v1/workspace/api-keys'
+    | '/api/public/v1/workspace/members'
     | '/api/public/v1/workspace/notifications'
     | '/api/public/v1/workspace/notifications:read-all'
+    | '/api/public/v1/workspace/webhooks'
     | '/api/public/v1/accounts/$id/posts'
     | '/api/public/v1/accounts/$id/rotate'
+    | '/api/public/v1/assets/$asset_id/complete'
     | '/api/public/v1/assets/$asset_id/posts'
+    | '/api/public/v1/deliveries/$delivery_id/accept'
+    | '/api/public/v1/deliveries/$delivery_id/report-issue'
     | '/api/public/v1/orders/$id/deliverables'
     | '/api/public/v1/orders/$id/details'
     | '/api/public/v1/orders/$id/status'
+    | '/api/public/v1/orders/$order_id/deliveries'
+    | '/api/public/v1/orders/$order_id/replacement'
     | '/api/public/v1/posts/$post_id/cancel'
     | '/api/public/v1/posts/$post_id/duplicate'
     | '/api/public/v1/posts/$post_id/publish'
@@ -824,7 +1092,13 @@ export interface FileRouteTypes {
     | '/api/public/v1/publications/$id/cancel'
     | '/api/public/v1/publications/$id/publish'
     | '/api/public/v1/publications/$id/status'
+    | '/api/public/v1/workspace/api-keys/$api_key_id'
+    | '/api/public/v1/workspace/members/$member_id'
+    | '/api/public/v1/workspace/webhooks/$webhook_id'
     | '/api/public/v1/workspace/notifications/$id/read'
+    | '/api/public/v1/workspace/webhooks/$webhook_id/deliveries'
+    | '/api/public/v1/workspace/webhooks/$webhook_id/rotate-secret'
+    | '/api/public/v1/workspace/webhooks/$webhook_id/deliveries/$webhook_delivery_id/replay'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -837,20 +1111,22 @@ export interface RootRouteChildren {
   ApiPublicAdminBunnyDownloadRoute: typeof ApiPublicAdminBunnyDownloadRoute
   ApiPublicV1AccountsRoute: typeof ApiPublicV1AccountsRouteWithChildren
   ApiPublicV1ActivityRoute: typeof ApiPublicV1ActivityRouteWithChildren
+  ApiPublicV1AssetsRoute: typeof ApiPublicV1AssetsRouteWithChildren
   ApiPublicV1CalendarRoute: typeof ApiPublicV1CalendarRoute
+  ApiPublicV1DeliveriesRoute: typeof ApiPublicV1DeliveriesRouteWithChildren
   ApiPublicV1HealthRoute: typeof ApiPublicV1HealthRoute
   ApiPublicV1MeRoute: typeof ApiPublicV1MeRoute
   ApiPublicV1MediaRoute: typeof ApiPublicV1MediaRouteWithChildren
-  ApiPublicV1OpenapiRoute: typeof ApiPublicV1OpenapiRoute
+  ApiPublicV1OpenapiDotjsonRoute: typeof ApiPublicV1OpenapiDotjsonRoute
   ApiPublicV1OrdersRoute: typeof ApiPublicV1OrdersRouteWithChildren
   ApiPublicV1PostsRoute: typeof ApiPublicV1PostsRouteWithChildren
   ApiPublicV1PostsChar58bulkCancelRoute: typeof ApiPublicV1PostsChar58bulkCancelRoute
   ApiPublicV1PostsChar58bulkRescheduleRoute: typeof ApiPublicV1PostsChar58bulkRescheduleRoute
-  ApiPublicV1ProductsRoute: typeof ApiPublicV1ProductsRoute
+  ApiPublicV1ProductsRoute: typeof ApiPublicV1ProductsRouteWithChildren
   ApiPublicV1PublicationsRoute: typeof ApiPublicV1PublicationsRouteWithChildren
+  ApiPublicV1SearchRoute: typeof ApiPublicV1SearchRoute
   ApiPublicV1WorkspaceRoute: typeof ApiPublicV1WorkspaceRouteWithChildren
   ApiPublicWebhooksWhopRoute: typeof ApiPublicWebhooksWhopRoute
-  ApiPublicV1AssetsAsset_idPostsRoute: typeof ApiPublicV1AssetsAsset_idPostsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1009,6 +1285,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicV1WorkspaceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/v1/search': {
+      id: '/api/public/v1/search'
+      path: '/api/public/v1/search'
+      fullPath: '/api/public/v1/search'
+      preLoaderRoute: typeof ApiPublicV1SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/v1/publications': {
       id: '/api/public/v1/publications'
       path: '/api/public/v1/publications'
@@ -1051,11 +1334,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicV1OrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/v1/openapi': {
-      id: '/api/public/v1/openapi'
-      path: '/api/public/v1/openapi'
-      fullPath: '/api/public/v1/openapi'
-      preLoaderRoute: typeof ApiPublicV1OpenapiRouteImport
+    '/api/public/v1/openapi.json': {
+      id: '/api/public/v1/openapi.json'
+      path: '/api/public/v1/openapi.json'
+      fullPath: '/api/public/v1/openapi.json'
+      preLoaderRoute: typeof ApiPublicV1OpenapiDotjsonRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/v1/media': {
@@ -1079,11 +1362,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicV1HealthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/v1/deliveries': {
+      id: '/api/public/v1/deliveries'
+      path: '/api/public/v1/deliveries'
+      fullPath: '/api/public/v1/deliveries'
+      preLoaderRoute: typeof ApiPublicV1DeliveriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/v1/calendar': {
       id: '/api/public/v1/calendar'
       path: '/api/public/v1/calendar'
       fullPath: '/api/public/v1/calendar'
       preLoaderRoute: typeof ApiPublicV1CalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/v1/assets': {
+      id: '/api/public/v1/assets'
+      path: '/api/public/v1/assets'
+      fullPath: '/api/public/v1/assets'
+      preLoaderRoute: typeof ApiPublicV1AssetsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/v1/activity': {
@@ -1135,6 +1432,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminOrdersIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/v1/workspace/webhooks': {
+      id: '/api/public/v1/workspace/webhooks'
+      path: '/webhooks'
+      fullPath: '/api/public/v1/workspace/webhooks'
+      preLoaderRoute: typeof ApiPublicV1WorkspaceWebhooksRouteImport
+      parentRoute: typeof ApiPublicV1WorkspaceRoute
+    }
     '/api/public/v1/workspace/notifications:read-all': {
       id: '/api/public/v1/workspace/notifications:read-all'
       path: '/notifications:read-all'
@@ -1149,6 +1453,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicV1WorkspaceNotificationsRouteImport
       parentRoute: typeof ApiPublicV1WorkspaceRoute
     }
+    '/api/public/v1/workspace/members': {
+      id: '/api/public/v1/workspace/members'
+      path: '/members'
+      fullPath: '/api/public/v1/workspace/members'
+      preLoaderRoute: typeof ApiPublicV1WorkspaceMembersRouteImport
+      parentRoute: typeof ApiPublicV1WorkspaceRoute
+    }
+    '/api/public/v1/workspace/api-keys': {
+      id: '/api/public/v1/workspace/api-keys'
+      path: '/api-keys'
+      fullPath: '/api/public/v1/workspace/api-keys'
+      preLoaderRoute: typeof ApiPublicV1WorkspaceApiKeysRouteImport
+      parentRoute: typeof ApiPublicV1WorkspaceRoute
+    }
     '/api/public/v1/publications/$id': {
       id: '/api/public/v1/publications/$id'
       path: '/$id'
@@ -1156,12 +1474,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicV1PublicationsIdRouteImport
       parentRoute: typeof ApiPublicV1PublicationsRoute
     }
+    '/api/public/v1/products/$product_id': {
+      id: '/api/public/v1/products/$product_id'
+      path: '/$product_id'
+      fullPath: '/api/public/v1/products/$product_id'
+      preLoaderRoute: typeof ApiPublicV1ProductsProduct_idRouteImport
+      parentRoute: typeof ApiPublicV1ProductsRoute
+    }
     '/api/public/v1/posts/$post_id': {
       id: '/api/public/v1/posts/$post_id'
       path: '/$post_id'
       fullPath: '/api/public/v1/posts/$post_id'
       preLoaderRoute: typeof ApiPublicV1PostsPost_idRouteImport
       parentRoute: typeof ApiPublicV1PostsRoute
+    }
+    '/api/public/v1/orders/$order_id': {
+      id: '/api/public/v1/orders/$order_id'
+      path: '/$order_id'
+      fullPath: '/api/public/v1/orders/$order_id'
+      preLoaderRoute: typeof ApiPublicV1OrdersOrder_idRouteImport
+      parentRoute: typeof ApiPublicV1OrdersRoute
     }
     '/api/public/v1/orders/$id': {
       id: '/api/public/v1/orders/$id'
@@ -1177,6 +1509,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicV1MediaIdRouteImport
       parentRoute: typeof ApiPublicV1MediaRoute
     }
+    '/api/public/v1/deliveries/$delivery_id': {
+      id: '/api/public/v1/deliveries/$delivery_id'
+      path: '/$delivery_id'
+      fullPath: '/api/public/v1/deliveries/$delivery_id'
+      preLoaderRoute: typeof ApiPublicV1DeliveriesDelivery_idRouteImport
+      parentRoute: typeof ApiPublicV1DeliveriesRoute
+    }
+    '/api/public/v1/assets/$asset_id': {
+      id: '/api/public/v1/assets/$asset_id'
+      path: '/$asset_id'
+      fullPath: '/api/public/v1/assets/$asset_id'
+      preLoaderRoute: typeof ApiPublicV1AssetsAsset_idRouteImport
+      parentRoute: typeof ApiPublicV1AssetsRoute
+    }
     '/api/public/v1/activity/$id': {
       id: '/api/public/v1/activity/$id'
       path: '/$id'
@@ -1190,6 +1536,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/public/v1/accounts/$id'
       preLoaderRoute: typeof ApiPublicV1AccountsIdRouteImport
       parentRoute: typeof ApiPublicV1AccountsRoute
+    }
+    '/api/public/v1/workspace/webhooks/$webhook_id': {
+      id: '/api/public/v1/workspace/webhooks/$webhook_id'
+      path: '/$webhook_id'
+      fullPath: '/api/public/v1/workspace/webhooks/$webhook_id'
+      preLoaderRoute: typeof ApiPublicV1WorkspaceWebhooksWebhook_idRouteImport
+      parentRoute: typeof ApiPublicV1WorkspaceWebhooksRoute
+    }
+    '/api/public/v1/workspace/members/$member_id': {
+      id: '/api/public/v1/workspace/members/$member_id'
+      path: '/$member_id'
+      fullPath: '/api/public/v1/workspace/members/$member_id'
+      preLoaderRoute: typeof ApiPublicV1WorkspaceMembersMember_idRouteImport
+      parentRoute: typeof ApiPublicV1WorkspaceMembersRoute
+    }
+    '/api/public/v1/workspace/api-keys/$api_key_id': {
+      id: '/api/public/v1/workspace/api-keys/$api_key_id'
+      path: '/$api_key_id'
+      fullPath: '/api/public/v1/workspace/api-keys/$api_key_id'
+      preLoaderRoute: typeof ApiPublicV1WorkspaceApiKeysApi_key_idRouteImport
+      parentRoute: typeof ApiPublicV1WorkspaceApiKeysRoute
     }
     '/api/public/v1/publications/$id/status': {
       id: '/api/public/v1/publications/$id/status'
@@ -1254,6 +1621,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicV1PostsPost_idCancelRouteImport
       parentRoute: typeof ApiPublicV1PostsPost_idRoute
     }
+    '/api/public/v1/orders/$order_id/replacement': {
+      id: '/api/public/v1/orders/$order_id/replacement'
+      path: '/replacement'
+      fullPath: '/api/public/v1/orders/$order_id/replacement'
+      preLoaderRoute: typeof ApiPublicV1OrdersOrder_idReplacementRouteImport
+      parentRoute: typeof ApiPublicV1OrdersOrder_idRoute
+    }
+    '/api/public/v1/orders/$order_id/deliveries': {
+      id: '/api/public/v1/orders/$order_id/deliveries'
+      path: '/deliveries'
+      fullPath: '/api/public/v1/orders/$order_id/deliveries'
+      preLoaderRoute: typeof ApiPublicV1OrdersOrder_idDeliveriesRouteImport
+      parentRoute: typeof ApiPublicV1OrdersOrder_idRoute
+    }
     '/api/public/v1/orders/$id/status': {
       id: '/api/public/v1/orders/$id/status'
       path: '/status'
@@ -1275,12 +1656,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicV1OrdersIdDeliverablesRouteImport
       parentRoute: typeof ApiPublicV1OrdersIdRoute
     }
+    '/api/public/v1/deliveries/$delivery_id/report-issue': {
+      id: '/api/public/v1/deliveries/$delivery_id/report-issue'
+      path: '/report-issue'
+      fullPath: '/api/public/v1/deliveries/$delivery_id/report-issue'
+      preLoaderRoute: typeof ApiPublicV1DeliveriesDelivery_idReportIssueRouteImport
+      parentRoute: typeof ApiPublicV1DeliveriesDelivery_idRoute
+    }
+    '/api/public/v1/deliveries/$delivery_id/accept': {
+      id: '/api/public/v1/deliveries/$delivery_id/accept'
+      path: '/accept'
+      fullPath: '/api/public/v1/deliveries/$delivery_id/accept'
+      preLoaderRoute: typeof ApiPublicV1DeliveriesDelivery_idAcceptRouteImport
+      parentRoute: typeof ApiPublicV1DeliveriesDelivery_idRoute
+    }
     '/api/public/v1/assets/$asset_id/posts': {
       id: '/api/public/v1/assets/$asset_id/posts'
-      path: '/api/public/v1/assets/$asset_id/posts'
+      path: '/posts'
       fullPath: '/api/public/v1/assets/$asset_id/posts'
       preLoaderRoute: typeof ApiPublicV1AssetsAsset_idPostsRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ApiPublicV1AssetsAsset_idRoute
+    }
+    '/api/public/v1/assets/$asset_id/complete': {
+      id: '/api/public/v1/assets/$asset_id/complete'
+      path: '/complete'
+      fullPath: '/api/public/v1/assets/$asset_id/complete'
+      preLoaderRoute: typeof ApiPublicV1AssetsAsset_idCompleteRouteImport
+      parentRoute: typeof ApiPublicV1AssetsAsset_idRoute
     }
     '/api/public/v1/accounts/$id/rotate': {
       id: '/api/public/v1/accounts/$id/rotate'
@@ -1296,12 +1698,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicV1AccountsIdPostsRouteImport
       parentRoute: typeof ApiPublicV1AccountsIdRoute
     }
+    '/api/public/v1/workspace/webhooks/$webhook_id/rotate-secret': {
+      id: '/api/public/v1/workspace/webhooks/$webhook_id/rotate-secret'
+      path: '/rotate-secret'
+      fullPath: '/api/public/v1/workspace/webhooks/$webhook_id/rotate-secret'
+      preLoaderRoute: typeof ApiPublicV1WorkspaceWebhooksWebhook_idRotateSecretRouteImport
+      parentRoute: typeof ApiPublicV1WorkspaceWebhooksWebhook_idRoute
+    }
+    '/api/public/v1/workspace/webhooks/$webhook_id/deliveries': {
+      id: '/api/public/v1/workspace/webhooks/$webhook_id/deliveries'
+      path: '/deliveries'
+      fullPath: '/api/public/v1/workspace/webhooks/$webhook_id/deliveries'
+      preLoaderRoute: typeof ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteImport
+      parentRoute: typeof ApiPublicV1WorkspaceWebhooksWebhook_idRoute
+    }
     '/api/public/v1/workspace/notifications/$id/read': {
       id: '/api/public/v1/workspace/notifications/$id/read'
       path: '/$id/read'
       fullPath: '/api/public/v1/workspace/notifications/$id/read'
       preLoaderRoute: typeof ApiPublicV1WorkspaceNotificationsIdReadRouteImport
       parentRoute: typeof ApiPublicV1WorkspaceNotificationsRoute
+    }
+    '/api/public/v1/workspace/webhooks/$webhook_id/deliveries/$webhook_delivery_id/replay': {
+      id: '/api/public/v1/workspace/webhooks/$webhook_id/deliveries/$webhook_delivery_id/replay'
+      path: '/$webhook_delivery_id/replay'
+      fullPath: '/api/public/v1/workspace/webhooks/$webhook_id/deliveries/$webhook_delivery_id/replay'
+      preLoaderRoute: typeof ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesWebhook_delivery_idReplayRouteImport
+      parentRoute: typeof ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRoute
     }
   }
 }
@@ -1391,6 +1814,66 @@ const ApiPublicV1ActivityRouteChildren: ApiPublicV1ActivityRouteChildren = {
 const ApiPublicV1ActivityRouteWithChildren =
   ApiPublicV1ActivityRoute._addFileChildren(ApiPublicV1ActivityRouteChildren)
 
+interface ApiPublicV1AssetsAsset_idRouteChildren {
+  ApiPublicV1AssetsAsset_idCompleteRoute: typeof ApiPublicV1AssetsAsset_idCompleteRoute
+  ApiPublicV1AssetsAsset_idPostsRoute: typeof ApiPublicV1AssetsAsset_idPostsRoute
+}
+
+const ApiPublicV1AssetsAsset_idRouteChildren: ApiPublicV1AssetsAsset_idRouteChildren =
+  {
+    ApiPublicV1AssetsAsset_idCompleteRoute:
+      ApiPublicV1AssetsAsset_idCompleteRoute,
+    ApiPublicV1AssetsAsset_idPostsRoute: ApiPublicV1AssetsAsset_idPostsRoute,
+  }
+
+const ApiPublicV1AssetsAsset_idRouteWithChildren =
+  ApiPublicV1AssetsAsset_idRoute._addFileChildren(
+    ApiPublicV1AssetsAsset_idRouteChildren,
+  )
+
+interface ApiPublicV1AssetsRouteChildren {
+  ApiPublicV1AssetsAsset_idRoute: typeof ApiPublicV1AssetsAsset_idRouteWithChildren
+}
+
+const ApiPublicV1AssetsRouteChildren: ApiPublicV1AssetsRouteChildren = {
+  ApiPublicV1AssetsAsset_idRoute: ApiPublicV1AssetsAsset_idRouteWithChildren,
+}
+
+const ApiPublicV1AssetsRouteWithChildren =
+  ApiPublicV1AssetsRoute._addFileChildren(ApiPublicV1AssetsRouteChildren)
+
+interface ApiPublicV1DeliveriesDelivery_idRouteChildren {
+  ApiPublicV1DeliveriesDelivery_idAcceptRoute: typeof ApiPublicV1DeliveriesDelivery_idAcceptRoute
+  ApiPublicV1DeliveriesDelivery_idReportIssueRoute: typeof ApiPublicV1DeliveriesDelivery_idReportIssueRoute
+}
+
+const ApiPublicV1DeliveriesDelivery_idRouteChildren: ApiPublicV1DeliveriesDelivery_idRouteChildren =
+  {
+    ApiPublicV1DeliveriesDelivery_idAcceptRoute:
+      ApiPublicV1DeliveriesDelivery_idAcceptRoute,
+    ApiPublicV1DeliveriesDelivery_idReportIssueRoute:
+      ApiPublicV1DeliveriesDelivery_idReportIssueRoute,
+  }
+
+const ApiPublicV1DeliveriesDelivery_idRouteWithChildren =
+  ApiPublicV1DeliveriesDelivery_idRoute._addFileChildren(
+    ApiPublicV1DeliveriesDelivery_idRouteChildren,
+  )
+
+interface ApiPublicV1DeliveriesRouteChildren {
+  ApiPublicV1DeliveriesDelivery_idRoute: typeof ApiPublicV1DeliveriesDelivery_idRouteWithChildren
+}
+
+const ApiPublicV1DeliveriesRouteChildren: ApiPublicV1DeliveriesRouteChildren = {
+  ApiPublicV1DeliveriesDelivery_idRoute:
+    ApiPublicV1DeliveriesDelivery_idRouteWithChildren,
+}
+
+const ApiPublicV1DeliveriesRouteWithChildren =
+  ApiPublicV1DeliveriesRoute._addFileChildren(
+    ApiPublicV1DeliveriesRouteChildren,
+  )
+
 interface ApiPublicV1MediaRouteChildren {
   ApiPublicV1MediaIdRoute: typeof ApiPublicV1MediaIdRoute
 }
@@ -1417,12 +1900,32 @@ const ApiPublicV1OrdersIdRouteChildren: ApiPublicV1OrdersIdRouteChildren = {
 const ApiPublicV1OrdersIdRouteWithChildren =
   ApiPublicV1OrdersIdRoute._addFileChildren(ApiPublicV1OrdersIdRouteChildren)
 
+interface ApiPublicV1OrdersOrder_idRouteChildren {
+  ApiPublicV1OrdersOrder_idDeliveriesRoute: typeof ApiPublicV1OrdersOrder_idDeliveriesRoute
+  ApiPublicV1OrdersOrder_idReplacementRoute: typeof ApiPublicV1OrdersOrder_idReplacementRoute
+}
+
+const ApiPublicV1OrdersOrder_idRouteChildren: ApiPublicV1OrdersOrder_idRouteChildren =
+  {
+    ApiPublicV1OrdersOrder_idDeliveriesRoute:
+      ApiPublicV1OrdersOrder_idDeliveriesRoute,
+    ApiPublicV1OrdersOrder_idReplacementRoute:
+      ApiPublicV1OrdersOrder_idReplacementRoute,
+  }
+
+const ApiPublicV1OrdersOrder_idRouteWithChildren =
+  ApiPublicV1OrdersOrder_idRoute._addFileChildren(
+    ApiPublicV1OrdersOrder_idRouteChildren,
+  )
+
 interface ApiPublicV1OrdersRouteChildren {
   ApiPublicV1OrdersIdRoute: typeof ApiPublicV1OrdersIdRouteWithChildren
+  ApiPublicV1OrdersOrder_idRoute: typeof ApiPublicV1OrdersOrder_idRouteWithChildren
 }
 
 const ApiPublicV1OrdersRouteChildren: ApiPublicV1OrdersRouteChildren = {
   ApiPublicV1OrdersIdRoute: ApiPublicV1OrdersIdRouteWithChildren,
+  ApiPublicV1OrdersOrder_idRoute: ApiPublicV1OrdersOrder_idRouteWithChildren,
 }
 
 const ApiPublicV1OrdersRouteWithChildren =
@@ -1464,6 +1967,17 @@ const ApiPublicV1PostsRouteChildren: ApiPublicV1PostsRouteChildren = {
 const ApiPublicV1PostsRouteWithChildren =
   ApiPublicV1PostsRoute._addFileChildren(ApiPublicV1PostsRouteChildren)
 
+interface ApiPublicV1ProductsRouteChildren {
+  ApiPublicV1ProductsProduct_idRoute: typeof ApiPublicV1ProductsProduct_idRoute
+}
+
+const ApiPublicV1ProductsRouteChildren: ApiPublicV1ProductsRouteChildren = {
+  ApiPublicV1ProductsProduct_idRoute: ApiPublicV1ProductsProduct_idRoute,
+}
+
+const ApiPublicV1ProductsRouteWithChildren =
+  ApiPublicV1ProductsRoute._addFileChildren(ApiPublicV1ProductsRouteChildren)
+
 interface ApiPublicV1PublicationsIdRouteChildren {
   ApiPublicV1PublicationsIdCancelRoute: typeof ApiPublicV1PublicationsIdCancelRoute
   ApiPublicV1PublicationsIdPublishRoute: typeof ApiPublicV1PublicationsIdPublishRoute
@@ -1497,6 +2011,36 @@ const ApiPublicV1PublicationsRouteWithChildren =
     ApiPublicV1PublicationsRouteChildren,
   )
 
+interface ApiPublicV1WorkspaceApiKeysRouteChildren {
+  ApiPublicV1WorkspaceApiKeysApi_key_idRoute: typeof ApiPublicV1WorkspaceApiKeysApi_key_idRoute
+}
+
+const ApiPublicV1WorkspaceApiKeysRouteChildren: ApiPublicV1WorkspaceApiKeysRouteChildren =
+  {
+    ApiPublicV1WorkspaceApiKeysApi_key_idRoute:
+      ApiPublicV1WorkspaceApiKeysApi_key_idRoute,
+  }
+
+const ApiPublicV1WorkspaceApiKeysRouteWithChildren =
+  ApiPublicV1WorkspaceApiKeysRoute._addFileChildren(
+    ApiPublicV1WorkspaceApiKeysRouteChildren,
+  )
+
+interface ApiPublicV1WorkspaceMembersRouteChildren {
+  ApiPublicV1WorkspaceMembersMember_idRoute: typeof ApiPublicV1WorkspaceMembersMember_idRoute
+}
+
+const ApiPublicV1WorkspaceMembersRouteChildren: ApiPublicV1WorkspaceMembersRouteChildren =
+  {
+    ApiPublicV1WorkspaceMembersMember_idRoute:
+      ApiPublicV1WorkspaceMembersMember_idRoute,
+  }
+
+const ApiPublicV1WorkspaceMembersRouteWithChildren =
+  ApiPublicV1WorkspaceMembersRoute._addFileChildren(
+    ApiPublicV1WorkspaceMembersRouteChildren,
+  )
+
 interface ApiPublicV1WorkspaceNotificationsRouteChildren {
   ApiPublicV1WorkspaceNotificationsIdReadRoute: typeof ApiPublicV1WorkspaceNotificationsIdReadRoute
 }
@@ -1512,16 +2056,73 @@ const ApiPublicV1WorkspaceNotificationsRouteWithChildren =
     ApiPublicV1WorkspaceNotificationsRouteChildren,
   )
 
+interface ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteChildren {
+  ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesWebhook_delivery_idReplayRoute: typeof ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesWebhook_delivery_idReplayRoute
+}
+
+const ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteChildren: ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteChildren =
+  {
+    ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesWebhook_delivery_idReplayRoute:
+      ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesWebhook_delivery_idReplayRoute,
+  }
+
+const ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteWithChildren =
+  ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRoute._addFileChildren(
+    ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteChildren,
+  )
+
+interface ApiPublicV1WorkspaceWebhooksWebhook_idRouteChildren {
+  ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRoute: typeof ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteWithChildren
+  ApiPublicV1WorkspaceWebhooksWebhook_idRotateSecretRoute: typeof ApiPublicV1WorkspaceWebhooksWebhook_idRotateSecretRoute
+}
+
+const ApiPublicV1WorkspaceWebhooksWebhook_idRouteChildren: ApiPublicV1WorkspaceWebhooksWebhook_idRouteChildren =
+  {
+    ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRoute:
+      ApiPublicV1WorkspaceWebhooksWebhook_idDeliveriesRouteWithChildren,
+    ApiPublicV1WorkspaceWebhooksWebhook_idRotateSecretRoute:
+      ApiPublicV1WorkspaceWebhooksWebhook_idRotateSecretRoute,
+  }
+
+const ApiPublicV1WorkspaceWebhooksWebhook_idRouteWithChildren =
+  ApiPublicV1WorkspaceWebhooksWebhook_idRoute._addFileChildren(
+    ApiPublicV1WorkspaceWebhooksWebhook_idRouteChildren,
+  )
+
+interface ApiPublicV1WorkspaceWebhooksRouteChildren {
+  ApiPublicV1WorkspaceWebhooksWebhook_idRoute: typeof ApiPublicV1WorkspaceWebhooksWebhook_idRouteWithChildren
+}
+
+const ApiPublicV1WorkspaceWebhooksRouteChildren: ApiPublicV1WorkspaceWebhooksRouteChildren =
+  {
+    ApiPublicV1WorkspaceWebhooksWebhook_idRoute:
+      ApiPublicV1WorkspaceWebhooksWebhook_idRouteWithChildren,
+  }
+
+const ApiPublicV1WorkspaceWebhooksRouteWithChildren =
+  ApiPublicV1WorkspaceWebhooksRoute._addFileChildren(
+    ApiPublicV1WorkspaceWebhooksRouteChildren,
+  )
+
 interface ApiPublicV1WorkspaceRouteChildren {
+  ApiPublicV1WorkspaceApiKeysRoute: typeof ApiPublicV1WorkspaceApiKeysRouteWithChildren
+  ApiPublicV1WorkspaceMembersRoute: typeof ApiPublicV1WorkspaceMembersRouteWithChildren
   ApiPublicV1WorkspaceNotificationsRoute: typeof ApiPublicV1WorkspaceNotificationsRouteWithChildren
   ApiPublicV1WorkspaceNotificationsChar58readAllRoute: typeof ApiPublicV1WorkspaceNotificationsChar58readAllRoute
+  ApiPublicV1WorkspaceWebhooksRoute: typeof ApiPublicV1WorkspaceWebhooksRouteWithChildren
 }
 
 const ApiPublicV1WorkspaceRouteChildren: ApiPublicV1WorkspaceRouteChildren = {
+  ApiPublicV1WorkspaceApiKeysRoute:
+    ApiPublicV1WorkspaceApiKeysRouteWithChildren,
+  ApiPublicV1WorkspaceMembersRoute:
+    ApiPublicV1WorkspaceMembersRouteWithChildren,
   ApiPublicV1WorkspaceNotificationsRoute:
     ApiPublicV1WorkspaceNotificationsRouteWithChildren,
   ApiPublicV1WorkspaceNotificationsChar58readAllRoute:
     ApiPublicV1WorkspaceNotificationsChar58readAllRoute,
+  ApiPublicV1WorkspaceWebhooksRoute:
+    ApiPublicV1WorkspaceWebhooksRouteWithChildren,
 }
 
 const ApiPublicV1WorkspaceRouteWithChildren =
@@ -1537,21 +2138,23 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicAdminBunnyDownloadRoute: ApiPublicAdminBunnyDownloadRoute,
   ApiPublicV1AccountsRoute: ApiPublicV1AccountsRouteWithChildren,
   ApiPublicV1ActivityRoute: ApiPublicV1ActivityRouteWithChildren,
+  ApiPublicV1AssetsRoute: ApiPublicV1AssetsRouteWithChildren,
   ApiPublicV1CalendarRoute: ApiPublicV1CalendarRoute,
+  ApiPublicV1DeliveriesRoute: ApiPublicV1DeliveriesRouteWithChildren,
   ApiPublicV1HealthRoute: ApiPublicV1HealthRoute,
   ApiPublicV1MeRoute: ApiPublicV1MeRoute,
   ApiPublicV1MediaRoute: ApiPublicV1MediaRouteWithChildren,
-  ApiPublicV1OpenapiRoute: ApiPublicV1OpenapiRoute,
+  ApiPublicV1OpenapiDotjsonRoute: ApiPublicV1OpenapiDotjsonRoute,
   ApiPublicV1OrdersRoute: ApiPublicV1OrdersRouteWithChildren,
   ApiPublicV1PostsRoute: ApiPublicV1PostsRouteWithChildren,
   ApiPublicV1PostsChar58bulkCancelRoute: ApiPublicV1PostsChar58bulkCancelRoute,
   ApiPublicV1PostsChar58bulkRescheduleRoute:
     ApiPublicV1PostsChar58bulkRescheduleRoute,
-  ApiPublicV1ProductsRoute: ApiPublicV1ProductsRoute,
+  ApiPublicV1ProductsRoute: ApiPublicV1ProductsRouteWithChildren,
   ApiPublicV1PublicationsRoute: ApiPublicV1PublicationsRouteWithChildren,
+  ApiPublicV1SearchRoute: ApiPublicV1SearchRoute,
   ApiPublicV1WorkspaceRoute: ApiPublicV1WorkspaceRouteWithChildren,
   ApiPublicWebhooksWhopRoute: ApiPublicWebhooksWhopRoute,
-  ApiPublicV1AssetsAsset_idPostsRoute: ApiPublicV1AssetsAsset_idPostsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
