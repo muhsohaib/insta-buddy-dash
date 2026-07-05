@@ -47,6 +47,7 @@ import { Route as ApiPublicV1CalendarRouteImport } from './routes/api/public/v1/
 import { Route as ApiPublicV1AssetsRouteImport } from './routes/api/public/v1/assets'
 import { Route as ApiPublicV1ActivityRouteImport } from './routes/api/public/v1/activity'
 import { Route as ApiPublicV1AccountsRouteImport } from './routes/api/public/v1/accounts'
+import { Route as ApiPublicHooksWebhookWorkerRouteImport } from './routes/api/public/hooks/webhook-worker'
 import { Route as ApiPublicAdminBunnyDownloadRouteImport } from './routes/api/public/admin/bunny-download'
 import { Route as AuthenticatedDashboardOrdersNewRouteImport } from './routes/_authenticated/dashboard.orders.new'
 import { Route as AuthenticatedDashboardOrdersIdRouteImport } from './routes/_authenticated/dashboard.orders.$id'
@@ -298,6 +299,12 @@ const ApiPublicV1AccountsRoute = ApiPublicV1AccountsRouteImport.update({
   path: '/api/public/v1/accounts',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksWebhookWorkerRoute =
+  ApiPublicHooksWebhookWorkerRouteImport.update({
+    id: '/api/public/hooks/webhook-worker',
+    path: '/api/public/hooks/webhook-worker',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicAdminBunnyDownloadRoute =
   ApiPublicAdminBunnyDownloadRouteImport.update({
     id: '/api/public/admin/bunny-download',
@@ -601,6 +608,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/orders/$id': typeof AuthenticatedDashboardOrdersIdRoute
   '/dashboard/orders/new': typeof AuthenticatedDashboardOrdersNewRoute
   '/api/public/admin/bunny-download': typeof ApiPublicAdminBunnyDownloadRoute
+  '/api/public/hooks/webhook-worker': typeof ApiPublicHooksWebhookWorkerRoute
   '/api/public/v1/accounts': typeof ApiPublicV1AccountsRouteWithChildren
   '/api/public/v1/activity': typeof ApiPublicV1ActivityRouteWithChildren
   '/api/public/v1/assets': typeof ApiPublicV1AssetsRouteWithChildren
@@ -687,6 +695,7 @@ export interface FileRoutesByTo {
   '/dashboard/orders/$id': typeof AuthenticatedDashboardOrdersIdRoute
   '/dashboard/orders/new': typeof AuthenticatedDashboardOrdersNewRoute
   '/api/public/admin/bunny-download': typeof ApiPublicAdminBunnyDownloadRoute
+  '/api/public/hooks/webhook-worker': typeof ApiPublicHooksWebhookWorkerRoute
   '/api/public/v1/accounts': typeof ApiPublicV1AccountsRouteWithChildren
   '/api/public/v1/activity': typeof ApiPublicV1ActivityRouteWithChildren
   '/api/public/v1/assets': typeof ApiPublicV1AssetsRouteWithChildren
@@ -775,6 +784,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/orders/$id': typeof AuthenticatedDashboardOrdersIdRoute
   '/_authenticated/dashboard/orders/new': typeof AuthenticatedDashboardOrdersNewRoute
   '/api/public/admin/bunny-download': typeof ApiPublicAdminBunnyDownloadRoute
+  '/api/public/hooks/webhook-worker': typeof ApiPublicHooksWebhookWorkerRoute
   '/api/public/v1/accounts': typeof ApiPublicV1AccountsRouteWithChildren
   '/api/public/v1/activity': typeof ApiPublicV1ActivityRouteWithChildren
   '/api/public/v1/assets': typeof ApiPublicV1AssetsRouteWithChildren
@@ -863,6 +873,7 @@ export interface FileRouteTypes {
     | '/dashboard/orders/$id'
     | '/dashboard/orders/new'
     | '/api/public/admin/bunny-download'
+    | '/api/public/hooks/webhook-worker'
     | '/api/public/v1/accounts'
     | '/api/public/v1/activity'
     | '/api/public/v1/assets'
@@ -949,6 +960,7 @@ export interface FileRouteTypes {
     | '/dashboard/orders/$id'
     | '/dashboard/orders/new'
     | '/api/public/admin/bunny-download'
+    | '/api/public/hooks/webhook-worker'
     | '/api/public/v1/accounts'
     | '/api/public/v1/activity'
     | '/api/public/v1/assets'
@@ -1036,6 +1048,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/orders/$id'
     | '/_authenticated/dashboard/orders/new'
     | '/api/public/admin/bunny-download'
+    | '/api/public/hooks/webhook-worker'
     | '/api/public/v1/accounts'
     | '/api/public/v1/activity'
     | '/api/public/v1/assets'
@@ -1109,6 +1122,7 @@ export interface RootRouteChildren {
   PricingRoute: typeof PricingRoute
   SignUpRoute: typeof SignUpRoute
   ApiPublicAdminBunnyDownloadRoute: typeof ApiPublicAdminBunnyDownloadRoute
+  ApiPublicHooksWebhookWorkerRoute: typeof ApiPublicHooksWebhookWorkerRoute
   ApiPublicV1AccountsRoute: typeof ApiPublicV1AccountsRouteWithChildren
   ApiPublicV1ActivityRoute: typeof ApiPublicV1ActivityRouteWithChildren
   ApiPublicV1AssetsRoute: typeof ApiPublicV1AssetsRouteWithChildren
@@ -1395,6 +1409,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/v1/accounts'
       fullPath: '/api/public/v1/accounts'
       preLoaderRoute: typeof ApiPublicV1AccountsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/webhook-worker': {
+      id: '/api/public/hooks/webhook-worker'
+      path: '/api/public/hooks/webhook-worker'
+      fullPath: '/api/public/hooks/webhook-worker'
+      preLoaderRoute: typeof ApiPublicHooksWebhookWorkerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/admin/bunny-download': {
@@ -2136,6 +2157,7 @@ const rootRouteChildren: RootRouteChildren = {
   PricingRoute: PricingRoute,
   SignUpRoute: SignUpRoute,
   ApiPublicAdminBunnyDownloadRoute: ApiPublicAdminBunnyDownloadRoute,
+  ApiPublicHooksWebhookWorkerRoute: ApiPublicHooksWebhookWorkerRoute,
   ApiPublicV1AccountsRoute: ApiPublicV1AccountsRouteWithChildren,
   ApiPublicV1ActivityRoute: ApiPublicV1ActivityRouteWithChildren,
   ApiPublicV1AssetsRoute: ApiPublicV1AssetsRouteWithChildren,
