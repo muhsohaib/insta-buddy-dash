@@ -74,14 +74,9 @@ export function EditPostDialog({
     if (!post) return;
     setSaving(true);
     try {
-      await updateFn({
-        data: {
-          id: post.id,
-          patch: {
-            caption,
-            scheduled_at: new Date(datetime).toISOString(),
-          },
-        },
+      await api.patch(`/publications/${post.id}`, {
+        caption,
+        scheduled_at: new Date(datetime).toISOString(),
       });
 
       toast.success("Post updated");
