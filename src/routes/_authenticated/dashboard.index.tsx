@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { listMyAccounts, createAdditionalAccount } from "@/lib/accounts.functions";
 import { listMyPostsForAccount } from "@/lib/posts.functions";
-import { listPublicationsInRange } from "@/lib/publications.functions";
+import { useApiClient } from "@/lib/api/client";
 
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
