@@ -30,18 +30,28 @@ export const Route = createFileRoute("/api/public/v1/orders")({
         const { ok, getOrMintRequestId, toErrorResponse, SpecError } = await import(
           "@/lib/api/envelope"
         );
+        const { withIdempotency } = await import("@/lib/api/idempotency.server");
         const rid = getOrMintRequestId(request);
         try {
           const auth = await authenticateApiRequest(request);
-          const body = (await request.json().catch(() => ({}))) as unknown;
-          const parsed = z
-            .object({ quantity: z.number().int().min(1).max(50) })
-            .safeParse(body);
-          if (!parsed.success) {
-            throw new SpecError("invalid_input", parsed.error.message);
-          }
-          const result = await createOrderCore(auth, { quantity: parsed.data.quantity });
-          return ok(rid, { id: result.orderId, checkout_url: result.url }, { status: 201 });
+          return await withIdempotency(
+            { request, workspaceId: auth.orgId, requestId: rid, method: "POST", path: "/orders" },
+            async () => {
+              try {
+                const body = (await request.json().catch(() => ({}))) as unknown;
+                const parsed = z
+                  .object({ quantity: z.number().int().min(1).max(50) })
+                  .safeParse(body);
+                if (!parsed.success) {
+                  throw new SpecError("invalid_input", parsed.error.message);
+                }
+                const result = await createOrderCore(auth, { quantity: parsed.data.quantity });
+                return ok(rid, { id: result.orderId, checkout_url: result.url }, { status: 201 });
+              } catch (e) {
+                return toErrorResponse(rid, e);
+              }
+            },
+          );
         } catch (e) {
           return toErrorResponse(rid, e);
         }

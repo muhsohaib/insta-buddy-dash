@@ -115,6 +115,48 @@ export type Database = {
         }
         Relationships: []
       }
+      api_idempotency_keys: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          idempotency_key: string
+          method: string
+          path: string
+          request_hash: string
+          response_body: string
+          response_headers: Json
+          response_status: number
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          idempotency_key: string
+          method: string
+          path: string
+          request_hash: string
+          response_body: string
+          response_headers?: Json
+          response_status: number
+          workspace_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          idempotency_key?: string
+          method?: string
+          path?: string
+          request_hash?: string
+          response_body?: string
+          response_headers?: Json
+          response_status?: number
+          workspace_id?: string
+        }
+        Relationships: []
+      }
       api_keys: {
         Row: {
           created_at: string
@@ -151,6 +193,36 @@ export type Database = {
           prefix?: string
           revoked_at?: string | null
           token_hash?: string
+        }
+        Relationships: []
+      }
+      api_rate_limits: {
+        Row: {
+          bucket: string
+          count: number
+          id: string
+          updated_at: string
+          window_seconds: number
+          window_start: string
+          workspace_id: string
+        }
+        Insert: {
+          bucket: string
+          count?: number
+          id?: string
+          updated_at?: string
+          window_seconds: number
+          window_start: string
+          workspace_id: string
+        }
+        Update: {
+          bucket?: string
+          count?: number
+          id?: string
+          updated_at?: string
+          window_seconds?: number
+          window_start?: string
+          workspace_id?: string
         }
         Relationships: []
       }
@@ -1097,6 +1169,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      api_rate_limit_hit: {
+        Args: {
+          _bucket: string
+          _limit: number
+          _window_seconds: number
+          _window_start: string
+          _workspace_id: string
+        }
+        Returns: {
+          allowed: boolean
+          remaining: number
+          reset_at: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
