@@ -163,7 +163,9 @@ export async function completeAsset(
     .select("*")
     .single();
   if (error) throw new SpecError("internal", error.message);
-  return toView(data as unknown as Row);
+  const view = toView(data as unknown as Row);
+  await enqueueWebhookEvent(auth.supabase, auth.orgId, "asset.ready", { asset: view });
+  return view;
 }
 
 export async function updateAsset(
