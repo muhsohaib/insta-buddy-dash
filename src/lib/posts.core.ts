@@ -403,12 +403,13 @@ export async function updatePostCore(
     if (patch.asset_ids.length === 0) {
       throw new SpecError("invalid_input", "asset_ids must contain at least one asset");
     }
+    const assetIds = await assertAssets(ctx, patch.asset_ids);
     await ctx.supabase.from("publication_media").delete().eq("publication_id", id);
-    const rows = patch.asset_ids.map((aid, i) => ({
+    const rows = assetIds.map((aid, i) => ({
       publication_id: id,
       position: i,
       kind: "image" as const,
-      image_url: `${ASSET_PREFIX}${aid}`,
+      asset_id: aid,
     }));
     const { error: mErr } = await ctx.supabase.from("publication_media").insert(rows);
     if (mErr) throw mErr;
