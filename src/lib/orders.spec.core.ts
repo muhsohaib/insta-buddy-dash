@@ -20,14 +20,13 @@ const DB_TO_SPEC: Record<string, SpecOrderStatus> = {
 type OrderRow = {
   id: string;
   org_id: string;
-  user_id: string | null;
+  created_by_user_id: string | null;
   status: string;
   payment_status: string | null;
   currency: string | null;
-  amount_cents: number | null;
+  total_cents: number | null;
   quantity: number | null;
   product_id: string | null;
-  metadata: unknown;
   created_at: string;
   updated_at: string;
   ready_at: string | null;
@@ -61,10 +60,10 @@ export function toOrderView(r: OrderRow): OrderView {
     status: specStatus(r),
     product_id: r.product_id,
     quantity: r.quantity ?? 1,
-    amount_cents: r.amount_cents ?? 0,
+    amount_cents: r.total_cents ?? 0,
     currency: r.currency ?? "USD",
     payment_status: r.payment_status ?? "unknown",
-    metadata: (r.metadata as Record<string, unknown>) ?? {},
+    metadata: {},
     created_at: r.created_at,
     updated_at: r.updated_at,
     fulfilled_at: r.delivered_at ?? r.ready_at ?? null,
