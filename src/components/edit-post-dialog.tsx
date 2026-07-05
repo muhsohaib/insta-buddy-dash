@@ -93,7 +93,7 @@ export function EditPostDialog({
     if (!post) return;
     setDeleting(true);
     try {
-      await deleteFn({ data: { id: post.id } });
+      await api.del(`/publications/${post.id}`);
       toast.success("Post deleted");
       onChanged();
       setConfirmDelete(false);
