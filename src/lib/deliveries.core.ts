@@ -119,7 +119,9 @@ export async function acceptDelivery(auth: ApiAuth, id: string): Promise<Deliver
     .select(SELECT)
     .single();
   if (error) throw new SpecError("internal", error.message);
-  return toView(data as unknown as Row);
+  const view = toView(data as unknown as Row);
+  await enqueueWebhookEvent(auth.supabase, auth.orgId, "delivery.accepted", { delivery: view });
+  return view;
 }
 
 export async function reportIssue(
@@ -139,5 +141,10 @@ export async function reportIssue(
     .select(SELECT)
     .single();
   if (error) throw new SpecError("internal", error.message);
-  return toView(data as unknown as Row);
+  const view = toView(data as unknown as Row);
+  await enqueueWebhookEvent(auth.supabase, auth.orgId, "delivery.issue_reported", {
+    delivery: view,
+    reason,
+  });
+  return view;
 }
