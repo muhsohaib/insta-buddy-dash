@@ -1,0 +1,2 @@
+REVOKE EXECUTE ON FUNCTION public.api_rate_limit_hit(TEXT, TEXT, TIMESTAMPTZ, INTEGER, INTEGER) FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.api_rate_limit_hit(TEXT, TEXT, TIMESTAMPTZ, INTEGER, INTEGER) TO service_role;
