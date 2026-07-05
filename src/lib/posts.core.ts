@@ -292,6 +292,38 @@ async function assertAccount(ctx: WriteCtx, account_id: string): Promise<void> {
     throw new SpecError("conflict", "Social account is not ready to publish");
   }
 }
+// Validates every asset_id exists, belongs to the workspace, and is `ready`.
+// Returns the ids preserving input order + de-duped to prevent double-inserts.
+async function assertAssets(ctx: WriteCtx, assetIds: string[]): Promise<string[]> {
+  const unique = Array.from(new Set(assetIds));
+  if (unique.length === 0) return unique;
+  const { data, error } = await ctx.supabase
+    .from("assets")
+    .select("id, workspace_id, status")
+    .in("id", unique);
+  if (error) throw error;
+  const rows = (data ?? []) as Array<{ id: string; workspace_id: string; status: string }>;
+  const byId = new Map(rows.map((r) => [r.id, r]));
+  for (const id of unique) {
+    const row = byId.get(id);
+    if (!row || row.workspace_id !== ctx.orgId) {
+      throw new SpecError("not_found", `Asset ${id} not found`, { asset_ids: `unknown asset ${id}` });
+    }
+    if (row.status !== "ready") {
+      throw new SpecError("conflict", `Asset ${id} is not ready`, {
+        asset_ids: `asset ${id} status is ${row.status}, must be ready`,
+      });
+    }
+  }
+  // Preserve original order (may include duplicates -> reject to keep positions well-defined)
+  if (assetIds.length !== unique.length) {
+    throw new SpecError("invalid_input", "asset_ids must not contain duplicates", {
+      asset_ids: "duplicate ids",
+    });
+  }
+  return assetIds;
+}
+
 
 export async function createPostCore(
   ctx: WriteCtx,
