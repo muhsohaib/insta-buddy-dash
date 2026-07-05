@@ -4,6 +4,7 @@ import type { ApiAuth } from "./api-auth.server";
 import { generateApiKey } from "./api-auth.server";
 import { SpecError } from "./api/envelope";
 import { encodeCursor, type ParsedCursor } from "./api/pagination";
+import { enqueueWebhookEvent } from "./webhooks-dispatch.server";
 
 type Row = {
   id: string;
@@ -116,15 +117,22 @@ export async function createApiKey(
     .select("*")
     .single();
   if (error) throw new SpecError("internal", error.message);
-  return { ...toView(data as unknown as Row), token: raw };
+  const view = toView(data as unknown as Row);
+  await enqueueWebhookEvent(auth.supabase, auth.orgId, "api_key.created", {
+    api_key: { id: view.id, label: view.label, prefix: view.prefix },
+  });
+  return { ...view, token: raw };
 }
 
 export async function deleteApiKey(auth: ApiAuth, id: string): Promise<void> {
-  await getApiKey(auth, id);
+  const existing = await getApiKey(auth, id);
   const { error } = await auth.supabase
     .from("api_keys")
     .update({ revoked_at: new Date().toISOString() })
     .eq("id", id)
     .eq("org_id", auth.orgId);
   if (error) throw new SpecError("internal", error.message);
+  await enqueueWebhookEvent(auth.supabase, auth.orgId, "api_key.revoked", {
+    api_key: { id: existing.id, label: existing.label, prefix: existing.prefix },
+  });
 }

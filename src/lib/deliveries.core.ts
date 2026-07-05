@@ -3,6 +3,7 @@
 import type { ApiAuth } from "./api-auth.server";
 import { SpecError } from "./api/envelope";
 import { encodeCursor, type ParsedCursor } from "./api/pagination";
+import { enqueueWebhookEvent } from "./webhooks-dispatch.server";
 
 const SELECT =
   "id, order_item_id, ig_username, ig_password, delivered_at, accepted_at, issue_reported_at, issue_reason, created_at, updated_at, order_items!inner(id, order_id, orders!inner(id, org_id))";
@@ -118,7 +119,9 @@ export async function acceptDelivery(auth: ApiAuth, id: string): Promise<Deliver
     .select(SELECT)
     .single();
   if (error) throw new SpecError("internal", error.message);
-  return toView(data as unknown as Row);
+  const view = toView(data as unknown as Row);
+  await enqueueWebhookEvent(auth.supabase, auth.orgId, "delivery.accepted", { delivery: view });
+  return view;
 }
 
 export async function reportIssue(
@@ -138,5 +141,10 @@ export async function reportIssue(
     .select(SELECT)
     .single();
   if (error) throw new SpecError("internal", error.message);
-  return toView(data as unknown as Row);
+  const view = toView(data as unknown as Row);
+  await enqueueWebhookEvent(auth.supabase, auth.orgId, "delivery.issue_reported", {
+    delivery: view,
+    reason,
+  });
+  return view;
 }

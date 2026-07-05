@@ -37,7 +37,7 @@ Split by resource, all under `/workspace/*`.
 ### After 7b: 7c–7g preview (for cadence agreement)
 - **7c** — replace the app's data layer to consume `/api/public/v1/*` exclusively (retire `*.functions.ts` server fns that duplicate spec endpoints).
 - **7d** — real Asset pipeline (Bunny/Storage), swap `asset://` opaque strings in posts for real asset IDs.
-- **7e** — webhooks delivery worker + retry/backoff + signature.
+- **7e** — ✅ webhooks delivery worker + retry/backoff + signature. `src/lib/webhooks-dispatch.server.ts` (HMAC-SHA256 signature `t=..,v1=..` + `enqueueWebhookEvent` fan-out). `src/routes/api/public/hooks/webhook-worker.ts` cron worker: batches 25, exponential backoff 30s→1h, 8 attempts, 10s timeout, anon-key gated. Wired into `api-keys` (created/revoked), `assets` (ready), `deliveries` (accepted/issue_reported). pg_net enabled, cron scheduled every minute.
 - **7f** — rate limiting, idempotency keys, request-id tracing.
 - **7g** — remote MCP generated from the live `/openapi.json`.
 
