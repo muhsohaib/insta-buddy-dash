@@ -198,24 +198,22 @@ export function CreatePostDialog({
       const iso = new Date(datetime).toISOString();
       await Promise.all(
         selectedIds.map((accountId) =>
-          createPostFn({
-            data: {
-              account_id: accountId,
-              type: "reel",
-              caption,
-              scheduled_at: iso,
-              status: "scheduled",
-              media: [
-                {
-                  kind: "video",
-                  bunny_video_id: upload.videoId,
-                  bunny_library_id: upload.libraryId,
-                  thumbnail_url: upload.thumbnailUrl,
-                },
-              ],
-            },
-          })
-        )
+          api.post("/publications", {
+            account_id: accountId,
+            type: "reel",
+            caption,
+            scheduled_at: iso,
+            status: "scheduled",
+            media: [
+              {
+                kind: "video",
+                bunny_video_id: upload.videoId,
+                bunny_library_id: upload.libraryId,
+                thumbnail_url: upload.thumbnailUrl,
+              },
+            ],
+          }),
+        ),
       );
 
       toast.success(
