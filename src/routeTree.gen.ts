@@ -50,6 +50,7 @@ import { Route as AuthenticatedAdminOrdersIdRouteImport } from './routes/_authen
 import { Route as ApiPublicV1WorkspaceNotificationsChar58readAllRouteImport } from './routes/api/public/v1/workspace/notifications:read-all'
 import { Route as ApiPublicV1WorkspaceNotificationsRouteImport } from './routes/api/public/v1/workspace/notifications'
 import { Route as ApiPublicV1PublicationsIdRouteImport } from './routes/api/public/v1/publications/$id'
+import { Route as ApiPublicV1PostsPost_idRouteImport } from './routes/api/public/v1/posts/$post_id'
 import { Route as ApiPublicV1OrdersIdRouteImport } from './routes/api/public/v1/orders/$id'
 import { Route as ApiPublicV1MediaIdRouteImport } from './routes/api/public/v1/media/$id'
 import { Route as ApiPublicV1ActivityIdRouteImport } from './routes/api/public/v1/activity/$id'
@@ -285,6 +286,11 @@ const ApiPublicV1PublicationsIdRoute =
     path: '/$id',
     getParentRoute: () => ApiPublicV1PublicationsRoute,
   } as any)
+const ApiPublicV1PostsPost_idRoute = ApiPublicV1PostsPost_idRouteImport.update({
+  id: '/$post_id',
+  path: '/$post_id',
+  getParentRoute: () => ApiPublicV1PostsRoute,
+} as any)
 const ApiPublicV1OrdersIdRoute = ApiPublicV1OrdersIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -378,7 +384,7 @@ export interface FileRoutesByFullPath {
   '/api/public/v1/media': typeof ApiPublicV1MediaRouteWithChildren
   '/api/public/v1/openapi': typeof ApiPublicV1OpenapiRoute
   '/api/public/v1/orders': typeof ApiPublicV1OrdersRouteWithChildren
-  '/api/public/v1/posts': typeof ApiPublicV1PostsRoute
+  '/api/public/v1/posts': typeof ApiPublicV1PostsRouteWithChildren
   '/api/public/v1/products': typeof ApiPublicV1ProductsRoute
   '/api/public/v1/publications': typeof ApiPublicV1PublicationsRouteWithChildren
   '/api/public/v1/workspace': typeof ApiPublicV1WorkspaceRouteWithChildren
@@ -390,6 +396,7 @@ export interface FileRoutesByFullPath {
   '/api/public/v1/activity/$id': typeof ApiPublicV1ActivityIdRoute
   '/api/public/v1/media/$id': typeof ApiPublicV1MediaIdRoute
   '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRouteWithChildren
+  '/api/public/v1/posts/$post_id': typeof ApiPublicV1PostsPost_idRoute
   '/api/public/v1/publications/$id': typeof ApiPublicV1PublicationsIdRouteWithChildren
   '/api/public/v1/workspace/notifications': typeof ApiPublicV1WorkspaceNotificationsRouteWithChildren
   '/api/public/v1/workspace/notifications:read-all': typeof ApiPublicV1WorkspaceNotificationsChar58readAllRoute
@@ -431,7 +438,7 @@ export interface FileRoutesByTo {
   '/api/public/v1/media': typeof ApiPublicV1MediaRouteWithChildren
   '/api/public/v1/openapi': typeof ApiPublicV1OpenapiRoute
   '/api/public/v1/orders': typeof ApiPublicV1OrdersRouteWithChildren
-  '/api/public/v1/posts': typeof ApiPublicV1PostsRoute
+  '/api/public/v1/posts': typeof ApiPublicV1PostsRouteWithChildren
   '/api/public/v1/products': typeof ApiPublicV1ProductsRoute
   '/api/public/v1/publications': typeof ApiPublicV1PublicationsRouteWithChildren
   '/api/public/v1/workspace': typeof ApiPublicV1WorkspaceRouteWithChildren
@@ -443,6 +450,7 @@ export interface FileRoutesByTo {
   '/api/public/v1/activity/$id': typeof ApiPublicV1ActivityIdRoute
   '/api/public/v1/media/$id': typeof ApiPublicV1MediaIdRoute
   '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRouteWithChildren
+  '/api/public/v1/posts/$post_id': typeof ApiPublicV1PostsPost_idRoute
   '/api/public/v1/publications/$id': typeof ApiPublicV1PublicationsIdRouteWithChildren
   '/api/public/v1/workspace/notifications': typeof ApiPublicV1WorkspaceNotificationsRouteWithChildren
   '/api/public/v1/workspace/notifications:read-all': typeof ApiPublicV1WorkspaceNotificationsChar58readAllRoute
@@ -486,7 +494,7 @@ export interface FileRoutesById {
   '/api/public/v1/media': typeof ApiPublicV1MediaRouteWithChildren
   '/api/public/v1/openapi': typeof ApiPublicV1OpenapiRoute
   '/api/public/v1/orders': typeof ApiPublicV1OrdersRouteWithChildren
-  '/api/public/v1/posts': typeof ApiPublicV1PostsRoute
+  '/api/public/v1/posts': typeof ApiPublicV1PostsRouteWithChildren
   '/api/public/v1/products': typeof ApiPublicV1ProductsRoute
   '/api/public/v1/publications': typeof ApiPublicV1PublicationsRouteWithChildren
   '/api/public/v1/workspace': typeof ApiPublicV1WorkspaceRouteWithChildren
@@ -498,6 +506,7 @@ export interface FileRoutesById {
   '/api/public/v1/activity/$id': typeof ApiPublicV1ActivityIdRoute
   '/api/public/v1/media/$id': typeof ApiPublicV1MediaIdRoute
   '/api/public/v1/orders/$id': typeof ApiPublicV1OrdersIdRouteWithChildren
+  '/api/public/v1/posts/$post_id': typeof ApiPublicV1PostsPost_idRoute
   '/api/public/v1/publications/$id': typeof ApiPublicV1PublicationsIdRouteWithChildren
   '/api/public/v1/workspace/notifications': typeof ApiPublicV1WorkspaceNotificationsRouteWithChildren
   '/api/public/v1/workspace/notifications:read-all': typeof ApiPublicV1WorkspaceNotificationsChar58readAllRoute
@@ -553,6 +562,7 @@ export interface FileRouteTypes {
     | '/api/public/v1/activity/$id'
     | '/api/public/v1/media/$id'
     | '/api/public/v1/orders/$id'
+    | '/api/public/v1/posts/$post_id'
     | '/api/public/v1/publications/$id'
     | '/api/public/v1/workspace/notifications'
     | '/api/public/v1/workspace/notifications:read-all'
@@ -606,6 +616,7 @@ export interface FileRouteTypes {
     | '/api/public/v1/activity/$id'
     | '/api/public/v1/media/$id'
     | '/api/public/v1/orders/$id'
+    | '/api/public/v1/posts/$post_id'
     | '/api/public/v1/publications/$id'
     | '/api/public/v1/workspace/notifications'
     | '/api/public/v1/workspace/notifications:read-all'
@@ -660,6 +671,7 @@ export interface FileRouteTypes {
     | '/api/public/v1/activity/$id'
     | '/api/public/v1/media/$id'
     | '/api/public/v1/orders/$id'
+    | '/api/public/v1/posts/$post_id'
     | '/api/public/v1/publications/$id'
     | '/api/public/v1/workspace/notifications'
     | '/api/public/v1/workspace/notifications:read-all'
@@ -688,7 +700,7 @@ export interface RootRouteChildren {
   ApiPublicV1MediaRoute: typeof ApiPublicV1MediaRouteWithChildren
   ApiPublicV1OpenapiRoute: typeof ApiPublicV1OpenapiRoute
   ApiPublicV1OrdersRoute: typeof ApiPublicV1OrdersRouteWithChildren
-  ApiPublicV1PostsRoute: typeof ApiPublicV1PostsRoute
+  ApiPublicV1PostsRoute: typeof ApiPublicV1PostsRouteWithChildren
   ApiPublicV1ProductsRoute: typeof ApiPublicV1ProductsRoute
   ApiPublicV1PublicationsRoute: typeof ApiPublicV1PublicationsRouteWithChildren
   ApiPublicV1WorkspaceRoute: typeof ApiPublicV1WorkspaceRouteWithChildren
@@ -984,6 +996,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicV1PublicationsIdRouteImport
       parentRoute: typeof ApiPublicV1PublicationsRoute
     }
+    '/api/public/v1/posts/$post_id': {
+      id: '/api/public/v1/posts/$post_id'
+      path: '/$post_id'
+      fullPath: '/api/public/v1/posts/$post_id'
+      preLoaderRoute: typeof ApiPublicV1PostsPost_idRouteImport
+      parentRoute: typeof ApiPublicV1PostsRoute
+    }
     '/api/public/v1/orders/$id': {
       id: '/api/public/v1/orders/$id'
       path: '/$id'
@@ -1171,6 +1190,17 @@ const ApiPublicV1OrdersRouteChildren: ApiPublicV1OrdersRouteChildren = {
 const ApiPublicV1OrdersRouteWithChildren =
   ApiPublicV1OrdersRoute._addFileChildren(ApiPublicV1OrdersRouteChildren)
 
+interface ApiPublicV1PostsRouteChildren {
+  ApiPublicV1PostsPost_idRoute: typeof ApiPublicV1PostsPost_idRoute
+}
+
+const ApiPublicV1PostsRouteChildren: ApiPublicV1PostsRouteChildren = {
+  ApiPublicV1PostsPost_idRoute: ApiPublicV1PostsPost_idRoute,
+}
+
+const ApiPublicV1PostsRouteWithChildren =
+  ApiPublicV1PostsRoute._addFileChildren(ApiPublicV1PostsRouteChildren)
+
 interface ApiPublicV1PublicationsIdRouteChildren {
   ApiPublicV1PublicationsIdCancelRoute: typeof ApiPublicV1PublicationsIdCancelRoute
   ApiPublicV1PublicationsIdPublishRoute: typeof ApiPublicV1PublicationsIdPublishRoute
@@ -1250,7 +1280,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicV1MediaRoute: ApiPublicV1MediaRouteWithChildren,
   ApiPublicV1OpenapiRoute: ApiPublicV1OpenapiRoute,
   ApiPublicV1OrdersRoute: ApiPublicV1OrdersRouteWithChildren,
-  ApiPublicV1PostsRoute: ApiPublicV1PostsRoute,
+  ApiPublicV1PostsRoute: ApiPublicV1PostsRouteWithChildren,
   ApiPublicV1ProductsRoute: ApiPublicV1ProductsRoute,
   ApiPublicV1PublicationsRoute: ApiPublicV1PublicationsRouteWithChildren,
   ApiPublicV1WorkspaceRoute: ApiPublicV1WorkspaceRouteWithChildren,
