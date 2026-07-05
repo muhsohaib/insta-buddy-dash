@@ -102,6 +102,9 @@ function mapSource(source: string): SpecVia {
 }
 
 function assetIdFromMedia(m: PubRow["publication_media"][number]): string {
+  // Prefer real FK (Phase 7d+). Fall back to legacy asset:// placeholder or
+  // bunny-derived pseudo-id for rows created before 7d.
+  if (m.asset_id) return m.asset_id;
   if (m.image_url && m.image_url.startsWith(ASSET_PREFIX)) {
     return m.image_url.slice(ASSET_PREFIX.length);
   }
